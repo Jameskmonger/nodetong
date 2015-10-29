@@ -112,7 +112,11 @@
 
   socket.on("bullet out", function(data) {
 
-     $("body").append('<div class="bullet" id="' + data.id + '">');
+	if ($('#' + data.id).length == 0) {
+     	$("body").append('<div class="bullet" id="' + data.id + '">');
+     
+     }
+     
      $('#' + data.id).css({"display": "block", "top": data.y, "left": data.x});
 	});
 
@@ -132,11 +136,12 @@
 		return ("#" + formatId(id));
 	}
 
-  function shoot() {
-    var id = Math.random().toString(36).substring(7);
-    var data = local_player;
 
-    socket.emit("bullet in", local_player.position);
+  function shoot() {
+
+	var bulletPosition = local_player.position;
+
+	socket.emit("bullet in", bulletPosition);
 	}
 
 	function addPlayer(data) {

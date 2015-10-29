@@ -32,7 +32,29 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('bullet in', function(position) {
     position.id = shortid.generate();
-		io.emit("bullet out", position);
+    
+    
+    	var angle = position.orientation - 90;
+
+	var i = 1;
+
+function shootLoop () {          
+   setTimeout(function () {    
+      position.x += 10 * Math.cos(angle * Math.PI / 180);
+	  position.y += 10 * Math.sin(angle * Math.PI / 180);   
+	  
+	  io.emit("bullet out", position);
+	        
+      i++;                     
+      if (i < 30) {            
+         shootLoop();          
+      }                        
+   }, 10)
+}
+
+	shootLoop();
+
+		
 	});
 
 	socket.on('movement update', function(position) {

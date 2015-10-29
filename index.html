@@ -43,32 +43,51 @@
 	});
 	
 	var Directions = { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
-	
-	$(document).keydown(function(e) {
-		switch(e.which) {
-			case Directions.LEFT:
-				moveLocalPlayer(Directions.LEFT);
-			break;
 
-			case Directions.UP:
-				moveLocalPlayer(Directions.UP);
-			break;
+	var keysPressed = [false, false, false, false];
 
-			case Directions.RIGHT:
-				moveLocalPlayer(Directions.RIGHT);
-			break;
+	function updateKeysPressed(code, pressed){
 
-			case Directions.DOWN:
-				moveLocalPlayer(Directions.DOWN);
-			break;
 
-			default: return; // exit this handler for other keys
+		if (code === Directions.LEFT){
+			keysPressed[0] = (pressed ? Directions.LEFT : false);
 		}
+
+		if (code === Directions.UP){
+			keysPressed[1] = (pressed ? Directions.UP : false);
+		}
+
+		if (code === Directions.RIGHT){
+			keysPressed[2] = (pressed ? Directions.RIGHT : false);
+		}
+		if (code === Directions.DOWN){
+			keysPressed[3] = (pressed ? Directions.DOWN : false);
+		}
+
+		moveLocalPlayer();
+	}
+
+	$(document).keyup(function(e) {
+
+		updateKeysPressed(e.keyCode, false);
+
+	});
+
+	$(document).keydown(function(e) {
+
+        updateKeysPressed(e.keyCode, true);
+
 		e.preventDefault(); // prevent the default action (scroll / move caret)
 	});
 	
-	function moveLocalPlayer(direction) {
-		movePlayer(local_player.id, direction);
+	function moveLocalPlayer() {
+
+		keysPressed.forEach(function(key){
+			console.log(keysPressed);
+			if(key){
+				movePlayer(local_player.id, key);
+			}
+		});
 	}
 	
 	socket.on("player join", function(data) {	
@@ -101,7 +120,7 @@
 		var element = $(".player#player_" + id);
 	
 		var delta = 5;
-		var rotation = 15;
+		var rotation = 1;
 		
 		if (direction === Directions.LEFT)
 		{

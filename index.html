@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Asteroids</title>
+	
+	<style type="text/css">	
+	body {
+		margin: 0;
+		overflow: hidden;
+	}
+	
+	.player	{
+		width: 30px;
+		height: 30px;
+		background-color: #ff0000;
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: none;
+	}
+	</style>
+  </head>
+  <body>	
+	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+	var socket = io();
+	
+	var local_player = {id: -1, position: {x: 0, y: 0}};
+	
+	socket.on("initialisation request", function(data) {
+		local_player.id = data.id;
+		local_player.position = data.position;
+	});
+	
+	var Directions = { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
+	
+	$(document).keydown(function(e) {
+		switch(e.which) {
+			case Directions.LEFT:
+				moveLocalPlayer(Directions.LEFT);
+			break;
+
+			case Directions.UP:
+				moveLocalPlayer(Directions.UP);
+			break;
+
+			case Directions.RIGHT:
+				moveLocalPlayer(Directions.RIGHT);
+			break;
+
+			case Directions.DOWN:
+				moveLocalPlayer(Directions.DOWN);
+			break;
+
+			default: return; // exit this handler for other keys
+		}
+		e.preventDefault(); // prevent the default action (scroll / move caret)
+	});
+	
+	function moveLocalPlayer(direction) {
+		movePlayer(local_player.id, direction);
+	}
+	
+	socket.on("player join", function(data) {	
+		addPlayer(data);
+	});
+	
+	socket.on("player leave", function(id) {
+		removePlayer(id);
+	})
+	
+	function formatId(id) {
+		return "player_" + id;
+	}
+	
+	function formatIdSelector(id) {
+		return ("#" + formatId(id));
+	}
+	
+	function addPlayer(data) {
+		$("body").append('<div class="player" id="' + formatId(data.id) + '">');
+		
+		$(formatIdSelector(data.id)).css({"display": "block", "top": data.position.y, "left": data.position.x, "background-color": "#" + data.color});
+	}
+	
+	function removePlayer(id) {
+		$(formatIdSelector(id)).remove();
+	}
+	
+	function movePlayer(id, direction) {
+		var element = $(".player#player_" + id);
+	
+		var delta = 5;
+		
+		// Invert the delta if we're moving up or left
+		if (direction == Directions.LEFT || direction == Directions.UP)
+		{
+			delta = (delta * -1);
+		}
+		
+		// Apply the delta to the relevant variable
+		if (direction == Directions.LEFT || direction == Directions.RIGHT)
+		{
+			local_player.position.x += delta;
+		}
+		if (direction == Directions.UP || direction == Directions.DOWN)
+		{
+			local_player.position.y += delta;
+		}
+		
+		socket.emit("movement update", local_player.position);
+	}
+	  
+	socket.on('position update', function(data) {
+		var id = data.id;
+	
+		$(formatIdSelector(id)).css({top: data.position.y, left: data.position.x});
+	});
+	</script>
+  </body>
+</html>

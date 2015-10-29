@@ -2,13 +2,13 @@
 <html>
   <head>
     <title>Asteroids</title>
-	
-	<style type="text/css">	
+
+	<style type="text/css">
 	body {
 		margin: 0;
 		overflow: hidden;
 	}
-	
+
 	.player	{
 		width: 30px;
 		height: 30px;
@@ -17,37 +17,53 @@
 		top: 0;
 		left: 0;
 		display: none;
-		
 		border-top: 2px solid black;
 	}
+
+  .bullet	{
+		width: 10px;
+		height: 10px;
+    border-radius: 50%;
+		background-color: #000000;
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: none;
+		border-top: 2px solid black;
+	}
+
 	</style>
   </head>
-  <body>	
+  <body>
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script>
 	var socket = io();
-	
+
 	var local_player = {
-		id: -1, 
+		id: -1,
 		position: {
 			x: 0,
 			y: 0,
 			orientation: 0
 		}
 	};
-	
+
 	socket.on("initialisation request", function(data) {
 		local_player.id = data.id;
 		local_player.position = data.position;
 	});
-	
-	var Directions = { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
+
+	var Directions = {
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    SHOOT: 32};
 
 	var keysPressed = [false, false, false, false];
 
 	function updateKeysPressed(code, pressed){
-
 
 		if (code === Directions.LEFT){
 			keysPressed[0] = (pressed ? Directions.LEFT : false);
@@ -61,6 +77,7 @@
 			keysPressed[2] = (pressed ? Directions.RIGHT : false);
 		}
 		if (code === Directions.DOWN){
+
 			keysPressed[3] = (pressed ? Directions.DOWN : false);
 		}
 
@@ -75,53 +92,69 @@
 
 	$(document).keydown(function(e) {
 
-        updateKeysPressed(e.keyCode, true);
+    if (e.keyCode === Directions.SHOOT){
+			shoot();
+		}
+
+    updateKeysPressed(e.keyCode, true);
 
 		e.preventDefault(); // prevent the default action (scroll / move caret)
 	});
-	
+
 	function moveLocalPlayer() {
 
 		keysPressed.forEach(function(key){
-			console.log(keysPressed);
 			if(key){
 				movePlayer(local_player.id, key);
 			}
 		});
 	}
-	
-	socket.on("player join", function(data) {	
+
+  socket.on("bullet out", function(data) {
+
+     $("body").append('<div class="bullet" id="' + data.id + '">');
+     $('#' + data.id).css({"display": "block", "top": data.y, "left": data.x});
+	});
+
+	socket.on("player join", function(data) {
 		addPlayer(data);
 	});
-	
+
 	socket.on("player leave", function(id) {
 		removePlayer(id);
 	})
-	
+
 	function formatId(id) {
 		return "player_" + id;
 	}
-	
+
 	function formatIdSelector(id) {
 		return ("#" + formatId(id));
 	}
-	
+
+  function shoot() {
+    var id = Math.random().toString(36).substring(7);
+    var data = local_player;
+
+    socket.emit("bullet in", local_player.position);
+	}
+
 	function addPlayer(data) {
 		$("body").append('<div class="player" id="' + formatId(data.id) + '">');
-		
+
 		$(formatIdSelector(data.id)).css({"display": "block", "top": data.position.y, "left": data.position.x, "background-color": "#" + data.color});
 	}
-	
+
 	function removePlayer(id) {
 		$(formatIdSelector(id)).remove();
 	}
-	
+
 	function movePlayer(id, direction) {
 		var element = $(".player#player_" + id);
-	
+
 		var delta = 5;
-		var rotation = 1;
-		
+		var rotation = 10;
+
 		if (direction === Directions.LEFT)
 		{
 			local_player.position.orientation -= rotation;
@@ -142,10 +175,10 @@
 
 		socket.emit("movement update", local_player.position);
 	}
-	  
+
 	socket.on('position update', function(data) {
 		var id = data.id;
-	
+
 		var player_css =
 		{
 			"top": data.position.y,
@@ -154,7 +187,7 @@
 			"-webkit-transform": "rotate(" + data.position.orientation + "deg)",
 			"transform": "rotate(" + data.position.orientation + "deg)"
 		};
-	
+
 		$(formatIdSelector(id)).css(player_css);
 	});
 	</script>

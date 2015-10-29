@@ -10,14 +10,19 @@
 	}
 
 	.player	{
-		width: 30px;
-		height: 30px;
-		background-color: #ff0000;
+		width: 0;
+		height: 0;
+		background-color: #ffffff;
 		position: absolute;
 		top: 0;
 		left: 0;
 		display: none;
-		border-top: 2px solid black;
+		
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+	
+		border-bottom: 30px solid;
+		border-bottom-color: #ff0000;
 	}
 
   .bullet	{
@@ -147,7 +152,7 @@
 	function addPlayer(data) {
 		$("body").append('<div class="player" id="' + formatId(data.id) + '">');
 
-		$(formatIdSelector(data.id)).css({"display": "block", "top": data.position.y, "left": data.position.x, "background-color": "#" + data.color});
+		$(formatIdSelector(data.id)).css({"display": "block", "top": data.position.y, "left": data.position.x, "border-bottom-color": "#" + data.color});
 	}
 
 	function removePlayer(id) {

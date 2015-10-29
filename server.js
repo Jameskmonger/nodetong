@@ -67,8 +67,9 @@ function getPlayerData(socket) {
 function getRandomPosition(dimensions) {
 	var x = getRandomInt(0, 500);
 	var y = getRandomInt(0, 500);
+	var orientation = 0;
 	
-	var position = { "x": x, "y": y };
+	var position = { "x": x, "y": y, "orientation": 0 };
 	
 	return position;
 }

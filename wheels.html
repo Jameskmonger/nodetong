@@ -59,6 +59,10 @@
     function process() {
       var local_car = getLocalPlayer();
 
+      if (local_car == undefined) {
+        return;
+      }
+
       if (pressing(KeyCodes.UP)) {
         if (local_car.speed + 0.5 < 3.0) {
           local_car.speed += 0.3;
@@ -273,6 +277,10 @@
 
     socket.on("player update", function(player_data) {
       for (var i = 0; i < car_array.length; i++) {
+        if (car_array[i] == null) {
+          continue;
+        }
+        
         if (car_array[i].id == player_data.id) {
           car_array[i] = player_data;
           return;

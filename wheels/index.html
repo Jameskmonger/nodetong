@@ -14,6 +14,8 @@
     var wheelRotation = 90;
 
     document.addEventListener("keydown", function(event) {
+      car_speed = 0;
+
       if (event.keyCode == KEY_CODE_LEFT) {
         decreaseWheelRotation(1);
       }
@@ -23,7 +25,8 @@
       }
 
       if (event.keyCode == KEY_CODE_UP) {
-        speed = new Victor(3, 3);
+        car_speed++;
+        draw();
       }
 
       if (event.keyCode == KEY_CODE_SPACE) {
@@ -59,16 +62,11 @@
       draw();
     }
 
-    var carrot = 0;
-
-    function cr(deg) {
-      carrot = deg;
-      draw();
-    }
-
     var DRAW_DEBUG_LINES = true;
 
-    var speed = new Victor(0, 0);
+    var center_x = 36, center_y = 35;
+    var rotation_rad = 0;
+    var car_speed = 1;
 
     function draw() {
       var canvas = document.getElementById('wheels');
@@ -76,9 +74,9 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      drawCar(20, 20, carrot);
+      drawCar();
 
-      function drawCar(car_x, car_y, rotation) {
+      function drawCar() {
         // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
         var wheel_width = 5, wheel_length = 11;
@@ -86,51 +84,44 @@
 
         var wheel_base = car_height + wheel_length / 4;
 
-        var center_x = (car_x - wheel_width + car_width);
-        var center_y = (car_y - wheel_length + car_height) + 1;
+        //var center_x = (car_x - wheel_width + car_width);
+        //var center_y = (car_y - wheel_length + car_height) + 1;
 
-        var car_location_vector = new Victor(center_x, center_y);
+        //var rotation_rad = rotation * (Math.PI / 180)
 
-        var rotation_rad = rotation * (Math.PI / 180)
         var wheel_rotation_rad = wheelRotation * (Math.PI / 180);
 
-        var cos_r = Math.cos(rotation_rad), sin_r = Math.sin(rotation_rad);
-        var rotation_vector = new Victor(cos_r, sin_r);
+        var front_wheel_x = center_x + wheel_base/2 * Math.cos(rotation_rad);
+        var front_wheel_y = center_y + wheel_base/2 * Math.sin(rotation_rad);
 
-        var half_wheel_base = (wheel_base / 2);
-        var half_wheel_base_vector = new Victor(half_wheel_base, half_wheel_base);
+        var back_wheel_x = center_x - wheel_base/2 * Math.cos(rotation_rad);
+        var back_wheel_y = center_y - wheel_base/2 * Math.sin(rotation_rad);
 
-        var front_wheel_vector = rotation_vector.clone().multiply(half_wheel_base_vector).add(car_location_vector);
-        var back_wheel_vector = rotation_vector.clone().multiply(half_wheel_base_vector).subtract(car_location_vector);
+        var dt = 1;
 
-        var cos_r1 = Math.cos(rotation_rad), sin_r1 = Math.sin(rotation_rad);
-        var cos_rs = Math.cos(rotation_rad + wheel_rotation_rad), sin_rs = Math.sin(rotation_rad + wheel_rotation_rad);
+        back_wheel_x += car_speed * dt * Math.cos(rotation_rad);
+        back_wheel_y += car_speed * dt * Math.sin(rotation_rad);
 
-        var add_to_front = speed.clone().multiply(new Victor(cos_rs, sin_rs));
-        var add_to_back = speed.clone().multiply(new Victor(cos_r1, sin_r1));
+        front_wheel_x += car_speed * dt * Math.cos(rotation_rad + wheel_rotation_rad);
+        front_wheel_y += car_speed * dt * Math.sin(rotation_rad + wheel_rotation_rad);
 
-        front_wheel_vector.add(add_to_front);
-        back_wheel_vector.add(add_to_back);
+        center_x = (front_wheel_x + back_wheel_x) / 2;
+        center_y = (front_wheel_y + back_wheel_y) / 2;
 
-        var both_wheels = front_wheel_vector.clone().add(back_wheel_vector);
-        car_location_vector = both_wheels.multiply(new Victor(0.5, 0.5));
-
-        rotation = Math.atan2(front_wheel_vector.y - back_wheel_vector.y, front_wheel_vector.x - back_wheel_vector.x);
-
-        center_x = car_location_vector.x;
-        center_y = car_location_vector.y;
-
-        if (DRAW_DEBUG_LINES) {
-          ctx.save();
-          ctx.fillStyle = "#ff0000";
-          ctx.fillRect(car_x - 4, car_y + 1, 2, wheel_base);
-          ctx.restore();
-        }
+        rotation_rad = Math.atan2( front_wheel_y - back_wheel_y , front_wheel_x - back_wheel_x );
 
         ctx.save();
 
         ctx.translate(center_x, center_y);
-        ctx.rotate(rotation * Math.PI / 180);
+        ctx.rotate(rotation_rad);
+
+        if (DRAW_DEBUG_LINES) {
+          ctx.save();
+          ctx.fillStyle = "#ff0000";
+          ctx.fillRect(1, 1, 2, 2);
+          ctx.restore();
+        }
+
         ctx.translate(-(center_x), -(center_y));
 
         var front_left_wheel_x = (center_x - car_width + wheel_width);
@@ -154,7 +145,7 @@
         if (DRAW_DEBUG_LINES) {
           ctx.save();
           ctx.fillStyle = "#ff0000";
-          ctx.fillRect(center_x - 2, center_y - 2, 4, 4);
+          //ctx.fillRect(center_x - 2, center_y - 2, 4, 4);
           ctx.restore();
         }
 

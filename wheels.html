@@ -269,10 +269,29 @@
       car.position.wheels.back.y = car.position.y - wheel_base/2 * Math.sin(car.position.rotation.car_rad);
     }
 
-    var socket = io();
+    var socket = io("localhost", {reconnection: false});
 
     socket.on("player join", function(player_data) {
       car_array.push(player_data);
+    });
+
+    socket.on("player leave", function(player_id) {
+      var slot = -1;
+
+      for (var i = 0; i < car_array.length; i++) {
+        if (car_array[i] == null) {
+          continue;
+        }
+
+        if (car_array[i].id === player_id) {
+          slot = i;
+          break;
+        }
+      }
+
+      if (slot != -1) {
+        car_array.splice(slot, 1);
+      }
     });
 
     socket.on("player update", function(player_data) {
@@ -280,13 +299,18 @@
         if (car_array[i] == null) {
           continue;
         }
-        
+
         if (car_array[i].id == player_data.id) {
           car_array[i] = player_data;
           return;
         }
       }
     });
+
+    /*
+     * The local player is always sent first, so it will
+     * always be in the first array slot.
+     */
 
     function getLocalPlayer() {
       return car_array[0];

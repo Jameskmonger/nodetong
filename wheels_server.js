@@ -38,7 +38,7 @@ io.sockets.on('connection', function(socket) {
 		var i = socketList.indexOf(socket);
 		socketList.splice(i, 1);
 
-		io.emit("player leave", socket.player_id);
+		io.emit("player leave", socket.player_data.id);
 
 		console.log("Player " + socket.player_data.id + " disconnected. [" + socketList.length + " players online]");
 	});

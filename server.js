@@ -10,7 +10,7 @@ shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 app.use("/lib", express.static(__dirname + '/lib'));
 
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/wheels.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
 var socketList = [];

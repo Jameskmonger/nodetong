@@ -1,72 +1,186 @@
 <!doctype html>
 <html>
 <head>
-  <script src="victor.min.js" type="text/javascript"></script>
 </head>
-<body>
-  <canvas id="wheels" width="300" height="300"></canvas>
+<body style="margin: 0;">
+  <canvas id="wheels" width="1200" height="800"></canvas>
 
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', loaded, false);
 
-    var KEY_CODE_SPACE = 32, KEY_CODE_LEFT = 37, KEY_CODE_UP = 38, KEY_CODE_RIGHT = 39;
+    var KeyCodes = {
+      LEFT: 37,
+      UP: 38,
+      RIGHT: 39,
+      DOWN: 40,
+      SPACE: 32
+    };
 
-    var wheelRotation = 90;
+    var KeyCodeMap = [];
+    KeyCodeMap[KeyCodes.LEFT] = 0;
+    KeyCodeMap[KeyCodes.UP] = 1;
+    KeyCodeMap[KeyCodes.RIGHT] = 2;
+    KeyCodeMap[KeyCodes.DOWN] = 3;
+    KeyCodeMap[KeyCodes.SPACE] = 4;
+
+  	var key_pressed = [false, false, false, false, false];
 
     document.addEventListener("keydown", function(event) {
-      car_speed = 0;
-
-      if (event.keyCode == KEY_CODE_LEFT) {
-        decreaseWheelRotation(1);
-      }
-
-      if (event.keyCode == KEY_CODE_RIGHT) {
-        increaseWheelRotation(1);
-      }
-
-      if (event.keyCode == KEY_CODE_UP) {
-        car_speed++;
-        draw();
-      }
-
-      if (event.keyCode == KEY_CODE_SPACE) {
-        draw();
-      }
+      updateKeysPressed(event.keyCode, true);
     });
 
-    function decreaseWheelRotation(amount) {
-      setWheelRotation(wheelRotation - amount);
+    document.addEventListener("keyup", function(event) {
+      updateKeysPressed(event.keyCode, false);
+    });
+
+  	function updateKeysPressed(code, pressed) {
+      if (code == KeyCodes.SPACE && pressed) {
+        if (STEERING_MODE + 1 > 2)
+        {
+          STEERING_MODE = 0;
+        } else {
+          STEERING_MODE++;
+        }
+      }
+
+      if (KeyCodeMap[code] != undefined) {
+        key_pressed[KeyCodeMap[code]] = pressed;
+      }
+    }
+
+    var DRAW_DEBUG_LINES = false;
+
+    var FRONT_STEERING_MODE = 0, REAR_STEERING_MODE = 1, DUAL_STEERING_MODE = 2;
+
+    var STEERING_MODE = FRONT_STEERING_MODE;
+
+    var center_x = 100, center_y = 100;
+    var rotation = 0, rotation_rad = 0, wheel_rotation = 90;
+    var wheel_width = 5, wheel_length = 11;
+    var car_width = 21, car_height = 25;
+    var car_speed = 0;
+
+    var wheel_base = car_height + wheel_length / 4;
+
+    function pressing(keycode) {
+      return (key_pressed[KeyCodeMap[keycode]]);
+    }
+
+    var still_counter = 0;
+
+    function process() {
+      calculateRotationRad();
+      calculateFrontWheel();
+      calculateBackWheel();
+
+      if (pressing(KeyCodes.UP)) {
+        if (car_speed + 0.5 < 3.0) {
+          car_speed += 0.3;
+        } else {
+          car_speed = 3.0;
+        }
+      }
+
+      if (pressing(KeyCodes.DOWN)) {
+        if (car_speed > 0.5) {
+          car_speed *= 0.8;
+        } else if (car_speed <= 0.5 && car_speed > 0.1) {
+          car_speed *= 0.6;
+        } else {
+          car_speed = 0.0;
+        }
+      }
+
+      if (pressing(KeyCodes.LEFT)) {
+        turnWheelLeft();
+      }
+      if (pressing(KeyCodes.RIGHT)) {
+        turnWheelRight();
+      }
+
+      moveCar();
+
+      draw();
+    }
+
+    function calculateRotationRad() {
+      rotation_rad = (rotation - 90) * (Math.PI/180);
+    }
+
+    function getPositionRotationRad() {
+      return (rotation) * (Math.PI/180);
+    }
+
+    var front_wheel_x = 0, front_wheel_y = 0;
+    var back_wheel_x = 0, back_wheel_y = 0;
+
+    function calculateFrontWheel() {
+      front_wheel_x = center_x + wheel_base/2 * Math.cos(rotation_rad);
+      front_wheel_y = center_y + wheel_base/2 * Math.sin(rotation_rad);
+    }
+
+    function calculateBackWheel() {
+      back_wheel_x = center_x - wheel_base/2 * Math.cos(rotation_rad);
+      back_wheel_y = center_y - wheel_base/2 * Math.sin(rotation_rad);
+    }
+
+    function moveCar() {
+      var wheel_rotation_rad = (wheel_rotation - 90) * (Math.PI / 180);
+
+      var dt = 1;
+
+      if (STEERING_MODE === REAR_STEERING_MODE) {
+        front_wheel_x += car_speed * dt * Math.cos(rotation_rad);
+        front_wheel_y += car_speed * dt * Math.sin(rotation_rad);
+
+        back_wheel_x += car_speed * dt * Math.cos(rotation_rad + wheel_rotation_rad);
+        back_wheel_y += car_speed * dt * Math.sin(rotation_rad + wheel_rotation_rad);
+      } else if (STEERING_MODE === FRONT_STEERING_MODE) {
+        back_wheel_x += car_speed * dt * Math.cos(rotation_rad);
+        back_wheel_y += car_speed * dt * Math.sin(rotation_rad);
+
+        front_wheel_x += car_speed * dt * Math.cos(rotation_rad + wheel_rotation_rad);
+        front_wheel_y += car_speed * dt * Math.sin(rotation_rad + wheel_rotation_rad);
+      } else if (STEERING_MODE === DUAL_STEERING_MODE) {
+        var back_wheel_rotation_rad = (getBackWheelRotation() - 90) * (Math.PI / 180);
+
+        back_wheel_x += car_speed * dt * Math.cos(rotation_rad + back_wheel_rotation_rad);
+        back_wheel_y += car_speed * dt * Math.sin(rotation_rad + back_wheel_rotation_rad);
+
+        front_wheel_x += car_speed * dt * Math.cos(rotation_rad + wheel_rotation_rad);
+        front_wheel_y += car_speed * dt * Math.sin(rotation_rad + wheel_rotation_rad);
+      }
+
+      center_x = (front_wheel_x + back_wheel_x) / 2;
+      center_y = (front_wheel_y + back_wheel_y) / 2;
+
+      rotation = (Math.atan2( front_wheel_y - back_wheel_y , front_wheel_x - back_wheel_x ) * (180/Math.PI)) + 90;
+    }
+
+    function turnWheelRight() {
+      setWheelRotation(wheel_rotation + 5);
       return;
     }
 
-    function increaseWheelRotation(amount) {
-      setWheelRotation(wheelRotation + amount);
+    function turnWheelLeft() {
+      setWheelRotation(wheel_rotation - 5);
       return;
     }
 
-    function setWheelRotation(rotation) {
-      if (rotation < 60) {
+    // Default is 60 deg left, 120 deg right.
+    var LEFT_TURN_MAX = 0, RIGHT_TURN_MAX = 180;
+
+    function setWheelRotation(value) {
+      if (value <= LEFT_TURN_MAX) {
+        return;
+      }
+      if (value >= RIGHT_TURN_MAX) {
         return;
       }
 
-      if (rotation > 120) {
-        return;
-      }
-
-      wheelRotation = rotation;
-      draw();
+      wheel_rotation = value;
       return;
     }
-
-    function loaded() {
-      draw();
-    }
-
-    var DRAW_DEBUG_LINES = true;
-
-    var center_x = 36, center_y = 35;
-    var rotation_rad = 0;
-    var car_speed = 1;
 
     function draw() {
       var canvas = document.getElementById('wheels');
@@ -79,74 +193,88 @@
       function drawCar() {
         // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
-        var wheel_width = 5, wheel_length = 11;
-        var car_width = 21, car_height = 25;
-
-        var wheel_base = car_height + wheel_length / 4;
-
-        //var center_x = (car_x - wheel_width + car_width);
-        //var center_y = (car_y - wheel_length + car_height) + 1;
-
-        //var rotation_rad = rotation * (Math.PI / 180)
-
-        var wheel_rotation_rad = wheelRotation * (Math.PI / 180);
-
-        var front_wheel_x = center_x + wheel_base/2 * Math.cos(rotation_rad);
-        var front_wheel_y = center_y + wheel_base/2 * Math.sin(rotation_rad);
-
-        var back_wheel_x = center_x - wheel_base/2 * Math.cos(rotation_rad);
-        var back_wheel_y = center_y - wheel_base/2 * Math.sin(rotation_rad);
-
-        var dt = 1;
-
-        back_wheel_x += car_speed * dt * Math.cos(rotation_rad);
-        back_wheel_y += car_speed * dt * Math.sin(rotation_rad);
-
-        front_wheel_x += car_speed * dt * Math.cos(rotation_rad + wheel_rotation_rad);
-        front_wheel_y += car_speed * dt * Math.sin(rotation_rad + wheel_rotation_rad);
-
-        center_x = (front_wheel_x + back_wheel_x) / 2;
-        center_y = (front_wheel_y + back_wheel_y) / 2;
-
-        rotation_rad = Math.atan2( front_wheel_y - back_wheel_y , front_wheel_x - back_wheel_x );
-
         ctx.save();
 
         ctx.translate(center_x, center_y);
-        ctx.rotate(rotation_rad);
+        ctx.rotate(getPositionRotationRad());
 
         if (DRAW_DEBUG_LINES) {
           ctx.save();
           ctx.fillStyle = "#ff0000";
-          ctx.fillRect(1, 1, 2, 2);
+          ctx.fillRect(0, 0, 1, 1);
           ctx.restore();
         }
 
         ctx.translate(-(center_x), -(center_y));
 
-        var front_left_wheel_x = (center_x - car_width + wheel_width);
-        var front_left_wheel_y = (center_y - car_height + wheel_length) - 1;
-
-        var front_right_wheel_x = front_left_wheel_x + car_width;
-        var front_right_wheel_y = front_left_wheel_y;
-
-        drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, wheelRotation);
-        drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, wheelRotation);
-
-        var back_left_wheel_x = (center_x - car_width + wheel_width);
-        var back_left_wheel_y = (center_y + wheel_length) - 1;
-
-        var back_right_wheel_x = back_left_wheel_x + car_width;
-        var back_right_wheel_y = back_left_wheel_y;
-
-        drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, 90);
-        drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, 90);
-
         if (DRAW_DEBUG_LINES) {
           ctx.save();
-          ctx.fillStyle = "#ff0000";
-          //ctx.fillRect(center_x - 2, center_y - 2, 4, 4);
+          ctx.fillStyle = "#00ff00";
+          ctx.fillRect(front_wheel_x, front_wheel_y, 1, 1);
           ctx.restore();
+
+          ctx.save();
+          ctx.fillStyle = "#0000ff";
+          ctx.fillRect(back_wheel_x, back_wheel_y, 1, 1);
+          ctx.restore();
+        }
+
+        if (STEERING_MODE === REAR_STEERING_MODE) {
+          var front_left_wheel_x = (center_x - car_width + wheel_width);
+          var front_left_wheel_y = (center_y - car_height + wheel_length) - 1;
+
+          var front_right_wheel_x = front_left_wheel_x + car_width;
+          var front_right_wheel_y = front_left_wheel_y;
+
+          drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, 90);
+          drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, 90);
+
+          var back_left_wheel_x = (center_x - car_width + wheel_width);
+          var back_left_wheel_y = (center_y + wheel_length) - 1;
+
+          var back_right_wheel_x = back_left_wheel_x + car_width;
+          var back_right_wheel_y = back_left_wheel_y;
+
+          drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, wheel_rotation);
+          drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, wheel_rotation);
+        } else if (STEERING_MODE === FRONT_STEERING_MODE) {
+          var front_left_wheel_x = (center_x - car_width + wheel_width);
+          var front_left_wheel_y = (center_y - car_height + wheel_length) - 1;
+
+          var front_right_wheel_x = front_left_wheel_x + car_width;
+          var front_right_wheel_y = front_left_wheel_y;
+
+          drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, wheel_rotation);
+          drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, wheel_rotation);
+
+          var back_left_wheel_x = (center_x - car_width + wheel_width);
+          var back_left_wheel_y = (center_y + wheel_length) - 1;
+
+          var back_right_wheel_x = back_left_wheel_x + car_width;
+          var back_right_wheel_y = back_left_wheel_y;
+
+          drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, 90);
+          drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, 90);
+        } else if (STEERING_MODE === DUAL_STEERING_MODE) {
+          var front_left_wheel_x = (center_x - car_width + wheel_width);
+          var front_left_wheel_y = (center_y - car_height + wheel_length) - 1;
+
+          var front_right_wheel_x = front_left_wheel_x + car_width;
+          var front_right_wheel_y = front_left_wheel_y;
+
+          drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, wheel_rotation);
+          drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, wheel_rotation);
+
+          var back_left_wheel_x = (center_x - car_width + wheel_width);
+          var back_left_wheel_y = (center_y + wheel_length) - 1;
+
+          var back_right_wheel_x = back_left_wheel_x + car_width;
+          var back_right_wheel_y = back_left_wheel_y;
+
+          var back_wheel_rotation = getBackWheelRotation();
+
+          drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
+          drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
         }
 
         ctx.restore();
@@ -159,6 +287,14 @@
         ctx.fillRect(-width / 2, -height / 2, width, height);
         ctx.restore();
       }
+    }
+
+    function getBackWheelRotation() {
+      return (wheel_rotation - 2 * (wheel_rotation - 90));
+    }
+
+    function loaded() {
+      setInterval(process, 25);
     }
   </script>
 </body>

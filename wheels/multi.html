@@ -8,6 +8,8 @@
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', loaded, false);
 
+    var car_array = [];
+
     var KeyCodes = {
       LEFT: 37,
       UP: 38,
@@ -54,7 +56,6 @@
 
     var STEERING_MODE = FRONT_STEERING_MODE;
 
-    var center_x = 100, center_y = 100;
     var rotation = 0, rotation_rad = 0, wheel_rotation = 90;
     var wheel_width = 5, wheel_length = 11;
     var car_width = 21, car_height = 25;
@@ -111,19 +112,6 @@
       return (rotation) * (Math.PI/180);
     }
 
-    var front_wheel_x = 0, front_wheel_y = 0;
-    var back_wheel_x = 0, back_wheel_y = 0;
-
-    function calculateFrontWheel() {
-      front_wheel_x = center_x + wheel_base/2 * Math.cos(rotation_rad);
-      front_wheel_y = center_y + wheel_base/2 * Math.sin(rotation_rad);
-    }
-
-    function calculateBackWheel() {
-      back_wheel_x = center_x - wheel_base/2 * Math.cos(rotation_rad);
-      back_wheel_y = center_y - wheel_base/2 * Math.sin(rotation_rad);
-    }
-
     function moveCar() {
       var wheel_rotation_rad = (wheel_rotation - 90) * (Math.PI / 180);
 
@@ -142,7 +130,7 @@
         front_wheel_x += car_speed * dt * Math.cos(rotation_rad + wheel_rotation_rad);
         front_wheel_y += car_speed * dt * Math.sin(rotation_rad + wheel_rotation_rad);
       } else if (STEERING_MODE === DUAL_STEERING_MODE) {
-        var back_wheel_rotation_rad = (getBackWheelRotation() - 90) * (Math.PI / 180);
+        var back_wheel_rotation_rad = (getBackWheelRotationDegrees() - 90) * (Math.PI / 180);
 
         back_wheel_x += car_speed * dt * Math.cos(rotation_rad + back_wheel_rotation_rad);
         back_wheel_y += car_speed * dt * Math.sin(rotation_rad + back_wheel_rotation_rad);
@@ -157,12 +145,12 @@
       rotation = (Math.atan2( front_wheel_y - back_wheel_y , front_wheel_x - back_wheel_x ) * (180/Math.PI)) + 90;
     }
 
-    function turnWheelRight() {
+    function turnWheelRight(car) {
       setWheelRotation(wheel_rotation + 5);
       return;
     }
 
-    function turnWheelLeft() {
+    function turnWheelLeft(car) {
       setWheelRotation(wheel_rotation - 5);
       return;
     }
@@ -271,7 +259,7 @@
           var back_right_wheel_x = back_left_wheel_x + car_width;
           var back_right_wheel_y = back_left_wheel_y;
 
-          var back_wheel_rotation = getBackWheelRotation();
+          var back_wheel_rotation = getBackWheelRotationDegrees();
 
           drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
           drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
@@ -289,11 +277,48 @@
       }
     }
 
-    function getBackWheelRotation() {
-      return (wheel_rotation - 2 * (wheel_rotation - 90));
+    function getBackWheelRotationDegrees(car) {
+      var rotation = car.position.rotation.wheel_deg;
+
+      return (rotation - 2 * (rotation - 90));
+    }
+
+    function calculateFrontWheel(car) {
+      car.position.wheels.front.x = center_x + wheel_base/2 * Math.cos(rotation_rad);
+      car.position.wheels.front.y = center_y + wheel_base/2 * Math.sin(rotation_rad);
+    }
+
+    function calculateBackWheel(car) {
+      car.position.wheels.back.x = center_x - wheel_base/2 * Math.cos(rotation_rad);
+      car.position.wheels.back.y = center_y - wheel_base/2 * Math.sin(rotation_rad);
     }
 
     function loaded() {
+      var local_car = {
+        id: 1996,
+        position: {
+          wheels: {
+            front: {
+              x: 0,
+              y: 0
+            },
+            back: {
+              x: 0,
+              y: 0
+            }
+          },
+          rotation: {
+            wheel_deg: 0,
+            car_deg: 0,
+            car_rad: 0
+          },
+          x: 10,
+          y: 10
+        }
+      };
+
+      car_array.push(local_car);
+
       setInterval(process, 25);
     }
   </script>

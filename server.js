@@ -1,10 +1,13 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var shortid = require('shortid');
 var config = require('./config');
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
+
+app.use("/lib", express.static(__dirname + '/lib'));
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
@@ -13,53 +16,31 @@ app.get('/', function(req, res) {
 var socketList = [];
 
 io.sockets.on('connection', function(socket) {
-	socket.player_id = shortid.generate();
-
+	socket.player_data = createPlayerObject(shortid.generate());
 	socketList.push(socket);
 
-	console.log("Player " + socket.player_id + " connected. [" + socketList.length + " players online]");
+  io.emit("player join", socket.player_data);
 
-	initialisePlayer(socket);
+  for (var i = 0; i < socketList.length; i++) {
+    if (socket != socketList[i]) {
+      socket.emit("player join", socketList[i].player_data);
+    }
+  }
+
+	console.log("Player " + socket.player_data.id + " connected. [" + socketList.length + " players online]");
+
+  socket.on("update player", function(player_data) {
+    socket.player_data = player_data;
+    socket.broadcast.emit("player update", player_data);
+  });
 
 	socket.on('disconnect', function() {
 		var i = socketList.indexOf(socket);
-		socketList.splice(i, 1)
+		socketList.splice(i, 1);
 
-		io.emit("player leave", socket.player_id);
+		io.emit("player leave", socket.player_data.id);
 
-		console.log("Player " + socket.player_id + " disconnected. [" + socketList.length + " players online]");
-	});
-
-  socket.on('bullet in', function(position) {
-    position.id = shortid.generate();
-    
-    
-    	var angle = position.orientation - 90;
-
-	var i = 1;
-
-function shootLoop () {          
-   setTimeout(function () {    
-      position.x += 10 * Math.cos(angle * Math.PI / 180);
-	  position.y += 10 * Math.sin(angle * Math.PI / 180);   
-	  
-	  io.emit("bullet out", position);
-	        
-      i++;                     
-      if (i < 30) {            
-         shootLoop();          
-      }                        
-   }, 10)
-}
-
-	shootLoop();
-
-		
-	});
-
-	socket.on('movement update', function(position) {
-		socket.position = position;
-		io.emit("position update", getPlayerData(socket));
+		console.log("Player " + socket.player_data.id + " disconnected. [" + socketList.length + " players online]");
 	});
 });
 
@@ -67,40 +48,34 @@ http.listen(config.port, function() {
 	console.log('listening on *:' + config.port);
 });
 
-function initialisePlayer(socket) {
-	socket.position = getRandomPosition();
-
-	socket.player_color = getRandomColor();
-
-	socket.emit("initialisation request", getPlayerData(socket));
-
-	io.emit("player join", getPlayerData(socket));
-
-	socketList.forEach(function(other) {
-		if (other != socket) {
-			socket.emit("player join", getPlayerData(other));
-		}
-	});
-}
-
 function getRandomColor() {
 	return Math.floor(Math.random()*16777215).toString(16);
 }
 
-function getPlayerData(socket) {
-	return {"id": socket.player_id, "position": socket.position, "color": socket.player_color};
-}
-
-function getRandomPosition(dimensions) {
-	var x = getRandomInt(0, 500);
-	var y = getRandomInt(0, 500);
-	var orientation = 0;
-
-	var position = { "x": x, "y": y, "orientation": 0 };
-
-	return position;
-}
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function createPlayerObject(id) {
+  return ({
+    id: id,
+    position: {
+      wheels: {
+        front: {
+          x: 0,
+          y: 0
+        },
+        back: {
+          x: 0,
+          y: 0
+        }
+      },
+      rotation: {
+        wheel_deg: 90,
+        car_deg: 0,
+        car_rad: 0
+      },
+      x: 50,
+      y: 50
+    },
+    color: getRandomColor(),
+    speed: 0.0,
+    steering_mode: 0
+  });
 }

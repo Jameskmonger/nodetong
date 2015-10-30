@@ -14,22 +14,49 @@ var socketList = [];
 
 io.sockets.on('connection', function(socket) {
 	socket.player_id = shortid.generate();
-	
+
 	socketList.push(socket);
-	
+
 	console.log("Player " + socket.player_id + " connected. [" + socketList.length + " players online]");
-	
+
 	initialisePlayer(socket);
-	
+
 	socket.on('disconnect', function() {
 		var i = socketList.indexOf(socket);
 		socketList.splice(i, 1)
-		
+
 		io.emit("player leave", socket.player_id);
-		
+
 		console.log("Player " + socket.player_id + " disconnected. [" + socketList.length + " players online]");
 	});
-	
+
+  socket.on('bullet in', function(position) {
+    position.id = shortid.generate();
+    
+    
+    	var angle = position.orientation - 90;
+
+	var i = 1;
+
+function shootLoop () {          
+   setTimeout(function () {    
+      position.x += 10 * Math.cos(angle * Math.PI / 180);
+	  position.y += 10 * Math.sin(angle * Math.PI / 180);   
+	  
+	  io.emit("bullet out", position);
+	        
+      i++;                     
+      if (i < 30) {            
+         shootLoop();          
+      }                        
+   }, 10)
+}
+
+	shootLoop();
+
+		
+	});
+
 	socket.on('movement update', function(position) {
 		socket.position = position;
 		io.emit("position update", getPlayerData(socket));
@@ -42,13 +69,13 @@ http.listen(config.port, function() {
 
 function initialisePlayer(socket) {
 	socket.position = getRandomPosition();
-	
+
 	socket.player_color = getRandomColor();
-	
+
 	socket.emit("initialisation request", getPlayerData(socket));
-	
+
 	io.emit("player join", getPlayerData(socket));
-	
+
 	socketList.forEach(function(other) {
 		if (other != socket) {
 			socket.emit("player join", getPlayerData(other));
@@ -68,9 +95,9 @@ function getRandomPosition(dimensions) {
 	var x = getRandomInt(0, 500);
 	var y = getRandomInt(0, 500);
 	var orientation = 0;
-	
+
 	var position = { "x": x, "y": y, "orientation": 0 };
-	
+
 	return position;
 }
 

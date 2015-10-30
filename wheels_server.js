@@ -21,15 +21,22 @@ io.sockets.on('connection', function(socket) {
 
   io.emit("player join", socket.player_data);
 
+  for (var i = 0; i < socketList.length; i++) {
+    if (socket != socketList[i]) {
+      socket.emit("player join", socketList[i].player_data);
+    }
+  }
+
 	console.log("Player " + socket.player_data.id + " connected. [" + socketList.length + " players online]");
 
   socket.on("update player", function(player_data) {
-    
+    socket.player_data = player_data;
+    socket.broadcast.emit("player update", player_data);
   });
 
 	socket.on('disconnect', function() {
 		var i = socketList.indexOf(socket);
-		socketList.splice(i, 1)
+		socketList.splice(i, 1);
 
 		io.emit("player leave", socket.player_id);
 

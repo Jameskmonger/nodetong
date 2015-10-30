@@ -30,16 +30,17 @@
   	var key_pressed = [false, false, false, false, false];
 
     document.addEventListener("keydown", function(event) {
-      updateKeysPressed(event.keyCode, true);
+      updateKeysPressed(event, true);
     });
 
     document.addEventListener("keyup", function(event) {
-      updateKeysPressed(event.keyCode, false);
+      updateKeysPressed(event, false);
     });
 
-  	function updateKeysPressed(code, pressed) {
-      if (KeyCodeMap[code] != undefined) {
-        key_pressed[KeyCodeMap[code]] = pressed;
+  	function updateKeysPressed(event, pressed) {
+      if (KeyCodeMap[event.keyCode] != undefined) {
+        key_pressed[KeyCodeMap[event.keyCode]] = pressed;
+        event.preventDefault();
       }
     }
 
@@ -268,6 +269,15 @@
 
     socket.on("player join", function(player_data) {
       car_array.push(player_data);
+    });
+
+    socket.on("player update", function(player_data) {
+      for (var i = 0; i < car_array.length; i++) {
+        if (car_array[i].id == player_data.id) {
+          car_array[i] = player_data;
+          return;
+        }
+      }
     });
 
     function getLocalPlayer() {

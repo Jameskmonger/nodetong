@@ -48,6 +48,10 @@ http.listen(config.port, function() {
 	console.log('listening on *:' + config.port);
 });
 
+function getRandomColor() {
+	return Math.floor(Math.random()*16777215).toString(16);
+}
+
 function createPlayerObject(id) {
   return ({
     id: id,
@@ -70,6 +74,7 @@ function createPlayerObject(id) {
       x: 50,
       y: 50
     },
+    color: getRandomColor(),
     speed: 0.0,
     steering_mode: 0
   });

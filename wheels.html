@@ -216,6 +216,11 @@
         drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
         drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
 
+        ctx.save();
+        ctx.fillStyle = "#" + car.color;
+        ctx.fillRect(car.position.x - (car_width * 0.55), car.position.y - (car_height * 0.60), car_width * 1.10, car_height * 1.20);
+        ctx.restore();
+
         ctx.restore();
       }
 

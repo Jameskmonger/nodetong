@@ -92,6 +92,8 @@
         calculateRotationRad(car);
         calculateFrontWheel(car);
         calculateBackWheel(car);
+
+        // Calculate all cars movements locally to prevent jumpiness.
         moveCar(car);
       });
 

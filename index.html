@@ -249,7 +249,7 @@
       car.position.wheels.back.y = car.position.y - wheel_base/2 * Math.sin(car.position.rotation.car_rad);
     }
 
-    var socket = io("localhost", {reconnection: false});
+    var socket = io("http://localhost:3000", {reconnection: false});
 
     socket.on("player join", function(player_data) {
       car_array.push(player_data);

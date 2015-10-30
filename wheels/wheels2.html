@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+  <canvas id="wheels" width="300" height="300"></canvas>
+
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', loaded, false);
+
+    var KeyCodes = {
+      LEFT: 37,
+      UP: 38,
+      RIGHT: 39,
+      DOWN: 40,
+      SPACE: 32
+    };
+
+    var KeyCodeMap = [];
+    KeyCodeMap[KeyCodes.LEFT] = 0;
+    KeyCodeMap[KeyCodes.UP] = 1;
+    KeyCodeMap[KeyCodes.RIGHT] = 2;
+    KeyCodeMap[KeyCodes.DOWN] = 3;
+    KeyCodeMap[KeyCodes.SPACE] = 4;
+
+  	var key_pressed = [false, false, false, false, false];
+
+    document.addEventListener("keydown", function(event) {
+      updateKeysPressed(event.keyCode, true);
+    });
+
+    document.addEventListener("keyup", function(event) {
+      updateKeysPressed(event.keyCode, false);
+    });
+
+  	function updateKeysPressed(code, pressed) {
+      key_pressed[KeyCodeMap[code]] = pressed;
+    }
+
+    function loaded() {
+      setInterval(function() {
+        console.log(key_pressed);
+      }, 50);
+    }
+  </script>
+</body>
+</html>

@@ -113,27 +113,26 @@
 
       var dt = 1;
 
+      var front_modifier = 0;
+      var back_modifier = 0;
+
       if (car.steering_mode === REAR_STEERING_MODE) {
-        car.position.wheels.front.x += car.speed * dt * Math.cos(car.position.rotation.car_rad);
-        car.position.wheels.front.y += car.speed * dt * Math.sin(car.position.rotation.car_rad);
-
-        car.position.wheels.back.x += car.speed * dt * Math.cos(car.position.rotation.car_rad + wheel_rotation_rad);
-        car.position.wheels.back.y += car.speed * dt * Math.sin(car.position.rotation.car_rad + wheel_rotation_rad);
+        // If the car is using rear steering mode then the back modifier is the one that has the wheel rotation applied
+        front_modifier = car.position.rotation.car_rad;
+        back_modifier = (car.position.rotation.car_rad + wheel_rotation_rad);
       } else if (car.steering_mode === FRONT_STEERING_MODE) {
-        car.position.wheels.back.x += car.speed * dt * Math.cos(car.position.rotation.car_rad);
-        car.position.wheels.back.y += car.speed * dt * Math.sin(car.position.rotation.car_rad);
-
-        car.position.wheels.front.x += car.speed * dt * Math.cos(car.position.rotation.car_rad + wheel_rotation_rad);
-        car.position.wheels.front.y += car.speed * dt * Math.sin(car.position.rotation.car_rad + wheel_rotation_rad);
+        front_modifier = (car.position.rotation.car_rad + wheel_rotation_rad);
+        back_modifier = car.position.rotation.car_rad;
       } else if (car.steering_mode === DUAL_STEERING_MODE) {
-        var back_wheel_rotation_rad = (getBackWheelRotationDegrees(car) - 90) * (Math.PI / 180);
-
-        car.position.wheels.back.x += car.speed * dt * Math.cos(car.position.rotation.car_rad + back_wheel_rotation_rad);
-        car.position.wheels.back.y += car.speed * dt * Math.sin(car.position.rotation.car_rad + back_wheel_rotation_rad);
-
-        car.position.wheels.front.x += car.speed * dt * Math.cos(car.position.rotation.car_rad + wheel_rotation_rad);
-        car.position.wheels.front.y += car.speed * dt * Math.sin(car.position.rotation.car_rad + wheel_rotation_rad);
+        front_modifier = (car.position.rotation.car_rad + wheel_rotation_rad);
+        back_modifier = car.position.rotation.car_rad + ((getBackWheelRotationDegrees(car) - 90) * (Math.PI / 180));
       }
+
+      car.position.wheels.front.x += car.speed * dt * Math.cos(front_modifier);
+      car.position.wheels.front.y += car.speed * dt * Math.sin(front_modifier);
+
+      car.position.wheels.back.x += car.speed * dt * Math.cos(back_modifier);
+      car.position.wheels.back.y += car.speed * dt * Math.sin(back_modifier);
 
       car.position.x = (car.position.wheels.front.x + car.position.wheels.back.x) / 2;
       car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;
@@ -185,63 +184,37 @@
         ctx.rotate(getPositionRotationRad(car));
         ctx.translate(-(car.position.x), -(car.position.y));
 
+        var front_left_wheel_x = (car.position.x - car_width + wheel_width);
+        var front_left_wheel_y = (car.position.y - car_height + wheel_length) - 1;
+
+        var front_right_wheel_x = front_left_wheel_x + car_width;
+        var front_right_wheel_y = front_left_wheel_y;
+
+        var back_left_wheel_x = (car.position.x - car_width + wheel_width);
+        var back_left_wheel_y = (car.position.y + wheel_length) - 1;
+
+        var back_right_wheel_x = back_left_wheel_x + car_width;
+        var back_right_wheel_y = back_left_wheel_y;
+
+        var front_wheel_rotation = 90;
+        var back_wheel_rotation = 90;
+
         if (car.steering_mode === REAR_STEERING_MODE) {
-          var front_left_wheel_x = (car.position.x - car_width + wheel_width);
-          var front_left_wheel_y = (car.position.y - car_height + wheel_length) - 1;
-
-          var front_right_wheel_x = front_left_wheel_x + car_width;
-          var front_right_wheel_y = front_left_wheel_y;
-
-          drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, 90);
-          drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, 90);
-
-          var back_left_wheel_x = (car.position.x - car_width + wheel_width);
-          var back_left_wheel_y = (car.position.y + wheel_length) - 1;
-
-          var back_right_wheel_x = back_left_wheel_x + car_width;
-          var back_right_wheel_y = back_left_wheel_y;
-
-          drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, car.position.rotation.wheel_deg);
-          drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, car.position.rotation.wheel_deg);
+          front_wheel_rotation = 90;
+          back_wheel_rotation = car.position.rotation.wheel_deg;
         } else if (car.steering_mode === FRONT_STEERING_MODE) {
-          var front_left_wheel_x = (car.position.x - car_width + wheel_width);
-          var front_left_wheel_y = (car.position.y - car_height + wheel_length) - 1;
-
-          var front_right_wheel_x = front_left_wheel_x + car_width;
-          var front_right_wheel_y = front_left_wheel_y;
-
-          drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, car.position.rotation.wheel_deg);
-          drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, car.position.rotation.wheel_deg);
-
-          var back_left_wheel_x = (car.position.x - car_width + wheel_width);
-          var back_left_wheel_y = (car.position.y + wheel_length) - 1;
-
-          var back_right_wheel_x = back_left_wheel_x + car_width;
-          var back_right_wheel_y = back_left_wheel_y;
-
-          drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, 90);
-          drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, 90);
+          front_wheel_rotation = car.position.rotation.wheel_deg;
+          back_wheel_rotation = 90;
         } else if (car.steering_mode === DUAL_STEERING_MODE) {
-          var front_left_wheel_x = (car.position.x - car_width + wheel_width);
-          var front_left_wheel_y = (car.position.y - car_height + wheel_length) - 1;
-
-          var front_right_wheel_x = front_left_wheel_x + car_width;
-          var front_right_wheel_y = front_left_wheel_y;
-
-          drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, car.position.rotation.wheel_deg);
-          drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, car.position.rotation.wheel_deg);
-
-          var back_left_wheel_x = (car.position.x - car_width + wheel_width);
-          var back_left_wheel_y = (car.position.y + wheel_length) - 1;
-
-          var back_right_wheel_x = back_left_wheel_x + car_width;
-          var back_right_wheel_y = back_left_wheel_y;
-
-          var back_wheel_rotation = getBackWheelRotationDegrees(car);
-
-          drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
-          drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
+          front_wheel_rotation = car.position.rotation.wheel_deg;
+          back_wheel_rotation = getBackWheelRotationDegrees(car);
         }
+
+        drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, front_wheel_rotation);
+        drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, front_wheel_rotation);
+
+        drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
+        drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
 
         ctx.restore();
       }

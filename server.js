@@ -13,6 +13,10 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/client.js', function(req, res) {
+  res.sendFile(__dirname + '/client.js');
+})
+
 var socketList = [];
 
 io.sockets.on('connection', function(socket) {
@@ -31,7 +35,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on("update player", function(player_data) {
     socket.player_data = player_data;
-    
+
     socket.broadcast.emit("player update", player_data);
   });
 

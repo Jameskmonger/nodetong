@@ -155,7 +155,7 @@ function setWheelRotation(car, value) {
   return;
 }
 
-var CAR_CENTER_CANVAS = true;
+var CAR_CENTER_CANVAS = false;
 
 function draw() {
   var canvas = document.getElementById('wheels');
@@ -179,8 +179,8 @@ function draw() {
   function drawCar(car) {
     // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
-    var car_pos_x = 0;
-    var car_pos_y = 0;
+    var car_pos_x = car.position.x;
+    var car_pos_y = car.position.y;
 
     if (CAR_CENTER_CANVAS) {
       car_pos_x = car.position.x - local_car_x + origin_x;

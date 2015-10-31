@@ -5,7 +5,7 @@
   <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 </head>
 <body style="margin: 0;">
-  <canvas id="wheels" width="1200" height="800"></canvas>
+  <canvas id="wheels" width="600" height="400"></canvas>
 
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', loaded, false);
@@ -64,10 +64,10 @@
       }
 
       if (pressing(KeyCodes.UP)) {
-        if (local_car.speed + 0.5 < 3.0) {
+        if (local_car.speed + 0.5 < 4.0) {
           local_car.speed += 0.3;
         } else {
-          local_car.speed = 3.0;
+          local_car.speed = 4.0;
         }
       }
 
@@ -165,9 +165,18 @@
       return;
     }
 
+    var CAR_CENTER_CANVAS = true;
+
     function draw() {
       var canvas = document.getElementById('wheels');
       var ctx = canvas.getContext('2d');
+      ctx.font = "12px Arial";
+
+      var local_car_x = getLocalPlayer().position.x;
+      var local_car_y = getLocalPlayer().position.y;
+
+      var origin_x = canvas.width / 2;
+      var origin_y = canvas.height / 2;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -175,23 +184,33 @@
         drawCar(car);
       });
 
+      ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
+
       function drawCar(car) {
         // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
+        var car_pos_x = 0;
+        var car_pos_y = 0;
+
+        if (CAR_CENTER_CANVAS) {
+          car_pos_x = car.position.x - local_car_x + origin_x;
+          car_pos_y = car.position.y - local_car_y + origin_y;
+        }
+
         ctx.save();
 
-        ctx.translate(car.position.x, car.position.y);
+        ctx.translate(car_pos_x, car_pos_y);
         ctx.rotate(getPositionRotationRad(car));
-        ctx.translate(-(car.position.x), -(car.position.y));
+        ctx.translate(-(car_pos_x), -(car_pos_y));
 
-        var front_left_wheel_x = (car.position.x - car_width + wheel_width);
-        var front_left_wheel_y = (car.position.y - car_height + wheel_length) - 1;
+        var front_left_wheel_x = (car_pos_x - car_width + wheel_width);
+        var front_left_wheel_y = (car_pos_y - car_height + wheel_length) - 1;
 
         var front_right_wheel_x = front_left_wheel_x + car_width;
         var front_right_wheel_y = front_left_wheel_y;
 
-        var back_left_wheel_x = (car.position.x - car_width + wheel_width);
-        var back_left_wheel_y = (car.position.y + wheel_length) - 1;
+        var back_left_wheel_x = (car_pos_x - car_width + wheel_width);
+        var back_left_wheel_y = (car_pos_y + wheel_length) - 1;
 
         var back_right_wheel_x = back_left_wheel_x + car_width;
         var back_right_wheel_y = back_left_wheel_y;
@@ -218,7 +237,7 @@
 
         ctx.save();
         ctx.fillStyle = "#" + car.color;
-        ctx.fillRect(car.position.x - (car_width * 0.55), car.position.y - (car_height * 0.60), car_width * 1.10, car_height * 1.20);
+        ctx.fillRect(car_pos_x - (car_width * 0.55), car_pos_y - (car_height * 0.60), car_width * 1.10, car_height * 1.20);
         ctx.restore();
 
         ctx.restore();
@@ -275,6 +294,8 @@
     });
 
     socket.on("player update", function(player_data) {
+      console.log(car_array.length);
+
       for (var i = 0; i < car_array.length; i++) {
         if (car_array[i] == null) {
           continue;

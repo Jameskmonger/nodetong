@@ -31,6 +31,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on("update player", function(player_data) {
     socket.player_data = player_data;
+    
     socket.broadcast.emit("player update", player_data);
   });
 

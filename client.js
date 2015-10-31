@@ -44,8 +44,6 @@ function pressing(keycode) {
   return (key_pressed[KeyCodeMap[keycode]]);
 }
 
-var still_counter = 0;
-
 function process() {
   var local_car = getLocalPlayer();
 

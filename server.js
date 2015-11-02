@@ -42,7 +42,7 @@ io.sockets.on('connection', function(socket) {
 	socketList[id] = socket;
   player_count++;
 
-  socket.emit("local player id", id);
+  socket.emit("local player id", socket.player_data.id);
 
   socket.broadcast.emit("player join", socket.player_data);
 
@@ -50,7 +50,7 @@ io.sockets.on('connection', function(socket) {
     socket.emit("player join", socketList[i].player_data);
   }
 
-	console.log("Player " + id + " connected. [" + player_count + " players online]");
+	console.log("Player " + socket.player_data.id + " connected. [" + player_count + " players online]");
 
   socket.on("update player", function(player_data) {
     socket.player_data = player_data;
@@ -59,12 +59,12 @@ io.sockets.on('connection', function(socket) {
   });
 
 	socket.on('disconnect', function() {
-    socketList[id] = undefined;
+    socketList[socket.player_data.id] = undefined;
     player_count--;
 
-		io.emit("player leave", id);
+		io.emit("player leave", socket.player_data.id);
 
-		console.log("Player " + id + " disconnected. [" + player_count + " players online]");
+		console.log("Player " + socket.player_data.id + " disconnected. [" + player_count + " players online]");
 	});
 });
 

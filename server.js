@@ -33,12 +33,16 @@ function getFirstEmptyPlayerSlot() {
   return -1;
 }
 
+var player_count = 0;
+
 io.sockets.on('connection', function(socket) {
   var id = getFirstEmptyPlayerSlot();
 	socket.player_data = createPlayerObject(id);
-	socketList[id] = socket;
 
-  socket.emit("local player id", socket.player_data.id);
+	socketList[id] = socket;
+  player_count++;
+
+  socket.emit("local player id", id);
 
   socket.broadcast.emit("player join", socket.player_data);
 
@@ -46,7 +50,7 @@ io.sockets.on('connection', function(socket) {
     socket.emit("player join", socketList[i].player_data);
   }
 
-	console.log("Player " + socket.player_data.id + " connected. [" + socketList.length + " players online]");
+	console.log("Player " + id + " connected. [" + player_count + " players online]");
 
   socket.on("update player", function(player_data) {
     socket.player_data = player_data;
@@ -55,11 +59,12 @@ io.sockets.on('connection', function(socket) {
   });
 
 	socket.on('disconnect', function() {
-    socketList[socket.player_data.id] = undefined;
+    socketList[id] = undefined;
+    player_count--;
 
-		io.emit("player leave", socket.player_data.id);
+		io.emit("player leave", id);
 
-		console.log("Player " + socket.player_data.id + " disconnected. [" + socketList.length + " players online]");
+		console.log("Player " + id + " disconnected. [" + player_count + " players online]");
 	});
 });
 

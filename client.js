@@ -156,7 +156,7 @@ function moveCar(car) {
   car.position.rotation.car_deg = (Math.atan2( car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x ) * (180/Math.PI)) + 90;
 }
 
-var WHEEL_TURN_INCREMENT = 5.0;
+var WHEEL_TURN_INCREMENT = 2.5;
 
 function turnWheelRight(car) {
   setWheelRotation(car, car.position.rotation.wheel_deg + WHEEL_TURN_INCREMENT);

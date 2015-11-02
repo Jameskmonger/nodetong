@@ -183,7 +183,7 @@ var track_tile_images = new Array();
 function loadTrackTiles() {
   for (var i = LOWEST_TRACK_TILE_ID; i < HIGHEST_TRACK_TILE_ID; i++) {
     track_tile_images[i] = new Image();
-    track_tile_images[i].src = '/assets/img/' + i + '.png';
+    track_tile_images[i].src = '/assets/tiles/' + i + '.png';
   }
 }
 

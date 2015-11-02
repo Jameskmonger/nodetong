@@ -282,8 +282,6 @@ socket.on("player leave", function(player_id) {
 });
 
 socket.on("player update", function(player_data) {
-  console.log(car_array.length);
-
   for (var i = 0; i < car_array.length; i++) {
     if (car_array[i] == null) {
       continue;

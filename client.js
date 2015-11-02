@@ -193,8 +193,8 @@ function draw() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.drawImage(img, 0 - Math.abs(vx), 50);
-  ctx.drawImage(img, img.width - Math.abs(vx), 50);
+  ctx.drawImage(img, (img.width * 0) - Math.abs(vx), 50);
+  ctx.drawImage(img, (img.width * 1) - Math.abs(vx), 50);
   ctx.drawImage(img, (img.width * 2) - Math.abs(vx), 50);
 
   if (Math.abs(vx) > img.width) {

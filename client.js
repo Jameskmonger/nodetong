@@ -178,10 +178,27 @@ function setWheelRotation(car, value) {
 
 var CAR_CENTER_CANVAS = true;
 
-var vx = 0;
+// Move this over to locally hosted rather than imgur
+var land_grass03 = new Image();
+land_grass03.src = 'http://i.imgur.com/BAjPAbz.png';
 
-var img = new Image();
-img.src = 'http://i.imgur.com/BAjPAbz.png';
+var world_tiles = new Array();
+
+// The world is 50x50 for now
+var world_height_tile = 50;
+var world_width_tile = 50;
+
+// Define an array of x tiles for each y tile
+for (var x = 0; x < world_width_tile; x++) {
+  world_tiles[x] = new Array();
+}
+
+// Use land_grass03 for now
+for (var x = 0; x < world_width_tile; x++) {
+  for (var y = 0; y < world_height_tile; y++) {
+    world_tiles[x][y] = land_grass03;
+  }
+}
 
 function draw() {
   var local_car = getLocalPlayer();
@@ -201,11 +218,17 @@ function draw() {
     // Clear the canvas so we can draw again
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    var count = (Math.floor(canvas.width / img.width) + 2);
+    for (var y = 0; y < world_height_tile; y++) {
+      for (var x = 0; x < world_width_tile; x++) {
+        var img = world_tiles[x][y];
 
-    for (var i = 0; i < count; i++) {
-      ctx.drawImage(img, (img.width * i) - (Math.abs(vx) + local_car_x), 50);
+        var image_x = (img.width * x) - local_car_x;
+        var image_y = (img.height * y) - local_car_y;
+
+        ctx.drawImage(img, image_x, image_y);
+      }
     }
+
 
     _.forEach(car_array, function(car) {
       drawCar(car);

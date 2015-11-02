@@ -17,20 +17,33 @@ app.get('/', function(req, res) {
 
 app.get('/client.js', function(req, res) {
   res.sendFile(__dirname + '/client.js');
-})
+});
+
+var MAX_PLAYER_COUNT = 2000;
 
 var socketList = [];
 
-io.sockets.on('connection', function(socket) {
-	socket.player_data = createPlayerObject(shortid.generate());
-	socketList.push(socket);
+function getFirstEmptyPlayerSlot() {
+  for (var i = 0; i < MAX_PLAYER_COUNT; i++) {
+    if (socketList[i] == undefined) {
+      return i;
+    }
+  }
 
-  io.emit("player join", socket.player_data);
+  return -1;
+}
+
+io.sockets.on('connection', function(socket) {
+  var id = getFirstEmptyPlayerSlot();
+	socket.player_data = createPlayerObject(id);
+	socketList[id] = socket;
+
+  socket.emit("local player id", socket.player_data.id);
+
+  socket.broadcast.emit("player join", socket.player_data);
 
   for (var i = 0; i < socketList.length; i++) {
-    if (socket != socketList[i]) {
-      socket.emit("player join", socketList[i].player_data);
-    }
+    socket.emit("player join", socketList[i].player_data);
   }
 
 	console.log("Player " + socket.player_data.id + " connected. [" + socketList.length + " players online]");
@@ -42,8 +55,7 @@ io.sockets.on('connection', function(socket) {
   });
 
 	socket.on('disconnect', function() {
-		var i = socketList.indexOf(socket);
-		socketList.splice(i, 1);
+    socketList[socket.player_data.id] = undefined;
 
 		io.emit("player leave", socket.player_data.id);
 

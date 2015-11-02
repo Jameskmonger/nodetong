@@ -348,40 +348,22 @@ function calculateBackWheel(car) {
 
 var socket = io({reconnection: false});
 
+var LOCAL_PLAYER_ID;
+
+socket.on("local player id", function(id) {
+  LOCAL_PLAYER_ID = id;
+});
+
 socket.on("player join", function(player_data) {
-  car_array.push(player_data);
+  car_array[player_data.id] = player_data;
 });
 
 socket.on("player leave", function(player_id) {
-  var slot = -1;
-
-  for (var i = 0; i < car_array.length; i++) {
-    if (car_array[i] == null) {
-      continue;
-    }
-
-    if (car_array[i].id === player_id) {
-      slot = i;
-      break;
-    }
-  }
-
-  if (slot != -1) {
-    car_array.splice(slot, 1);
-  }
+  car_array[player_id] = undefined;
 });
 
 socket.on("player update", function(player_data) {
-  for (var i = 0; i < car_array.length; i++) {
-    if (car_array[i] == null) {
-      continue;
-    }
-
-    if (car_array[i].id == player_data.id) {
-      car_array[i] = player_data;
-      return;
-    }
-  }
+  car_array[player_data.id] = player_data;
 });
 
 /*
@@ -390,7 +372,7 @@ socket.on("player update", function(player_data) {
  */
 
 function getLocalPlayer() {
-  return car_array[0];
+  return car_array[LOCAL_PLAYER_ID];
 }
 
 function updatePlayer() {

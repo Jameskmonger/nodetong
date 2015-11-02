@@ -222,13 +222,13 @@ function draw() {
       for (var x = 0; x < world_width_tile; x++) {
         var img = world_tiles[x][y];
 
+        // Get image offset compared to local player
         var image_x = (img.width * x) - local_car_x;
         var image_y = (img.height * y) - local_car_y;
 
         ctx.drawImage(img, image_x, image_y);
       }
     }
-
 
     _.forEach(car_array, function(car) {
       drawCar(car);

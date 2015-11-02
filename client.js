@@ -156,7 +156,7 @@ function moveCar(car) {
   car.position.rotation.car_deg = (Math.atan2( car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x ) * (180/Math.PI)) + 90;
 }
 
-var WHEEL_TURN_INCREMENT = 2.5;
+var WHEEL_TURN_INCREMENT = 2.5, WHEEL_STRAIGHTEN_INCREMENT = 4.0;
 
 function turnWheelRight(car) {
   setWheelRotation(car, car.position.rotation.wheel_deg + WHEEL_TURN_INCREMENT);
@@ -176,18 +176,18 @@ function straightenWheel(car) {
   if (original_rotation > 90.0) {
     var delta = (original_rotation - 90.0);
 
-    if (delta <= WHEEL_TURN_INCREMENT) {
+    if (delta <= WHEEL_STRAIGHTEN_INCREMENT) {
       new_rotation = 90.0;
     } else {
-      new_rotation = (original_rotation - WHEEL_TURN_INCREMENT);
+      new_rotation = (original_rotation - WHEEL_STRAIGHTEN_INCREMENT);
     }
   } else {
     var delta = (90.0 - original_rotation);
 
-    if (delta <= WHEEL_TURN_INCREMENT) {
+    if (delta <= WHEEL_STRAIGHTEN_INCREMENT) {
       new_rotation = 90.0;
     } else {
-      new_rotation = (original_rotation + WHEEL_TURN_INCREMENT);
+      new_rotation = (original_rotation + WHEEL_STRAIGHTEN_INCREMENT);
     }
   }
 

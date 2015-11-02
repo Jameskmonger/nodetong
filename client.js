@@ -178,6 +178,8 @@ function setWheelRotation(car, value) {
 
 var LOWEST_TRACK_TILE_ID = 0, HIGHEST_TRACK_TILE_ID = 310;
 
+var BASE_TILE_ID = 3;
+
 var track_tile_images = new Array();
 
 function getTrackTileImage(id) {
@@ -191,9 +193,17 @@ function getTrackTileImage(id) {
 
 var world_tiles = new Array();
 
+function getWorldTile(x, y) {
+  if (world_tiles[x][y] == undefined) {
+    return getTrackTileImage(BASE_TILE_ID);
+  } else {
+    return world_tiles[x][y];
+  }
+}
+
 // The world is 50x50 for now
-var world_height_tile = 50;
-var world_width_tile = 50;
+var world_height_tile = 5;
+var world_width_tile = 5;
 
 function setWorldTiles() {
   // Define an array of x tiles for each y tile
@@ -201,16 +211,17 @@ function setWorldTiles() {
     world_tiles[x] = new Array();
   }
 
-  // Use land_grass03 for now
-  for (var x = 0; x < world_width_tile; x++) {
-    for (var y = 0; y < world_height_tile; y++) {
-      if (y % 2 == 0) {
-        world_tiles[x][y] = getTrackTileImage(114);
-      } else {
-        world_tiles[x][y] = getTrackTileImage(288);
-      }
-    }
-  }
+  world_tiles[1][1] = getTrackTileImage(15);
+  world_tiles[2][1] = getTrackTileImage(14);
+  world_tiles[3][1] = getTrackTileImage(17);
+
+  world_tiles[1][2] = getTrackTileImage(13);
+
+  world_tiles[3][2] = getTrackTileImage(13);
+
+  world_tiles[1][3] = getTrackTileImage(51);
+  world_tiles[2][3] = getTrackTileImage(14);
+  world_tiles[3][3] = getTrackTileImage(53);
 }
 
 function draw() {
@@ -233,11 +244,17 @@ function draw() {
 
     for (var y = 0; y < world_height_tile; y++) {
       for (var x = 0; x < world_width_tile; x++) {
-        var img = world_tiles[x][y];
+        var img = getWorldTile(x, y);
 
         // Get image offset compared to local player
         var image_x = (img.width * x) - local_car_x;
         var image_y = (img.height * y) - local_car_y;
+
+        var base = getTrackTileImage(BASE_TILE_ID);
+
+        if (base != img) {
+          ctx.drawImage(base, image_x, image_y);
+        }
 
         ctx.drawImage(img, image_x, image_y);
       }

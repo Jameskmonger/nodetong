@@ -178,12 +178,31 @@ function setWheelRotation(car, value) {
 
 var CAR_CENTER_CANVAS = false;
 
+var vx = 0;
+
+var img = new Image();
+img.src = 'http://cssdeck.com/uploads/media/items/4/4OIJyak.png';
+
+
+
 function draw() {
-  var local_car = getLocalPlayer()
+  var local_car = getLocalPlayer();
+
+  var canvas = document.getElementById('wheels');
+  var ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.drawImage(img, vx, 50);
+  ctx.drawImage(img, img.width - Math.abs(vx), 50);
+
+  if (Math.abs(vx) > img.width) {
+      vx = 0;
+  }
+
+  vx -= 2;
 
   if (local_car != undefined) {
-    var canvas = document.getElementById('wheels');
-    var ctx = canvas.getContext('2d');
     ctx.font = "12px Arial";
 
     var local_car_x = getLocalPlayer().position.x;
@@ -191,8 +210,6 @@ function draw() {
 
     var origin_x = canvas.width / 2;
     var origin_y = canvas.height / 2;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     _.forEach(car_array, function(car) {
       drawCar(car);

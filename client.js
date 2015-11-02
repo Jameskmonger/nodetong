@@ -176,8 +176,6 @@ function setWheelRotation(car, value) {
   return;
 }
 
-var CAR_CENTER_CANVAS = true;
-
 var land_grass03 = new Image();
 land_grass03.src = '/assets/img/0.png';
 
@@ -248,13 +246,8 @@ function draw() {
   function drawCar(car) {
     // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
-    var car_pos_x = car.position.x;
-    var car_pos_y = car.position.y;
-
-    if (CAR_CENTER_CANVAS) {
-      car_pos_x = car.position.x - local_car_x + origin_x;
-      car_pos_y = car.position.y - local_car_y + origin_y;
-    }
+    var car_pos_x = car.position.x - local_car_x + origin_x;
+    var car_pos_y = car.position.y - local_car_y + origin_y;
 
     ctx.save();
 

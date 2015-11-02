@@ -1,3 +1,28 @@
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
+
 document.addEventListener('DOMContentLoaded', loaded, false);
 
 var car_array = [];
@@ -84,8 +109,6 @@ function process() {
     // Calculate all cars movements locally to prevent jumpiness.
     moveCar(car);
   });
-
-  draw();
 }
 
 function calculateRotationRad(car) {
@@ -156,23 +179,29 @@ function setWheelRotation(car, value) {
 var CAR_CENTER_CANVAS = false;
 
 function draw() {
-  var canvas = document.getElementById('wheels');
-  var ctx = canvas.getContext('2d');
-  ctx.font = "12px Arial";
+  var local_car = getLocalPlayer()
 
-  var local_car_x = getLocalPlayer().position.x;
-  var local_car_y = getLocalPlayer().position.y;
+  if (local_car != undefined) {
+    var canvas = document.getElementById('wheels');
+    var ctx = canvas.getContext('2d');
+    ctx.font = "12px Arial";
 
-  var origin_x = canvas.width / 2;
-  var origin_y = canvas.height / 2;
+    var local_car_x = getLocalPlayer().position.x;
+    var local_car_y = getLocalPlayer().position.y;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var origin_x = canvas.width / 2;
+    var origin_y = canvas.height / 2;
 
-  _.forEach(car_array, function(car) {
-    drawCar(car);
-  });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
+    _.forEach(car_array, function(car) {
+      drawCar(car);
+    });
+
+    ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
+  }
+
+  requestAnimationFrame(draw);
 
   function drawCar(car) {
     // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
@@ -311,4 +340,6 @@ function loaded() {
   setInterval(function() { process(); }, 25);
 
   setInterval(function() { updatePlayer(); }, 100);
+
+  requestAnimationFrame(draw);
 }

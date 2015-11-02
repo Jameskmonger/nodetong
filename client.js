@@ -180,11 +180,13 @@ var LOWEST_TRACK_TILE_ID = 0, HIGHEST_TRACK_TILE_ID = 310;
 
 var track_tile_images = new Array();
 
-function loadTrackTiles() {
-  for (var i = LOWEST_TRACK_TILE_ID; i < HIGHEST_TRACK_TILE_ID; i++) {
-    track_tile_images[i] = new Image();
-    track_tile_images[i].src = '/assets/tiles/' + i + '.png';
+function getTrackTileImage(id) {
+  if (track_tile_images[id] == undefined) {
+    track_tile_images[id] = new Image();
+    track_tile_images[id].src = '/assets/tiles/' + id + '.png';
   }
+
+  return track_tile_images[id];
 }
 
 var world_tiles = new Array();
@@ -203,9 +205,9 @@ function setWorldTiles() {
   for (var x = 0; x < world_width_tile; x++) {
     for (var y = 0; y < world_height_tile; y++) {
       if (y % 2 == 0) {
-        world_tiles[x][y] = track_tile_images[114];
+        world_tiles[x][y] = getTrackTileImage(114);
       } else {
-        world_tiles[x][y] = track_tile_images[288];
+        world_tiles[x][y] = getTrackTileImage(288);
       }
     }
   }
@@ -379,7 +381,6 @@ function updatePlayer() {
 }
 
 function loaded() {
-  loadTrackTiles();
   setWorldTiles();
 
   setInterval(function() { process(); }, 25);

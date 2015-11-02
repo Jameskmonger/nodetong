@@ -176,11 +176,16 @@ function setWheelRotation(car, value) {
   return;
 }
 
-var land_grass03 = new Image();
-land_grass03.src = '/assets/img/0.png';
+var LOWEST_TRACK_TILE_ID = 0, HIGHEST_TRACK_TILE_ID = 310;
 
-var sjd = new Image();
-sjd.src = '/assets/img/1.png';
+var track_tile_images = new Array();
+
+function loadTrackTiles() {
+  for (var i = LOWEST_TRACK_TILE_ID; i < HIGHEST_TRACK_TILE_ID; i++) {
+    track_tile_images[i] = new Image();
+    track_tile_images[i].src = '/assets/img/' + i + '.png';
+  }
+}
 
 var world_tiles = new Array();
 
@@ -188,18 +193,20 @@ var world_tiles = new Array();
 var world_height_tile = 50;
 var world_width_tile = 50;
 
-// Define an array of x tiles for each y tile
-for (var x = 0; x < world_width_tile; x++) {
-  world_tiles[x] = new Array();
-}
+function setWorldTiles() {
+  // Define an array of x tiles for each y tile
+  for (var x = 0; x < world_width_tile; x++) {
+    world_tiles[x] = new Array();
+  }
 
-// Use land_grass03 for now
-for (var x = 0; x < world_width_tile; x++) {
-  for (var y = 0; y < world_height_tile; y++) {
-    if (y % 2 == 0) {
-      world_tiles[x][y] = sjd;
-    } else {
-      world_tiles[x][y] = land_grass03;
+  // Use land_grass03 for now
+  for (var x = 0; x < world_width_tile; x++) {
+    for (var y = 0; y < world_height_tile; y++) {
+      if (y % 2 == 0) {
+        world_tiles[x][y] = track_tile_images[114];
+      } else {
+        world_tiles[x][y] = track_tile_images[288];
+      }
     }
   }
 }
@@ -372,6 +379,9 @@ function updatePlayer() {
 }
 
 function loaded() {
+  loadTrackTiles();
+  setWorldTiles();
+
   setInterval(function() { process(); }, 25);
 
   setInterval(function() { updatePlayer(); }, 100);

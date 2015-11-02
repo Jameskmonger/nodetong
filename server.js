@@ -7,6 +7,8 @@ var config = require('./config');
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
+app.use("/assets/img", express.static(__dirname + '/assets/img'));
+
 app.use("/lib", express.static(__dirname + '/lib'));
 
 app.get('/', function(req, res) {

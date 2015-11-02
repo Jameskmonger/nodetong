@@ -178,9 +178,11 @@ function setWheelRotation(car, value) {
 
 var CAR_CENTER_CANVAS = true;
 
-// Move this over to locally hosted rather than imgur
 var land_grass03 = new Image();
-land_grass03.src = 'http://i.imgur.com/BAjPAbz.png';
+land_grass03.src = '/assets/img/0.png';
+
+var sjd = new Image();
+sjd.src = '/assets/img/1.png';
 
 var world_tiles = new Array();
 
@@ -196,7 +198,11 @@ for (var x = 0; x < world_width_tile; x++) {
 // Use land_grass03 for now
 for (var x = 0; x < world_width_tile; x++) {
   for (var y = 0; y < world_height_tile; y++) {
-    world_tiles[x][y] = land_grass03;
+    if (y % 2 == 0) {
+      world_tiles[x][y] = sjd;
+    } else {
+      world_tiles[x][y] = land_grass03;
+    }
   }
 }
 

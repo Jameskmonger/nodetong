@@ -242,6 +242,8 @@ function draw() {
     // Clear the canvas so we can draw again
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    var base = getTrackTileImage(BASE_TILE_ID);
+
     for (var y = 0; y < world_height_tile; y++) {
       for (var x = 0; x < world_width_tile; x++) {
         var img = getWorldTile(x, y);
@@ -250,10 +252,8 @@ function draw() {
         var image_x = (img.width * x) - local_car_x;
         var image_y = (img.height * y) - local_car_y;
 
-        var base = getTrackTileImage(BASE_TILE_ID);
-
         if (base != img) {
-          ctx.drawImage(base, image_x, image_y);
+            ctx.drawImage(base, image_x, image_y);
         }
 
         ctx.drawImage(img, image_x, image_y);
@@ -264,7 +264,7 @@ function draw() {
       drawCar(car);
     });
 
-    ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
+    ctx.fillText("x: " + getLocalPlayer().position.x / 128 + ", y: " + getLocalPlayer().position.y / 128, 25, 25);
   }
 
   requestAnimationFrame(draw);

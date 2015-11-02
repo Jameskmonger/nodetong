@@ -97,8 +97,13 @@ function process() {
   if (pressing(KeyCodes.LEFT)) {
     turnWheelLeft(local_car);
   }
+
   if (pressing(KeyCodes.RIGHT)) {
     turnWheelRight(local_car);
+  }
+
+  if (pressing(KeyCodes.LEFT) != true && pressing(KeyCodes.RIGHT) != true) {
+    straightenWheel(local_car);
   }
 
   _.forEach(car_array, function(car) {
@@ -151,14 +156,42 @@ function moveCar(car) {
   car.position.rotation.car_deg = (Math.atan2( car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x ) * (180/Math.PI)) + 90;
 }
 
+var WHEEL_TURN_INCREMENT = 5.0;
+
 function turnWheelRight(car) {
-  setWheelRotation(car, car.position.rotation.wheel_deg + 5);
+  setWheelRotation(car, car.position.rotation.wheel_deg + WHEEL_TURN_INCREMENT);
   return;
 }
 
 function turnWheelLeft(car) {
-  setWheelRotation(car, car.position.rotation.wheel_deg - 5);
+  setWheelRotation(car, car.position.rotation.wheel_deg - WHEEL_TURN_INCREMENT);
   return;
+}
+
+function straightenWheel(car) {
+  var original_rotation = car.position.rotation.wheel_deg;
+
+  var new_rotation;
+
+  if (original_rotation > 90.0) {
+    var delta = (original_rotation - 90.0);
+
+    if (delta <= WHEEL_TURN_INCREMENT) {
+      new_rotation = 90.0;
+    } else {
+      new_rotation = (original_rotation - WHEEL_TURN_INCREMENT);
+    }
+  } else {
+    var delta = (90.0 - original_rotation);
+
+    if (delta <= WHEEL_TURN_INCREMENT) {
+      new_rotation = 90.0;
+    } else {
+      new_rotation = (original_rotation + WHEEL_TURN_INCREMENT);
+    }
+  }
+
+  setWheelRotation(car, new_rotation);
 }
 
 // Default is 40 deg left, 140 deg right.

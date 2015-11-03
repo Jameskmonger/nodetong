@@ -27,7 +27,16 @@ document.addEventListener('DOMContentLoaded', loaded, false);
 
 window.onresize = resized;
 
-var canvas, ctx;
+var drawing = {
+  world: {
+    canvas: undefined,
+    context: undefined
+  },
+  players: {
+    canvas: undefined,
+    context: undefined
+  }
+};
 
 var car_array = [];
 
@@ -79,9 +88,11 @@ function pressing(keycode) {
   return (key_pressed[KeyCodeMap[keycode]]);
 }
 
-var player_gear = 0, been_in_gear = 999999;
+var player_gear = 1, been_in_gear = 999999;
 
 var GEAR_WAIT_TIME = 20, LOWEST_GEAR = -1, HIGHEST_GEAR = 1;
+
+var TRACK_COLOUR = [166, 201, 203, 255];
 
 function process() {
   var local_car = getLocalPlayer();
@@ -153,6 +164,19 @@ function process() {
     changeUpGear();
   }
 
+  var canvas_dimensions = {
+    width: drawing.world.canvas.width,
+    height: drawing.world.canvas.height
+  };
+
+  var world_color = drawing.world.context.getImageData(canvas_dimensions.width / 2, canvas_dimensions.height / 2, 1, 1).data;
+
+  if (world_color[0] != TRACK_COLOUR[0] || world_color[1] != TRACK_COLOUR[1] || world_color[2] != TRACK_COLOUR[2]) {
+    if (local_car.speed > 1.0) {
+      local_car.speed = 1.0;
+    }
+  }
+
   _.forEach(car_array, function(car) {
     if (car != undefined) {
       calculateRotationRad(car);
@@ -164,6 +188,8 @@ function process() {
     }
   });
 }
+
+var counter = 0;
 
 function changeDownGear() {
   if (been_in_gear > GEAR_WAIT_TIME) {
@@ -418,20 +444,38 @@ function getGearText() {
   return "N";
 }
 
+function getWorldPositionForScreenCoordinates(x, y) {
+  var origin_x = drawing.world.canvas.width / 2;
+  var origin_y = drawing.world.canvas.height / 2;
+
+  var local_player = getLocalPlayer();
+
+  var world_x = local_player.position.x + (x - origin_x);
+  var world_y = local_player.position.y + (y - origin_y);
+
+  return {
+    x: world_x,
+    y: world_y
+  };
+}
+
 function draw() {
   var local_car = getLocalPlayer();
 
   if (local_car != undefined) {
-    ctx.font = "12px Arial";
-
     var local_car_x = local_car.position.x;
     var local_car_y = local_car.position.y;
 
-    var origin_x = canvas.width / 2;
-    var origin_y = canvas.height / 2;
+    var origin_x = drawing.world.canvas.width / 2;
+    var origin_y = drawing.world.canvas.height / 2;
 
     // Clear the canvas so we can draw again
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawing.world.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
+
+    drawing.world.context.save();
+    drawing.world.context.fillStyle = "#333333"
+    drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
+    drawing.world.context.restore();
 
     var base = getTrackTileImage(BASE_TILE_ID);
 
@@ -444,12 +488,14 @@ function draw() {
         var image_y = (img.height * y) + origin_y - local_car_y;
 
         if (base != img) {
-            ctx.drawImage(base, image_x, image_y);
+            drawing.world.context.drawImage(base, image_x, image_y);
         }
 
-        ctx.drawImage(img, image_x, image_y);
+        drawing.world.context.drawImage(img, image_x, image_y);
       }
     }
+
+    drawing.players.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
     _.forEach(car_array, function(car) {
       if (car != undefined) {
@@ -459,17 +505,18 @@ function draw() {
 
     drawGearInformation();
 
-    //ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
+  //  ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
+    //ctx.fillText("x: " + origin_x + ", y: " + origin_y, 25, 45);
   }
 
   requestAnimationFrame(draw);
 
   function drawGearInformation() {
-    ctx.save();
-    ctx.font = "42px Arial";
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText(getGearText(), 25, canvas.height - 25);
-    ctx.restore();
+    drawing.players.context.save();
+    drawing.players.context.font = "42px Arial";
+    drawing.players.context.fillStyle = "#ffffff";
+    drawing.players.context.fillText(getGearText(), 25, drawing.players.canvas.height - 25);
+    drawing.players.context.restore();
   }
 
   function drawCar(car) {
@@ -478,11 +525,11 @@ function draw() {
     var car_pos_x = car.position.x + origin_x - local_car_x;
     var car_pos_y = car.position.y + origin_y - local_car_y;
 
-    ctx.save();
+    drawing.players.context.save();
 
-    ctx.translate(car_pos_x, car_pos_y);
-    ctx.rotate(getPositionRotationRad(car));
-    ctx.translate(-(car_pos_x), -(car_pos_y));
+    drawing.players.context.translate(car_pos_x, car_pos_y);
+    drawing.players.context.rotate(getPositionRotationRad(car));
+    drawing.players.context.translate(-(car_pos_x), -(car_pos_y));
 
     var front_left_wheel_x = (car_pos_x - car_width + wheel_width);
     var front_left_wheel_y = (car_pos_y - car_height + wheel_length) - 1;
@@ -510,25 +557,42 @@ function draw() {
       back_wheel_rotation = getBackWheelRotationDegrees(car);
     }
 
-    drawRotatedRect(front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, front_wheel_rotation);
-    drawRotatedRect(front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, front_wheel_rotation);
+    drawRotatedRect(drawing.players.context, front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, front_wheel_rotation);
+    drawRotatedRect(drawing.players.context, front_right_wheel_x, front_right_wheel_y, wheel_length, wheel_width, front_wheel_rotation);
 
-    drawRotatedRect(back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
-    drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
+    drawRotatedRect(drawing.players.context, back_left_wheel_x, back_left_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
+    drawRotatedRect(drawing.players.context, back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
 
-    ctx.save();
+    drawing.players.context.save();
 
     var car_img = getVehicleImage(car.model, car.color);
     if (car_img != undefined) {
-      ctx.drawImage(car_img, car_pos_x - (car_width * 0.6), car_pos_y - (car_height * 0.8), car_width * 1.2, car_height * 1.6);
+      drawing.players.context.drawImage(car_img, car_pos_x - (car_width * 0.6), car_pos_y - (car_height * 0.8), car_width * 1.2, car_height * 1.6);
     }
 
-    ctx.restore();
+    drawing.players.context.restore();
 
-    ctx.restore();
+    /*var line_y = car_pos_y - 20;
+
+    drawing.players.context.fillText("car_" + car.id, car_pos_x + car_width, line_y);
+    line_y += 20;
+
+    drawing.players.context.fillText("draw_x: " + car_pos_x.toFixed(2), car_pos_x + car_width, line_y);
+    line_y += 15;
+
+    drawing.players.context.fillText("draw_y: " + car_pos_y.toFixed(2), car_pos_x + car_width, line_y);
+    line_y += 20;
+
+    drawing.players.context.fillText("pos_x: " + car.position.x.toFixed(2), car_pos_x + car_width, line_y);
+    line_y += 15;
+
+    drawing.players.context.fillText("pos_y: " + car.position.y.toFixed(2), car_pos_x + car_width, line_y);
+    line_y += 20;*/
+
+    drawing.players.context.restore();
   }
 
-  function drawRotatedRect(x, y, width, height, rotation) {
+  function drawRotatedRect(ctx, x, y, width, height, rotation) {
     ctx.save();
     ctx.translate(x + width / 2, y + height / 2);
     ctx.rotate(rotation * Math.PI / 180);
@@ -587,8 +651,10 @@ function updatePlayer() {
 }
 
 function loaded() {
-  canvas = document.getElementById('wheels');
-  ctx = canvas.getContext('2d');
+  drawing.world.canvas = document.getElementById('world_canvas');
+  drawing.players.canvas = document.getElementById('players_canvas');
+  drawing.world.context = drawing.world.canvas.getContext('2d');
+  drawing.players.context = drawing.players.canvas.getContext('2d');
 
   resized();
 
@@ -603,6 +669,8 @@ function loaded() {
 }
 
 function resized() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  drawing.world.canvas.width = window.innerWidth;
+  drawing.world.canvas.height = window.innerHeight;
+  drawing.players.canvas.width = window.innerWidth;
+  drawing.players.canvas.height = window.innerHeight;
 }

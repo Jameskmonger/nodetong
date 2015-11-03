@@ -74,7 +74,7 @@ http.listen(config.port, function() {
 	console.log('listening on *:' + config.port);
 });
 
-var VEHICLE_COLOR_COUNT = 5;
+var VEHICLE_COLOR_COUNT = 4;
 
 function getRandomColor() {
 	return getRandomInt(0, VEHICLE_COLOR_COUNT);

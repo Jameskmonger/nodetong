@@ -227,13 +227,13 @@ function loadVehicleImages() {
 
     for (var c = 0; c < PRELOAD_VEHICLE_COLOR_COUNT; c++) {
       vehicle_images[m][c] = new Image();
-      vehicle_images[m][c].src = getVehicleImageSrc(model, color);
+      vehicle_images[m][c].src = getVehicleImageSrc(m, c);
     }
   }
 }
 
 function getVehicleImageSrc(model, color) {
-  return ('/assets/vehicles/' + m + '_' + c + '.png');
+  return ('/assets/vehicles/' + model + '_' + color + '.png');
 }
 
 function loadVehicleImage(model, color) {
@@ -242,7 +242,8 @@ function loadVehicleImage(model, color) {
   }
 
   vehicle_images[model][color] = new Image();
-  vehicle_images[model][color] = getVehicleImageSrc(model, color);
+  vehicle_images[model][color].src = getVehicleImageSrc(model, color);
+
   return vehicle_images[model][color];
 }
 

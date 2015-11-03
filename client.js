@@ -471,23 +471,7 @@ socket.on("player leave", function(player_id) {
 });
 
 socket.on("player update", function(player_data) {
-  var car = car_array[player_data.id];
-
-  car.position.x = player_data.x;
-  car.position.y = player_data.y;
-  car.position.rotation.car_deg = player_data.car_deg;
-  car.position.rotation.car_rad = player_data.car_rad;
-
-  car_array[player_data.id] = car;
-});
-
-socket.on("player update movement", function(player_data) {
-  var car = car_array[player_data.id];
-
-  car.position.rotation.wheel_deg = player_data.wheel_deg;
-  car.speed = player_data.speed;
-
-  car_array[player_data.id] = car;
+  car_array[player_data.id] = player_data;
 });
 
 /*
@@ -500,29 +484,7 @@ function getLocalPlayer() {
 }
 
 function updatePlayer() {
-  var player = getLocalPlayer();
-
-  var data = {
-    x: player.position.x,
-    y: player.position.y,
-    rotation: {
-      car_deg: player.position.rotation.car_deg,
-      car_rad: player.position.rotation.car_rad
-    }
-  };
-
-  socket.emit("update player", data);
-}
-
-function updatePlayerMovement() {
-  var player = getLocalPlayer();
-
-  var data = {
-    wheel_deg: player.position.rotation.wheel_deg,
-    speed: player.speed
-  }
-
-  socket.emit("update player movement", data);
+  socket.emit("update player", getLocalPlayer());
 }
 
 function loaded() {
@@ -535,8 +497,6 @@ function loaded() {
   setWorldTiles();
 
   setInterval(function() { process(); }, 25);
-
-  setInterval(function() { updatePlayerMovement(); }, 50);
 
   setInterval(function() { updatePlayer(); }, 100);
 

@@ -235,8 +235,8 @@ function getWorldTile(x, y) {
 }
 
 // The world is 50x50 for now
-var world_height_tile = 5;
-var world_width_tile = 5;
+var world_height_tile = 30;
+var world_width_tile = 30;
 
 function setWorldTiles() {
   // Define an array of x tiles for each y tile
@@ -244,17 +244,48 @@ function setWorldTiles() {
     world_tiles[x] = new Array();
   }
 
-  world_tiles[1][1] = getTrackTileImage(15);
-  world_tiles[2][1] = getTrackTileImage(14);
-  world_tiles[3][1] = getTrackTileImage(17);
+  world_tiles[8][4] = getTrackTileImage(20);
+  world_tiles[8][5] = getTrackTileImage(38);
+  world_tiles[8][6] = getTrackTileImage(33);
+  world_tiles[8][7] = getTrackTileImage(56);
+  world_tiles[8][8] = getTrackTileImage(74);
 
-  world_tiles[1][2] = getTrackTileImage(13);
+  world_tiles[9][4] = getTrackTileImage(21);
+  world_tiles[9][5] = getTrackTileImage(39);
+  world_tiles[9][6] = getTrackTileImage(35);
+  world_tiles[9][7] = getTrackTileImage(57);
+  world_tiles[9][8] = getTrackTileImage(75);
 
-  world_tiles[3][2] = getTrackTileImage(13);
+  world_tiles[10][4] = getTrackTileImage(16);
+  world_tiles[10][5] = getTrackTileImage(52);
+  world_tiles[10][7] = getTrackTileImage(16);
+  world_tiles[10][8] = getTrackTileImage(52);
 
-  world_tiles[1][3] = getTrackTileImage(51);
-  world_tiles[2][3] = getTrackTileImage(14);
-  world_tiles[3][3] = getTrackTileImage(53);
+  world_tiles[11][4] = getTrackTileImage(16);
+  world_tiles[11][5] = getTrackTileImage(52);
+  world_tiles[11][7] = getTrackTileImage(16);
+  world_tiles[11][8] = getTrackTileImage(52);
+
+  world_tiles[12][4] = getTrackTileImage(99);
+  world_tiles[12][5] = getTrackTileImage(101);
+  world_tiles[12][7] = getTrackTileImage(19);
+  world_tiles[12][8] = getTrackTileImage(312);
+
+  world_tiles[13][4] = getTrackTileImage(16);
+  world_tiles[13][5] = getTrackTileImage(52);
+  world_tiles[13][8] = getTrackTileImage(14);
+
+  world_tiles[14][4] = getTrackTileImage(22);
+  world_tiles[14][5] = getTrackTileImage(40);
+  world_tiles[14][6] = getTrackTileImage(36);
+  world_tiles[14][8] = getTrackTileImage(14);
+
+  world_tiles[15][4] = getTrackTileImage(23);
+  world_tiles[15][5] = getTrackTileImage(41);
+  world_tiles[15][6] = getTrackTileImage(311);
+  world_tiles[15][7] = getTrackTileImage(13);
+  world_tiles[15][8] = getTrackTileImage(53);
+
 }
 
 function draw() {
@@ -297,7 +328,7 @@ function draw() {
       drawCar(car);
     });
 
-    ctx.fillText("x: " + getLocalPlayer().position.x / 128 + ", y: " + getLocalPlayer().position.y / 128, 25, 25);
+    ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
   }
 
   requestAnimationFrame(draw);

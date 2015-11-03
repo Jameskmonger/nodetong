@@ -92,11 +92,11 @@ function createPlayerObject(id) {
       },
       rotation: {
         wheel_deg: 90,
-        car_deg: 0,
-        car_rad: 0
+        car_deg: 90,
+        car_rad: 1.5708
       },
-      x: 50,
-      y: 50
+      x: 1110.00,
+      y: 440.00
     },
     color: getRandomColor(),
     speed: 0.0,

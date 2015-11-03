@@ -213,7 +213,7 @@ function setWheelRotation(car, value) {
   return;
 }
 
-var VEHICLE_MODEL_COUNT = 1, VEHICLE_COLOR_COUNT = 5;
+var PRELOAD_VEHICLE_MODEL_COUNT = 5, PRELOAD_VEHICLE_COLOR_COUNT = 5;
 
 var vehicle_images = new Array();
 
@@ -222,10 +222,10 @@ function getVehicleImage(id, color) {
 }
 
 function loadVehicleImages() {
-  for (var m = 0; m < VEHICLE_MODEL_COUNT; m++) {
+  for (var m = 0; m < PRELOAD_VEHICLE_MODEL_COUNT; m++) {
     vehicle_images[m] = new Array();
 
-    for (var c = 0; c < VEHICLE_COLOR_COUNT; c++) {
+    for (var c = 0; c < PRELOAD_VEHICLE_COLOR_COUNT; c++) {
       vehicle_images[m][c] = new Image();
       vehicle_images[m][c].src = '/assets/vehicles/' + m + '_' + c + '.png';
     }

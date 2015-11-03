@@ -235,8 +235,8 @@ function getWorldTile(x, y) {
 }
 
 // The world is 50x50 for now
-var world_height_tile = 30;
-var world_width_tile = 30;
+var world_height_tile = 12;
+var world_width_tile = 23;
 
 function setWorldTiles() {
   // Define an array of x tiles for each y tile

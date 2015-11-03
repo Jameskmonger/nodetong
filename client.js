@@ -98,7 +98,9 @@ var TRACK_COLOURS =
   [164, 199, 201],
   [168, 203, 205],
   [184, 214, 215],
-  [189, 218, 219], 
+  [189, 218, 219],
+  [158, 192, 194],
+  [161, 196, 198],
 ];
 
 function process() {
@@ -185,8 +187,7 @@ function process() {
         && world_color[1].betweenEquals(TRACK_COLOURS[c][1] - 2, TRACK_COLOURS[c][1] + 2)
         && world_color[2].betweenEquals(TRACK_COLOURS[c][2] - 2, TRACK_COLOURS[c][2] + 2)) {
       allowed = true;
-    } else {
-      console.log("[" + world_color[0] + ", " + world_color[1] + ", " + world_color[2] + "], ");
+      break;
     }
   }
 
@@ -695,5 +696,5 @@ function resized() {
 }
 
 Number.prototype.betweenEquals = function (min, max) {
-    return this >= min && this <= max;
+    return (this >= min && this <= max);
 };

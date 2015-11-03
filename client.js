@@ -218,7 +218,7 @@ var PRELOAD_VEHICLE_MODEL_COUNT = 5, PRELOAD_VEHICLE_COLOR_COUNT = 5;
 var vehicle_images = new Array();
 
 function getVehicleImage(id, color) {
-  return vehicle_images[id][color];
+  return loadVehicleImage(id, color);
 }
 
 function loadVehicleImages() {
@@ -227,9 +227,23 @@ function loadVehicleImages() {
 
     for (var c = 0; c < PRELOAD_VEHICLE_COLOR_COUNT; c++) {
       vehicle_images[m][c] = new Image();
-      vehicle_images[m][c].src = '/assets/vehicles/' + m + '_' + c + '.png';
+      vehicle_images[m][c].src = getVehicleImageSrc(model, color);
     }
   }
+}
+
+function getVehicleImageSrc(model, color) {
+  return ('/assets/vehicles/' + m + '_' + c + '.png');
+}
+
+function loadVehicleImage(model, color) {
+  if (vehicle_images[model] == undefined) {
+    vehicle_images[model] = new Array();
+  }
+
+  vehicle_images[model][color] = new Image();
+  vehicle_images[model][color] = getVehicleImageSrc(model, color);
+  return vehicle_images[model][color];
 }
 
 var LOWEST_TRACK_TILE_ID = 0, HIGHEST_TRACK_TILE_ID = 310;

@@ -7,6 +7,8 @@ var config = require('./config');
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
+app.use("/assets/vehicles", express.static(__dirname + "/assets/vehicles"));
+
 app.use("/assets/tiles", express.static(__dirname + '/assets/tiles'));
 
 app.use("/lib", express.static(__dirname + '/lib'));
@@ -72,8 +74,14 @@ http.listen(config.port, function() {
 	console.log('listening on *:' + config.port);
 });
 
+var VEHICLE_COLOR_COUNT = 5;
+
 function getRandomColor() {
-	return Math.floor(Math.random()*16777215).toString(16);
+	return getRandomInt(0, VEHICLE_COLOR_COUNT);
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function createPlayerObject(id) {
@@ -99,6 +107,7 @@ function createPlayerObject(id) {
       y: 440.00
     },
     color: getRandomColor(),
+    model: 0,
     speed: 0.0,
     steering_mode: 0
   });

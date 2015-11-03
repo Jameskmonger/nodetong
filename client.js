@@ -92,7 +92,37 @@ var player_gear = 1, been_in_gear = 999999;
 
 var GEAR_WAIT_TIME = 20, LOWEST_GEAR = -1, HIGHEST_GEAR = 1;
 
-var TRACK_COLOUR = [166, 201, 203, 255];
+// Trim this list down as it uses fuzzy matching
+var TRACK_COLOURS =
+[
+  [166, 201, 203],
+  [189, 218, 219],
+  [156, 192, 194],
+  [175, 208, 209],
+  [184, 215, 216],
+  [168, 203, 205],
+  [180, 211, 213],
+  [173, 206, 206],
+  [178, 210, 211],
+  [174, 207, 208],
+  [167, 201, 203],
+  [169, 203, 205],
+  [168, 203, 204],
+  [167, 202, 204],
+  [187, 217, 218],
+  [179, 211, 212],
+  [183, 213, 214],
+  [182, 213, 214],
+  [170, 204, 206],
+  [181, 212, 213],
+  [168, 202, 204],
+  [169, 204, 205],
+  [178, 210, 212],
+  [176, 208, 210],
+  [188, 218, 219],
+  [177, 209, 211],
+  [173, 206, 208]
+];
 
 function process() {
   var local_car = getLocalPlayer();
@@ -171,7 +201,17 @@ function process() {
 
   var world_color = drawing.world.context.getImageData(canvas_dimensions.width / 2, canvas_dimensions.height / 2, 1, 1).data;
 
-  if (world_color[0] != TRACK_COLOUR[0] || world_color[1] != TRACK_COLOUR[1] || world_color[2] != TRACK_COLOUR[2]) {
+  var allowed = false;
+
+  for (var c = 0; c < TRACK_COLOURS.length; c++) {
+    if (world_color[0].between(TRACK_COLOURS[c][0] - 2, TRACK_COLOURS[c][0] + 2)
+        && world_color[1].between(TRACK_COLOURS[c][1] - 2, TRACK_COLOURS[c][1] + 2)
+        && world_color[2].between(TRACK_COLOURS[c][2] - 2, TRACK_COLOURS[c][2] + 2)) {
+      allowed = true;
+    }
+  }
+
+  if (allowed === false) {
     if (local_car.speed > 1.0) {
       local_car.speed = 1.0;
     }
@@ -674,3 +714,7 @@ function resized() {
   drawing.players.canvas.width = window.innerWidth;
   drawing.players.canvas.height = window.innerHeight;
 }
+
+Number.prototype.between = function (min, max) {
+    return this > min && this < max;
+};

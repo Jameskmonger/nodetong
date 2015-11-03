@@ -61,8 +61,10 @@ function updateKeysPressed(event, pressed) {
 
 var FRONT_STEERING_MODE = 0, REAR_STEERING_MODE = 1, DUAL_STEERING_MODE = 2;
 
-var wheel_width = 5, wheel_length = 11;
-var car_width = 21, car_height = 25;
+var scale = 1.4;
+
+var wheel_width = 5 * scale, wheel_length = 11 * scale;
+var car_width = 21 * scale, car_height = 25 * scale;
 var wheel_base = car_height + wheel_length / 4;
 
 function pressing(keycode) {
@@ -107,12 +109,14 @@ function process() {
   }
 
   _.forEach(car_array, function(car) {
-    calculateRotationRad(car);
-    calculateFrontWheel(car);
-    calculateBackWheel(car);
+    if (car != undefined) {
+      calculateRotationRad(car);
+      calculateFrontWheel(car);
+      calculateBackWheel(car);
 
-    // Calculate all cars movements locally to prevent jumpiness.
-    moveCar(car);
+      // Calculate all cars movements locally to prevent jumpiness.
+      moveCar(car);
+    }
   });
 }
 
@@ -207,6 +211,25 @@ function setWheelRotation(car, value) {
 
   car.position.rotation.wheel_deg = value;
   return;
+}
+
+var VEHICLE_MODEL_COUNT = 1, VEHICLE_COLOR_COUNT = 5;
+
+var vehicle_images = new Array();
+
+function getVehicleImage(id, color) {
+  return vehicle_images[id][color];
+}
+
+function loadVehicleImages() {
+  for (var m = 0; m < VEHICLE_MODEL_COUNT; m++) {
+    vehicle_images[m] = new Array();
+
+    for (var c = 0; c < VEHICLE_COLOR_COUNT; c++) {
+      vehicle_images[m][c] = new Image();
+      vehicle_images[m][c].src = '/assets/vehicles/' + m + '_' + c + '.png';
+    }
+  }
 }
 
 var LOWEST_TRACK_TILE_ID = 0, HIGHEST_TRACK_TILE_ID = 310;
@@ -325,7 +348,9 @@ function draw() {
     }
 
     _.forEach(car_array, function(car) {
-      drawCar(car);
+      if (car != undefined) {
+        drawCar(car);
+      }
     });
 
     ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
@@ -378,8 +403,10 @@ function draw() {
     drawRotatedRect(back_right_wheel_x, back_right_wheel_y, wheel_length, wheel_width, back_wheel_rotation);
 
     ctx.save();
-    ctx.fillStyle = "#" + car.color;
-    ctx.fillRect(car_pos_x - (car_width * 0.55), car_pos_y - (car_height * 0.60), car_width * 1.10, car_height * 1.20);
+
+    var car_img = getVehicleImage(car.model, car.color);
+    ctx.drawImage(car_img, car_pos_x - (car_width * 0.6), car_pos_y - (car_height * 0.8), car_width * 1.2, car_height * 1.6);
+
     ctx.restore();
 
     ctx.restore();
@@ -444,6 +471,7 @@ function updatePlayer() {
 }
 
 function loaded() {
+  loadVehicleImages();
   setWorldTiles();
 
   setInterval(function() { process(); }, 25);

@@ -405,7 +405,9 @@ function draw() {
     ctx.save();
 
     var car_img = getVehicleImage(car.model, car.color);
-    ctx.drawImage(car_img, car_pos_x - (car_width * 0.6), car_pos_y - (car_height * 0.8), car_width * 1.2, car_height * 1.6);
+    if (car_img != undefined) {
+      ctx.drawImage(car_img, car_pos_x - (car_width * 0.6), car_pos_y - (car_height * 0.8), car_width * 1.2, car_height * 1.6);
+    }
 
     ctx.restore();
 

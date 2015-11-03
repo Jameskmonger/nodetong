@@ -258,8 +258,8 @@ function getWorldTile(x, y) {
 }
 
 // The world is 50x50 for now
-var world_height_tile = 12;
-var world_width_tile = 23;
+var world_height_tile = 20;
+var world_width_tile = 28;
 
 function setWorldTiles() {
   // Define an array of x tiles for each y tile
@@ -456,7 +456,23 @@ socket.on("player leave", function(player_id) {
 });
 
 socket.on("player update", function(player_data) {
-  car_array[player_data.id] = player_data;
+  var car = car_array[player_data.id];
+
+  car.position.x = player_data.x;
+  car.position.y = player_data.y;
+  car.position.rotation.car_deg = player_data.car_deg;
+  car.position.rotation.car_rad = player_data.car_rad;
+
+  car_array[player_data.id] = car;
+});
+
+socket.on("player update movement", function(player_data) {
+  var car = car_array[player_data.id];
+
+  car.position.rotation.wheel_deg = player_data.wheel_deg;
+  car.speed = player_data.speed;
+
+  car_array[player_data.id] = car;
 });
 
 /*
@@ -469,14 +485,43 @@ function getLocalPlayer() {
 }
 
 function updatePlayer() {
-  socket.emit("update player", getLocalPlayer());
+  var player = getLocalPlayer();
+
+  var data = {
+    x: player.position.x,
+    y: player.position.y,
+    rotation: {
+      car_deg: player.position.rotation.car_deg,
+      car_rad: player.position.rotation.car_rad
+    }
+  };
+
+  socket.emit("update player", data);
+}
+
+function updatePlayerMovement() {
+  var player = getLocalPlayer();
+
+  var data = {
+    wheel_deg: player.position.rotation.wheel_deg,
+    speed: player.speed
+  }
+
+  socket.emit("update player movement", data);
 }
 
 function loaded() {
+  var canvas = document.getElementById('wheels');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
   loadVehicleImages();
   setWorldTiles();
 
   setInterval(function() { process(); }, 25);
+
+  setInterval(function() { updatePlayerMovement(); }, 50);
 
   setInterval(function() { updatePlayer(); }, 100);
 

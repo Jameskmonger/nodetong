@@ -95,33 +95,10 @@ var GEAR_WAIT_TIME = 20, LOWEST_GEAR = -1, HIGHEST_GEAR = 1;
 // Trim this list down as it uses fuzzy matching
 var TRACK_COLOURS =
 [
-  [166, 201, 203],
-  [189, 218, 219],
-  [156, 192, 194],
-  [175, 208, 209],
-  [184, 215, 216],
+  [164, 199, 201],
   [168, 203, 205],
-  [180, 211, 213],
-  [173, 206, 206],
-  [178, 210, 211],
-  [174, 207, 208],
-  [167, 201, 203],
-  [169, 203, 205],
-  [168, 203, 204],
-  [167, 202, 204],
-  [187, 217, 218],
-  [179, 211, 212],
-  [183, 213, 214],
-  [182, 213, 214],
-  [170, 204, 206],
-  [181, 212, 213],
-  [168, 202, 204],
-  [169, 204, 205],
-  [178, 210, 212],
-  [176, 208, 210],
-  [188, 218, 219],
-  [177, 209, 211],
-  [173, 206, 208]
+  [184, 214, 215],
+  [189, 218, 219], 
 ];
 
 function process() {
@@ -204,10 +181,12 @@ function process() {
   var allowed = false;
 
   for (var c = 0; c < TRACK_COLOURS.length; c++) {
-    if (world_color[0].between(TRACK_COLOURS[c][0] - 2, TRACK_COLOURS[c][0] + 2)
-        && world_color[1].between(TRACK_COLOURS[c][1] - 2, TRACK_COLOURS[c][1] + 2)
-        && world_color[2].between(TRACK_COLOURS[c][2] - 2, TRACK_COLOURS[c][2] + 2)) {
+    if (world_color[0].betweenEquals(TRACK_COLOURS[c][0] - 2, TRACK_COLOURS[c][0] + 2)
+        && world_color[1].betweenEquals(TRACK_COLOURS[c][1] - 2, TRACK_COLOURS[c][1] + 2)
+        && world_color[2].betweenEquals(TRACK_COLOURS[c][2] - 2, TRACK_COLOURS[c][2] + 2)) {
       allowed = true;
+    } else {
+      console.log("[" + world_color[0] + ", " + world_color[1] + ", " + world_color[2] + "], ");
     }
   }
 
@@ -715,6 +694,6 @@ function resized() {
   drawing.players.canvas.height = window.innerHeight;
 }
 
-Number.prototype.between = function (min, max) {
-    return this > min && this < max;
+Number.prototype.betweenEquals = function (min, max) {
+    return this >= min && this <= max;
 };

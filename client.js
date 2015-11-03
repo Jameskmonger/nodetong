@@ -25,6 +25,10 @@
 
 document.addEventListener('DOMContentLoaded', loaded, false);
 
+window.onresize = resized;
+
+var canvas, ctx;
+
 var car_array = [];
 
 var KeyCodes = {
@@ -330,9 +334,6 @@ function draw() {
   var local_car = getLocalPlayer();
 
   if (local_car != undefined) {
-    var canvas = document.getElementById('wheels');
-    var ctx = canvas.getContext('2d');
-
     ctx.font = "12px Arial";
 
     var local_car_x = local_car.position.x;
@@ -351,8 +352,8 @@ function draw() {
         var img = getWorldTile(x, y);
 
         // Get image offset compared to local player
-        var image_x = (img.width * x) - local_car_x;
-        var image_y = (img.height * y) - local_car_y;
+        var image_x = (img.width * x) + origin_x - local_car_x;
+        var image_y = (img.height * y) + origin_y - local_car_y;
 
         if (base != img) {
             ctx.drawImage(base, image_x, image_y);
@@ -376,8 +377,8 @@ function draw() {
   function drawCar(car) {
     // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
-    var car_pos_x = car.position.x - local_car_x + origin_x;
-    var car_pos_y = car.position.y - local_car_y + origin_y;
+    var car_pos_x = car.position.x + origin_x - local_car_x;
+    var car_pos_y = car.position.y + origin_y - local_car_y;
 
     ctx.save();
 
@@ -488,10 +489,10 @@ function updatePlayer() {
 }
 
 function loaded() {
-  var canvas = document.getElementById('wheels');
+  canvas = document.getElementById('wheels');
+  ctx = canvas.getContext('2d');
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  resized();
 
   loadVehicleImages();
   setWorldTiles();
@@ -501,4 +502,9 @@ function loaded() {
   setInterval(function() { updatePlayer(); }, 100);
 
   requestAnimationFrame(draw);
+}
+
+function resized() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }

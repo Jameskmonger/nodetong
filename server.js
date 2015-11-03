@@ -103,8 +103,8 @@ function createPlayerObject(id) {
         car_deg: 90,
         car_rad: 1.5708
       },
-      x: 1110.00,
-      y: 440.00
+      x: 1470.00,
+      y: 635.00
     },
     color: getRandomColor(),
     model: 0,

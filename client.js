@@ -36,7 +36,9 @@ var KeyCodes = {
   UP: 38,
   RIGHT: 39,
   DOWN: 40,
-  SPACE: 32
+  SPACE: 32,
+  Q_KEY: 81,
+  E_KEY: 69
 };
 
 var KeyCodeMap = [];
@@ -45,8 +47,10 @@ KeyCodeMap[KeyCodes.UP] = 1;
 KeyCodeMap[KeyCodes.RIGHT] = 2;
 KeyCodeMap[KeyCodes.DOWN] = 3;
 KeyCodeMap[KeyCodes.SPACE] = 4;
+KeyCodeMap[KeyCodes.Q_KEY] = 5;
+KeyCodeMap[KeyCodes.E_KEY] = 6;
 
-var key_pressed = [false, false, false, false, false];
+var key_pressed = [false, false, false, false, false, false, false];
 
 document.addEventListener("keydown", function(event) {
   updateKeysPressed(event, true);
@@ -75,6 +79,10 @@ function pressing(keycode) {
   return (key_pressed[KeyCodeMap[keycode]]);
 }
 
+var player_gear = 0, been_in_gear = 999999;
+
+var GEAR_WAIT_TIME = 20, LOWEST_GEAR = -1, HIGHEST_GEAR = 1;
+
 function process() {
   var local_car = getLocalPlayer();
 
@@ -83,20 +91,39 @@ function process() {
   }
 
   if (pressing(KeyCodes.UP)) {
-    if (local_car.speed + 0.5 < 4.0) {
-      local_car.speed += 0.3;
-    } else {
-      local_car.speed = 4.0;
+    if (player_gear == -1) {
+      if (local_car.speed - 0.5 > -2.0) {
+        local_car.speed -= 0.3;
+      } else {
+        local_car.speed = -2.0;
+      }
+    } else if (player_gear > 0) {
+      if (local_car.speed + 0.5 < 4.0) {
+        local_car.speed += 0.3;
+      } else {
+        local_car.speed = 4.0;
+      }
     }
   }
 
   if (pressing(KeyCodes.DOWN)) {
-    if (local_car.speed > 0.5) {
-      local_car.speed *= 0.8;
-    } else if (local_car.speed <= 0.5 && local_car.speed > 0.1) {
-      local_car.speed *= 0.6;
+    // We need to apply different speeds if we're reversing
+    if (local_car.speed < 0.0) {
+      if (local_car.speed < -0.5) {
+        local_car.speed *= 0.8;
+      } else if (local_car.speed >= -0.5 && local_car.speed < -0.1) {
+        local_car.speed *= 0.6;
+      } else {
+        local_car.speed = 0.0;
+      }
     } else {
-      local_car.speed = 0.0;
+      if (local_car.speed > 0.5) {
+        local_car.speed *= 0.8;
+      } else if (local_car.speed <= 0.5 && local_car.speed > 0.1) {
+        local_car.speed *= 0.6;
+      } else {
+        local_car.speed = 0.0;
+      }
     }
   }
 
@@ -112,6 +139,20 @@ function process() {
     straightenWheel(local_car);
   }
 
+  if (pressing(KeyCodes.Q_KEY) != true && pressing(KeyCodes.E_KEY) != true) {
+    if (been_in_gear != 999999) {
+      been_in_gear++;
+    }
+  }
+
+  if (pressing(KeyCodes.Q_KEY)) {
+    changeDownGear();
+  }
+
+  if (pressing(KeyCodes.E_KEY)) {
+    changeUpGear();
+  }
+
   _.forEach(car_array, function(car) {
     if (car != undefined) {
       calculateRotationRad(car);
@@ -122,6 +163,41 @@ function process() {
       moveCar(car);
     }
   });
+}
+
+function changeDownGear() {
+  if (been_in_gear > GEAR_WAIT_TIME) {
+    if (player_gear > LOWEST_GEAR) {
+      // If the player is in neutral, they cannot go into reverse unless they're still
+      if (player_gear == 0) {
+        if (getLocalPlayer().speed == 0.0) {
+          player_gear--;
+        }
+      } else {
+        player_gear--;
+      }
+    }
+
+    been_in_gear = 0;
+  } else {
+    if (been_in_gear != 999999) {
+      been_in_gear++;
+    }
+  }
+}
+
+function changeUpGear() {
+  if (been_in_gear > GEAR_WAIT_TIME) {
+    if (player_gear < HIGHEST_GEAR) {
+      player_gear++;
+    }
+
+    been_in_gear = 0;
+  } else {
+    if (been_in_gear != 999999) {
+      been_in_gear++;
+    }
+  }
 }
 
 function calculateRotationRad(car) {
@@ -327,7 +403,19 @@ function setWorldTiles() {
   world_tiles[15][6] = getTrackTileImage(311);
   world_tiles[15][7] = getTrackTileImage(13);
   world_tiles[15][8] = getTrackTileImage(53);
+}
 
+function getGearText() {
+  switch (player_gear) {
+    case -1:
+      return "R";
+    case 0:
+      return "N";
+    case 1:
+      return "1";
+  }
+
+  return "N";
 }
 
 function draw() {
@@ -369,10 +457,20 @@ function draw() {
       }
     });
 
+    drawGearInformation();
+
     //ctx.fillText("x: " + getLocalPlayer().position.x.toFixed(2) + ", y: " + getLocalPlayer().position.y.toFixed(2), 25, 25);
   }
 
   requestAnimationFrame(draw);
+
+  function drawGearInformation() {
+    ctx.save();
+    ctx.font = "42px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(getGearText(), 25, canvas.height - 25);
+    ctx.restore();
+  }
 
   function drawCar(car) {
     // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html

@@ -60,6 +60,8 @@ io.sockets.on('connection', function(socket) {
   socket.broadcast.emit("player join", socket.player_data);
 
   for (var i = 0; i < socketList.length; i++) {
+    var player = socketList[i].player_data;
+
     socket.emit("player join", socketList[i].player_data);
   }
 
@@ -67,13 +69,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on("update player", function(player_data) {
     socket.player_data.speed = player_data.speed;
-
-    if (socket.player_data.position.rotation.wheel_deg != player_data.wheel)
-      console.log(socket.player_data.position.rotation.wheel_deg + " - " + player_data.wheel)
-
     socket.player_data.position.rotation.wheel_deg = player_data.wheel;
-
-    //socket.broadcast.emit("player update", player_data);
   });
 
 	socket.on('disconnect', function() {
@@ -94,13 +90,42 @@ setInterval(loop, 25);
 
 function loop() {
   for (var i = 0; i < socketList.length; i++) {
+    if (socketList[i] === undefined) {
+      continue;
+    }
+
     var car = socketList[i].player_data;
 
     moveCar(car);
+
+    socketList[i].broadcast.emit("player update", car);
   }
 }
 
+function calculateFrontWheel(car) {
+  var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
+
+  car.position.wheels.front.x = car.position.x + wheel_base/2 * Math.cos(car_rotation_rad);
+  car.position.wheels.front.y = car.position.y + wheel_base/2 * Math.sin(car_rotation_rad);
+}
+
+function calculateBackWheel(car) {
+  var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
+
+  car.position.wheels.back.x = car.position.x - wheel_base/2 * Math.cos(car_rotation_rad);
+  car.position.wheels.back.y = car.position.y - wheel_base/2 * Math.sin(car_rotation_rad);
+}
+
+var scale = 1.4;
+
+var wheel_width = 5 * scale, wheel_length = 11 * scale;
+var car_width = 21 * scale, car_height = 25 * scale;
+var wheel_base = car_height + wheel_length / 4;
+
 function moveCar(car) {
+  calculateFrontWheel(car);
+  calculateBackWheel(car);
+
   var wheel_rotation_rad = (car.position.rotation.wheel_deg - 90) * (Math.PI / 180);
   var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
 
@@ -122,8 +147,6 @@ function moveCar(car) {
   car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;
 
   car.position.rotation.car_deg = (Math.atan2(car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x) * (180/Math.PI)) + 90;
-
-  return car;
 }
 
 var VEHICLE_COLOR_COUNT = 4;

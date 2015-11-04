@@ -130,7 +130,7 @@ define(['./key_handler'], function (key_handler) {
 
     if (allowed === false) {
       if (local_car.speed > 1.0) {
-        local_car.speed = 1.0;
+        //local_car.speed = 1.0;
       }
     }
 

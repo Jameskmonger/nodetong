@@ -1,10 +1,6 @@
 define(['./game', 'domReady'], function (game) {
   window.onresize = resized;
 
-  function resized() {
-    console.log("you resized me yo!");
-  }
-
   loaded();
 
   var drawing;

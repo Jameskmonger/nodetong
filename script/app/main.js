@@ -1,9 +1,7 @@
 define(function (require) {
   require('./request_animation_frame');
 
-  var key_handler = require('./key_handler');
-
-  var game = require('./game');
-
   var anim = require('./anim');
+
+  var net = require('./networking');
 });

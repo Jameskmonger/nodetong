@@ -1,6 +1,5 @@
 define(['./key_handler'], function (key_handler) {
   var GAME_LOOP_INTERVAL = 25;
-  var UPDATE_LOOP_INTERVAL = 100;
 
   var LOCAL_PLAYER_ID;
 
@@ -10,18 +9,12 @@ define(['./key_handler'], function (key_handler) {
   var car_width = 21 * scale, car_height = 25 * scale;
   var wheel_base = car_height + wheel_length / 4;
 
-  var socket;
-
   var world_canvas;
 
   loaded();
 
   function loaded() {
     setInterval(game_loop, GAME_LOOP_INTERVAL);
-
-    setInterval(update_loop, UPDATE_LOOP_INTERVAL);
-
-    socket = io({reconnection: false});
 
     world_canvas = {
       canvas: document.getElementById('world_canvas'),
@@ -284,22 +277,6 @@ define(['./key_handler'], function (key_handler) {
     return (rotation - 2 * (rotation - 90));
   }
 
-  socket.on("local player id", function(id) {
-    LOCAL_PLAYER_ID = id;
-  });
-
-  socket.on("player join", function(player_data) {
-    car_array[player_data.id] = player_data;
-  });
-
-  socket.on("player leave", function(player_id) {
-    car_array[player_id] = undefined;
-  });
-
-  socket.on("player update", function(player_data) {
-    car_array[player_data.id] = player_data;
-  });
-
   /*
    * The local player is always sent first, so it will
    * always be in the first array slot.
@@ -307,10 +284,6 @@ define(['./key_handler'], function (key_handler) {
 
   function getLocalPlayer() {
     return car_array[LOCAL_PLAYER_ID];
-  }
-
-  function update_loop() {
-    socket.emit("update player", getLocalPlayer());
   }
 
   var WORLD_HEIGHT_TILE;
@@ -405,6 +378,14 @@ define(['./key_handler'], function (key_handler) {
       return (this >= min && this <= max);
   };
 
+  function setLocalPlayerId(id) {
+    LOCAL_PLAYER_ID = id;
+  }
+
+  function setCarData(id, data) {
+    car_array[id] = data;
+  }
+
   return {
     getLocalPlayer: getLocalPlayer,
     BASE_TILE_IMAGE: BASE_TILE_IMAGE,
@@ -414,7 +395,8 @@ define(['./key_handler'], function (key_handler) {
     },
     getWorldTile: getWorldTile,
     car_array: car_array,
-    player_gear: player_gear
+    player_gear: player_gear,
+    setLocalPlayerId: setLocalPlayerId,
+    setCarData: setCarData
   }
-
 });

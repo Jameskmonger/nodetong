@@ -12,7 +12,6 @@ define(['./game', 'domReady'], function (game) {
   var wheel_base = car_height + wheel_length / 4;
 
   function loaded() {
-
     var world_canvas = document.getElementById('world_canvas');
     var player_canvas = document.getElementById('players_canvas');
 

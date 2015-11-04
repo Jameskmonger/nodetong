@@ -1,6 +1,4 @@
 define(function (require) {
-  console.log("key handler loaded");
-
   var KeyCodes = {
     LEFT: 37,
     UP: 38,
@@ -24,14 +22,10 @@ define(function (require) {
 
   document.addEventListener("keydown", function(event) {
     updateKeysPressed(event, true);
-
-    return key_pressed;
   });
 
   document.addEventListener("keyup", function(event) {
     updateKeysPressed(event, false);
-
-    return key_pressed;
   });
 
   function updateKeysPressed(event, pressed) {
@@ -41,5 +35,12 @@ define(function (require) {
     }
   }
 
-  return { pressed: key_pressed };
+  function pressing(keycode) {
+    return (key_pressed[KeyCodeMap[keycode]]);
+  }
+
+  return {
+    KeyCodes: KeyCodes,
+    pressing: pressing
+  }
 });

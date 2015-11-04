@@ -4,4 +4,6 @@ define(function (require) {
   var key_handler = require('./key_handler');
 
   var game = require('./game');
+
+  var anim = require('./anim');
 });

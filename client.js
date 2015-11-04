@@ -1,30 +1,3 @@
-(function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
-
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
-
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-
-document.addEventListener('DOMContentLoaded', loaded, false);
-
 window.onresize = resized;
 
 var drawing = {
@@ -39,42 +12,6 @@ var drawing = {
 };
 
 var car_array = [];
-
-var KeyCodes = {
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  SPACE: 32,
-  Q_KEY: 81,
-  E_KEY: 69
-};
-
-var KeyCodeMap = [];
-KeyCodeMap[KeyCodes.LEFT] = 0;
-KeyCodeMap[KeyCodes.UP] = 1;
-KeyCodeMap[KeyCodes.RIGHT] = 2;
-KeyCodeMap[KeyCodes.DOWN] = 3;
-KeyCodeMap[KeyCodes.SPACE] = 4;
-KeyCodeMap[KeyCodes.Q_KEY] = 5;
-KeyCodeMap[KeyCodes.E_KEY] = 6;
-
-var key_pressed = [false, false, false, false, false, false, false];
-
-document.addEventListener("keydown", function(event) {
-  updateKeysPressed(event, true);
-});
-
-document.addEventListener("keyup", function(event) {
-  updateKeysPressed(event, false);
-});
-
-function updateKeysPressed(event, pressed) {
-  if (KeyCodeMap[event.keyCode] != undefined) {
-    key_pressed[KeyCodeMap[event.keyCode]] = pressed;
-    event.preventDefault();
-  }
-}
 
 var FRONT_STEERING_MODE = 0, REAR_STEERING_MODE = 1, DUAL_STEERING_MODE = 2;
 

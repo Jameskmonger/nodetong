@@ -17,8 +17,19 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/client.js', function(req, res) {
-  res.sendFile(__dirname + '/client.js');
+app.get("/script/:filename", function(req, res) {
+  var filename = req.params.filename;
+  res.sendFile(__dirname + '/script/' + filename);
+});
+
+app.get("/script/modules/:filename", function(req, res) {
+  var filename = req.params.filename;
+  res.sendFile(__dirname + '/script/modules/' + filename);
+});
+
+app.get("/script/app/:filename", function(req, res) {
+  var filename = req.params.filename;
+  res.sendFile(__dirname + '/script/app/' + filename);
 });
 
 var MAX_PLAYER_COUNT = 2000;

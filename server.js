@@ -86,7 +86,7 @@ http.listen(config.port, function() {
 	console.log('listening on *:' + config.port);
 });
 
-setInterval(loop, 25);
+setInterval(loop, 50);
 
 function loop() {
   for (var i = 0; i < socketList.length; i++) {
@@ -98,7 +98,7 @@ function loop() {
 
     moveCar(car);
 
-    socketList[i].broadcast.emit("player update", car);
+    io.emit("player update", car);
   }
 }
 
@@ -129,7 +129,7 @@ function moveCar(car) {
   var wheel_rotation_rad = (car.position.rotation.wheel_deg - 90) * (Math.PI / 180);
   var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
 
-  var dt = 1;
+  var dt = 2;
 
   var front_modifier = 0;
   var back_modifier = 0;

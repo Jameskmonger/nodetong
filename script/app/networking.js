@@ -30,6 +30,10 @@ define(['./game'], function (game) {
   function update_loop() {
     var player = game.getLocalPlayer();
 
+    if (player === undefined) {
+      return;
+    }
+
     var data = {
       wheel: player.position.rotation.wheel_deg,
       speed: player.speed

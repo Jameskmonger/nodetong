@@ -377,14 +377,44 @@ define(['./key_handler'], function (key_handler) {
 
   Number.prototype.betweenEquals = function (min, max) {
       return (this >= min && this <= max);
-  };
+  }
+
+  Number.prototype.closeTo = function (value, range) {
+    var half_range = (range / 2);
+    var lower_bound = (value - half_range);
+    var upper_bound = (value + half_range);
+
+    return (this.betweenEquals(lower_bound, upper_bound));
+  }
 
   function setLocalPlayerId(id) {
     LOCAL_PLAYER_ID = id;
   }
 
   function setCarData(id, data) {
-    car_array[id] = data;
+    var requires_full_update;
+
+    if (id === LOCAL_PLAYER_ID) {
+      if (car_array[id] !== undefined) {
+        var close_to_x = (data.position.x.closeTo(car_array[id].position.x, 2.0));
+        var close_to_y = (data.position.y.closeTo(car_array[id].position.y, 2.0));
+
+        if (!close_to_x || !close_to_y) {
+          car_array[id].position.x = data.position.x;
+          car_array[id].position.y = data.position.y;
+          car_array[id].position.rotation.car_deg = data.position.rotation.car_deg;
+          car_array[id].position.rotation.car_rad = data.position.rotation.car_rad;
+        }
+      } else {
+        requires_full_update = true;
+      }
+    } else {
+      requires_full_update = true;
+    }
+
+    if (requires_full_update) {
+      car_array[id] = data;
+    }
   }
 
   return {

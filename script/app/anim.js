@@ -210,10 +210,9 @@ define(['./game', 'domReady'], function (game) {
 
       var line_y = car_pos_y - 20;
 
-      drawing.players.context.fillText("id: " + car.id, car_pos_x + car_width, line_y);
+      /*drawing.players.context.fillText("id: " + car.id, car_pos_x + car_width, line_y);
       line_y += 20;
 
-      /*
       drawing.players.context.fillText("draw_x: " + car_pos_x.toFixed(2), car_pos_x + car_width, line_y);
       line_y += 15;
 
@@ -225,10 +224,9 @@ define(['./game', 'domReady'], function (game) {
 
       drawing.players.context.fillText("pos_y: " + car.position.y.toFixed(2), car_pos_x + car_width, line_y);
       line_y += 20;
-      */
 
       drawing.players.context.fillText("speed: " + car.speed.toFixed(1), car_pos_x + car_width, line_y);
-      line_y += 15;
+      line_y += 15;*/
 
       drawing.players.context.restore();
     }

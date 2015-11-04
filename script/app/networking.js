@@ -28,6 +28,13 @@ define(['./game'], function (game) {
   });
 
   function update_loop() {
-    socket.emit("update player", game.getLocalPlayer());
+    var player = game.getLocalPlayer();
+
+    var data = {
+      wheel: player.position.rotation.wheel_deg,
+      speed: player.speed
+    };
+
+    socket.emit("update player", data);
   }
 });

@@ -148,14 +148,15 @@ define(['./key_handler'], function (key_handler) {
 
   function moveCar(car) {
     var wheel_rotation_rad = (car.position.rotation.wheel_deg - 90) * (Math.PI / 180);
+    var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
 
     var dt = 1;
 
     var front_modifier = 0;
     var back_modifier = 0;
 
-    front_modifier = (car.position.rotation.car_rad + wheel_rotation_rad);
-    back_modifier = car.position.rotation.car_rad;
+    front_modifier = (car_rotation_rad + wheel_rotation_rad);
+    back_modifier = car_rotation_rad;
 
     car.position.wheels.front.x += car.speed * dt * Math.cos(front_modifier);
     car.position.wheels.front.y += car.speed * dt * Math.sin(front_modifier);
@@ -166,7 +167,7 @@ define(['./key_handler'], function (key_handler) {
     car.position.x = (car.position.wheels.front.x + car.position.wheels.back.x) / 2;
     car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;
 
-    car.position.rotation.car_deg = (Math.atan2( car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x ) * (180/Math.PI)) + 90;
+    car.position.rotation.car_deg = (Math.atan2(car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x) * (180/Math.PI)) + 90;
   }
 
   function changeDownGear() {

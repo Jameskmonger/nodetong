@@ -66,9 +66,14 @@ io.sockets.on('connection', function(socket) {
 	console.log("Player " + id + " connected. [" + player_count + " players online]");
 
   socket.on("update player", function(player_data) {
-    socket.player_data = player_data;
+    socket.player_data.speed = player_data.speed;
 
-    socket.broadcast.emit("player update", player_data);
+    if (socket.player_data.position.rotation.wheel_deg != player_data.wheel)
+      console.log(socket.player_data.position.rotation.wheel_deg + " - " + player_data.wheel)
+
+    socket.player_data.position.rotation.wheel_deg = player_data.wheel;
+
+    //socket.broadcast.emit("player update", player_data);
   });
 
 	socket.on('disconnect', function() {
@@ -84,6 +89,42 @@ io.sockets.on('connection', function(socket) {
 http.listen(config.port, function() {
 	console.log('listening on *:' + config.port);
 });
+
+setInterval(loop, 25);
+
+function loop() {
+  for (var i = 0; i < socketList.length; i++) {
+    var car = socketList[i].player_data;
+
+    moveCar(car);
+  }
+}
+
+function moveCar(car) {
+  var wheel_rotation_rad = (car.position.rotation.wheel_deg - 90) * (Math.PI / 180);
+  var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
+
+  var dt = 1;
+
+  var front_modifier = 0;
+  var back_modifier = 0;
+
+  front_modifier = (car_rotation_rad + wheel_rotation_rad);
+  back_modifier = car_rotation_rad;
+
+  car.position.wheels.front.x += car.speed * dt * Math.cos(front_modifier);
+  car.position.wheels.front.y += car.speed * dt * Math.sin(front_modifier);
+
+  car.position.wheels.back.x += car.speed * dt * Math.cos(back_modifier);
+  car.position.wheels.back.y += car.speed * dt * Math.sin(back_modifier);
+
+  car.position.x = (car.position.wheels.front.x + car.position.wheels.back.x) / 2;
+  car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;
+
+  car.position.rotation.car_deg = (Math.atan2(car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x) * (180/Math.PI)) + 90;
+
+  return car;
+}
 
 var VEHICLE_COLOR_COUNT = 4;
 

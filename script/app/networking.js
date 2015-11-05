@@ -1,6 +1,4 @@
 define(['./game'], function (game) {
-  var UPDATE_LOOP_INTERVAL = 100;
-
   var socket;
 
   loaded();
@@ -8,7 +6,7 @@ define(['./game'], function (game) {
   function loaded() {
     socket = io({reconnection: false});
 
-    setInterval(update_loop, UPDATE_LOOP_INTERVAL);
+    game.setMovementListener(updatePlayer);
   }
 
   socket.on("local player id", function(id) {
@@ -27,7 +25,9 @@ define(['./game'], function (game) {
     game.setCarData(player_data.id, player_data);
   });
 
-  function update_loop() {
+  var last_sent_player;
+
+  function updatePlayer() {
     var player = game.getLocalPlayer();
 
     if (player === undefined) {
@@ -38,6 +38,12 @@ define(['./game'], function (game) {
       wheel: player.position.rotation.wheel_deg,
       speed: player.speed
     };
+
+    if (last_sent_player === data) {
+      return;
+    }
+
+    last_sent_player = data;
 
     socket.emit("update player", data);
   }

@@ -40,6 +40,12 @@ define(['./key_handler'], function (key_handler) {
     [161, 196, 198],
   ];
 
+  var movement_network_listener;
+
+  function setMovementListener(listener) {
+    movement_network_listener = listener;
+  };
+
   function game_loop() {
     var local_car = getLocalPlayer();
 
@@ -61,6 +67,11 @@ define(['./key_handler'], function (key_handler) {
           local_car.speed = 4.0;
         }
       }
+
+      if (movement_network_listener != undefined)
+      {
+        movement_network_listener();
+      }
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
@@ -81,6 +92,11 @@ define(['./key_handler'], function (key_handler) {
         } else {
           local_car.speed = 0.0;
         }
+      }
+
+      if (movement_network_listener != undefined)
+      {
+        movement_network_listener();
       }
     }
 
@@ -250,11 +266,17 @@ define(['./key_handler'], function (key_handler) {
     if (value <= LEFT_TURN_MAX) {
       return;
     }
+
     if (value >= RIGHT_TURN_MAX) {
       return;
     }
 
     car.position.rotation.wheel_deg = value;
+
+    if (movement_network_listener !== undefined)
+    {
+      movement_network_listener();
+    }
     return;
   }
 
@@ -428,6 +450,7 @@ define(['./key_handler'], function (key_handler) {
     car_array: car_array,
     player_gear: player_gear,
     setLocalPlayerId: setLocalPlayerId,
-    setCarData: setCarData
+    setCarData: setCarData,
+    setMovementListener: setMovementListener
   }
 });

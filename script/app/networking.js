@@ -9,8 +9,9 @@ define(['./game'], function (game) {
     game.setMovementListener(updatePlayer);
   }
 
-  socket.on("local player id", function(id) {
-    game.setLocalPlayerId(id);
+  socket.on("initialise local player", function(data) {
+    game.setWorldTiles(data.world);
+    game.setLocalPlayerId(data.id);
   });
 
   socket.on("player join", function(player_data) {

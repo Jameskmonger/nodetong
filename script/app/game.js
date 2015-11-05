@@ -20,8 +20,6 @@ define(['./key_handler'], function (key_handler) {
       canvas: document.getElementById('world_canvas'),
       context: document.getElementById('world_canvas').getContext('2d')
     };
-
-    setWorldTiles();
   }
 
   var car_array = [];
@@ -124,30 +122,6 @@ define(['./key_handler'], function (key_handler) {
 
     if (key_handler.pressing(key_handler.KeyCodes.E_KEY)) {
       changeUpGear();
-    }
-
-    var canvas_dimensions = {
-      width: world_canvas.canvas.width,
-      height: world_canvas.canvas.height
-    };
-
-    var world_color = world_canvas.context.getImageData(canvas_dimensions.width / 2, canvas_dimensions.height / 2, 1, 1).data;
-
-    var allowed = false;
-
-    for (var c = 0; c < TRACK_COLOURS.length; c++) {
-      if (world_color[0].betweenEquals(TRACK_COLOURS[c][0] - 2, TRACK_COLOURS[c][0] + 2)
-          && world_color[1].betweenEquals(TRACK_COLOURS[c][1] - 2, TRACK_COLOURS[c][1] + 2)
-          && world_color[2].betweenEquals(TRACK_COLOURS[c][2] - 2, TRACK_COLOURS[c][2] + 2)) {
-        allowed = true;
-        break;
-      }
-    }
-
-    if (allowed === false) {
-      if (local_car.speed > 1.0) {
-        //local_car.speed = 1.0;
-      }
     }
 
     _.forEach(car_array, function(car) {
@@ -317,10 +291,21 @@ define(['./key_handler'], function (key_handler) {
   var BASE_TILE_ID;
   var BASE_TILE_IMAGE;
 
-  function setWorldTiles() {
-    WORLD_HEIGHT_TILE = 20;
-    WORLD_WIDTH_TILE = 28;
-    BASE_TILE_ID = 3;
+  function getBaseTileImage() {
+    return BASE_TILE_IMAGE;
+  }
+
+  function getWorldDimensions() {
+    return {
+      HEIGHT: WORLD_HEIGHT_TILE,
+      WIDTH: WORLD_WIDTH_TILE
+    };
+  }
+
+  function setWorldTiles(world_data) {
+    WORLD_HEIGHT_TILE = world_data.height;
+    WORLD_WIDTH_TILE = world_data.width;
+    BASE_TILE_ID = world_data.base;
 
     world_tiles = new Array();
 
@@ -331,47 +316,13 @@ define(['./key_handler'], function (key_handler) {
 
     BASE_TILE_IMAGE = getTrackTileImage(BASE_TILE_ID);
 
-    world_tiles[8][4] = getTrackTileImage(20);
-    world_tiles[8][5] = getTrackTileImage(38);
-    world_tiles[8][6] = getTrackTileImage(33);
-    world_tiles[8][7] = getTrackTileImage(56);
-    world_tiles[8][8] = getTrackTileImage(74);
-
-    world_tiles[9][4] = getTrackTileImage(21);
-    world_tiles[9][5] = getTrackTileImage(39);
-    world_tiles[9][6] = getTrackTileImage(35);
-    world_tiles[9][7] = getTrackTileImage(57);
-    world_tiles[9][8] = getTrackTileImage(75);
-
-    world_tiles[10][4] = getTrackTileImage(16);
-    world_tiles[10][5] = getTrackTileImage(52);
-    world_tiles[10][7] = getTrackTileImage(16);
-    world_tiles[10][8] = getTrackTileImage(52);
-
-    world_tiles[11][4] = getTrackTileImage(16);
-    world_tiles[11][5] = getTrackTileImage(52);
-    world_tiles[11][7] = getTrackTileImage(16);
-    world_tiles[11][8] = getTrackTileImage(52);
-
-    world_tiles[12][4] = getTrackTileImage(99);
-    world_tiles[12][5] = getTrackTileImage(101);
-    world_tiles[12][7] = getTrackTileImage(19);
-    world_tiles[12][8] = getTrackTileImage(312);
-
-    world_tiles[13][4] = getTrackTileImage(16);
-    world_tiles[13][5] = getTrackTileImage(52);
-    world_tiles[13][8] = getTrackTileImage(14);
-
-    world_tiles[14][4] = getTrackTileImage(22);
-    world_tiles[14][5] = getTrackTileImage(40);
-    world_tiles[14][6] = getTrackTileImage(36);
-    world_tiles[14][8] = getTrackTileImage(14);
-
-    world_tiles[15][4] = getTrackTileImage(23);
-    world_tiles[15][5] = getTrackTileImage(41);
-    world_tiles[15][6] = getTrackTileImage(311);
-    world_tiles[15][7] = getTrackTileImage(13);
-    world_tiles[15][8] = getTrackTileImage(53);
+    for (var x = 0; x < WORLD_WIDTH_TILE; x++) {
+      for (var y = 0; y < WORLD_HEIGHT_TILE; y++) {
+        if (world_data.tiles[x][y] != undefined) {
+          world_tiles[x][y] = getTrackTileImage(world_data.tiles[x][y]);
+        }
+      }
+    }
   }
 
   var track_tile_images;
@@ -390,7 +341,7 @@ define(['./key_handler'], function (key_handler) {
   }
 
   function getWorldTile(x, y) {
-    if (world_tiles[x][y] == undefined) {
+    if (world_tiles[x][y] === undefined) {
       return getTrackTileImage(BASE_TILE_ID);
     } else {
       return world_tiles[x][y];
@@ -441,16 +392,14 @@ define(['./key_handler'], function (key_handler) {
 
   return {
     getLocalPlayer: getLocalPlayer,
-    BASE_TILE_IMAGE: BASE_TILE_IMAGE,
-    WORLD_DIMENSIONS: {
-      HEIGHT: WORLD_HEIGHT_TILE,
-      WIDTH: WORLD_WIDTH_TILE
-    },
+    getBaseTileImage: getBaseTileImage,
+    getWorldDimensions: getWorldDimensions,
     getWorldTile: getWorldTile,
     car_array: car_array,
     player_gear: player_gear,
     setLocalPlayerId: setLocalPlayerId,
     setCarData: setCarData,
-    setMovementListener: setMovementListener
+    setMovementListener: setMovementListener,
+    setWorldTiles: setWorldTiles
   }
 });

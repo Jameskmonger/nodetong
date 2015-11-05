@@ -124,10 +124,10 @@ define(['./game', 'domReady'], function (game) {
       drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
       drawing.world.context.restore();
 
-      var base = game.BASE_TILE_IMAGE;
+      var base = game.getBaseTileImage();
 
-      for (var y = 0; y < game.WORLD_DIMENSIONS.HEIGHT; y++) {
-        for (var x = 0; x < game.WORLD_DIMENSIONS.WIDTH; x++) {
+      for (var y = 0; y < game.getWorldDimensions().HEIGHT; y++) {
+        for (var x = 0; x < game.getWorldDimensions().WIDTH; x++) {
           var img = game.getWorldTile(x, y);
 
           // Get image offset compared to local player
@@ -137,6 +137,8 @@ define(['./game', 'domReady'], function (game) {
           if (base != img) {
               drawing.world.context.drawImage(base, image_x, image_y);
           }
+
+          console.log(img);
 
           drawing.world.context.drawImage(img, image_x, image_y);
         }

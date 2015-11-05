@@ -3,6 +3,8 @@ define(['./game', 'domReady'], function (game) {
 
   loaded();
 
+  var world_loaded;
+
   var drawing;
 
   var scale = 1.4;
@@ -11,13 +13,63 @@ define(['./game', 'domReady'], function (game) {
   var car_width = 21 * scale, car_height = 25 * scale;
   var wheel_base = car_height + wheel_length / 4;
 
+  function worldLoaded() {
+    if (drawing.world_dummy.canvas.width === 0) {
+      drawing.world_dummy.canvas.width = game.getWorldDimensions().WIDTH * 128;
+    }
+
+    if (drawing.world_dummy.canvas.height === 0) {
+      drawing.world_dummy.canvas.height = game.getWorldDimensions().HEIGHT * 128;
+    }
+
+    var GAME_WORLD_WIDTH = game.getWorldDimensions().WIDTH,
+        GAME_WORLD_HEIGHT = game.getWorldDimensions().HEIGHT;
+
+    var drawn_tiles = 0;
+
+    var try_to_draw_interval = setInterval(function() {
+      drawn_tiles = 0;
+
+      var base = game.getBaseTileImage();
+
+      for (var y = 0; y < GAME_WORLD_HEIGHT; y++) {
+        for (var x = 0; x < GAME_WORLD_WIDTH; x++) {
+          var img = game.getWorldTile(x, y);
+
+          var image_x = (128 * x);
+          var image_y = (128 * y);
+
+          if (base != img) {
+              drawing.world_dummy.context.drawImage(base, image_x, image_y);
+          }
+
+          drawing.world_dummy.context.drawImage(img, image_x, image_y);
+
+          if (img.complete) {
+            drawn_tiles++;
+          }
+        }
+      }
+
+      console.log(drawn_tiles + " " + (GAME_WORLD_WIDTH * GAME_WORLD_HEIGHT));
+
+      if (drawn_tiles === (GAME_WORLD_WIDTH * GAME_WORLD_HEIGHT)) {
+        world_loaded = true;
+
+        clearInterval(try_to_draw_interval);
+      }
+    }, 25);
+  }
+
   function loaded() {
+    game.setWorldLoadedListener(worldLoaded);
+
     var world_canvas = document.getElementById('world_canvas');
     var player_canvas = document.getElementById('players_canvas');
 
     var dummy = document.createElement("canvas");
-    dummy.width = game.getWorldDimensions().WIDTH;
-    dummy.height = game.getWorldDimensions().HEIGHT;
+    dummy.width = 0;
+    dummy.height = 0;
 
     drawing = {
       world: {
@@ -29,7 +81,8 @@ define(['./game', 'domReady'], function (game) {
         context: player_canvas.getContext('2d')
       },
       world_dummy: {
-
+        canvas: dummy,
+        context: dummy.getContext('2d')
       }
     };
 
@@ -37,7 +90,7 @@ define(['./game', 'domReady'], function (game) {
 
     loadVehicleImages();
 
-    world_drawn = 0;
+    world_loaded = false;
 
     requestAnimationFrame(draw);
   }
@@ -50,7 +103,7 @@ define(['./game', 'domReady'], function (game) {
   }
 
   function getGearText() {
-    switch (game.player_gear) {
+    switch (game.getPlayerGear()) {
       case -1:
         return "R";
       case 0:
@@ -115,61 +168,36 @@ define(['./game', 'domReady'], function (game) {
     };
   }
 
-  var world_drawn;
-
   function draw() {
     var local_car = game.getLocalPlayer();
 
     if (local_car != undefined) {
-
       var local_car_x = local_car.position.x;
       var local_car_y = local_car.position.y;
 
       var origin_x = drawing.world.canvas.width / 2;
       var origin_y = drawing.world.canvas.height / 2;
 
-      if (world_drawn < 5)
-      {
-        // Clear the canvas so we can draw again
+      drawing.world.context.save();
+      drawing.world.context.fillStyle = "#333333"
+      drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
+      drawing.world.context.restore();
+
+      if (world_loaded) {
         drawing.world.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
-        drawing.world.context.save();
-        drawing.world.context.fillStyle = "#333333"
-        drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
-        drawing.world.context.restore();
+        drawing.world.context.drawImage(drawing.world_dummy.canvas, 0 + origin_x - local_car_x, 0 + origin_y - local_car_y);
 
-        var base = game.getBaseTileImage();
+        drawing.players.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
-        for (var y = 0; y < game.getWorldDimensions().HEIGHT; y++) {
-          for (var x = 0; x < game.getWorldDimensions().WIDTH; x++) {
-            var img = game.getWorldTile(x, y);
-
-            // Get image offset compared to local player
-            var image_x = (img.width * x) + origin_x - local_car_x;
-            var image_y = (img.height * y) + origin_y - local_car_y;
-
-            if (base != img) {
-                drawing.world.context.drawImage(base, image_x, image_y);
-            }
-
-            drawing.world.context.drawImage(img, image_x, image_y);
+        _.forEach(game.car_array, function(car) {
+          if (car != undefined) {
+            drawCar(car);
           }
-        }
-
-        world_drawn++;
+        });
       }
 
-
-
-      drawing.players.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
-
-      _.forEach(game.car_array, function(car) {
-        if (car != undefined) {
-          drawCar(car);
-        }
-      });
-
-      //drawGearInformation();
+      drawGearInformation();
     }
 
     requestAnimationFrame(draw);

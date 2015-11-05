@@ -160,6 +160,10 @@ define(['./key_handler'], function (key_handler) {
     car.position.rotation.car_deg = (Math.atan2(car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x) * (180/Math.PI)) + 90;
   }
 
+  function getPlayerGear() {
+    return player_gear;
+  }
+
   function changeDownGear() {
     if (been_in_gear > GEAR_WAIT_TIME) {
       if (player_gear > LOWEST_GEAR) {
@@ -302,6 +306,12 @@ define(['./key_handler'], function (key_handler) {
     };
   }
 
+  var world_loaded_listener;
+
+  function setWorldLoadedListener(listener) {
+    world_loaded_listener = listener;
+  }
+
   function setWorldTiles(world_data) {
     WORLD_HEIGHT_TILE = world_data.height;
     WORLD_WIDTH_TILE = world_data.width;
@@ -323,6 +333,8 @@ define(['./key_handler'], function (key_handler) {
         }
       }
     }
+
+    world_loaded_listener();
   }
 
   var track_tile_images;
@@ -396,10 +408,11 @@ define(['./key_handler'], function (key_handler) {
     getWorldDimensions: getWorldDimensions,
     getWorldTile: getWorldTile,
     car_array: car_array,
-    player_gear: player_gear,
     setLocalPlayerId: setLocalPlayerId,
     setCarData: setCarData,
     setMovementListener: setMovementListener,
-    setWorldTiles: setWorldTiles
+    setWorldTiles: setWorldTiles,
+    setWorldLoadedListener: setWorldLoadedListener,
+    getPlayerGear: getPlayerGear
   }
 });

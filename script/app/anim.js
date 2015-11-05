@@ -15,6 +15,10 @@ define(['./game', 'domReady'], function (game) {
     var world_canvas = document.getElementById('world_canvas');
     var player_canvas = document.getElementById('players_canvas');
 
+    var dummy = document.createElement("canvas");
+    dummy.width = game.getWorldDimensions().WIDTH;
+    dummy.height = game.getWorldDimensions().HEIGHT;
+
     drawing = {
       world: {
         canvas: world_canvas,
@@ -23,12 +27,17 @@ define(['./game', 'domReady'], function (game) {
       players: {
         canvas: player_canvas,
         context: player_canvas.getContext('2d')
+      },
+      world_dummy: {
+
       }
     };
 
     resized();
 
     loadVehicleImages();
+
+    world_drawn = 0;
 
     requestAnimationFrame(draw);
   }
@@ -106,43 +115,51 @@ define(['./game', 'domReady'], function (game) {
     };
   }
 
+  var world_drawn;
+
   function draw() {
     var local_car = game.getLocalPlayer();
 
     if (local_car != undefined) {
+
       var local_car_x = local_car.position.x;
       var local_car_y = local_car.position.y;
 
       var origin_x = drawing.world.canvas.width / 2;
       var origin_y = drawing.world.canvas.height / 2;
 
-      // Clear the canvas so we can draw again
-      drawing.world.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
+      if (world_drawn < 5)
+      {
+        // Clear the canvas so we can draw again
+        drawing.world.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
-      drawing.world.context.save();
-      drawing.world.context.fillStyle = "#333333"
-      drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
-      drawing.world.context.restore();
+        drawing.world.context.save();
+        drawing.world.context.fillStyle = "#333333"
+        drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
+        drawing.world.context.restore();
 
-      var base = game.getBaseTileImage();
+        var base = game.getBaseTileImage();
 
-      for (var y = 0; y < game.getWorldDimensions().HEIGHT; y++) {
-        for (var x = 0; x < game.getWorldDimensions().WIDTH; x++) {
-          var img = game.getWorldTile(x, y);
+        for (var y = 0; y < game.getWorldDimensions().HEIGHT; y++) {
+          for (var x = 0; x < game.getWorldDimensions().WIDTH; x++) {
+            var img = game.getWorldTile(x, y);
 
-          // Get image offset compared to local player
-          var image_x = (img.width * x) + origin_x - local_car_x;
-          var image_y = (img.height * y) + origin_y - local_car_y;
+            // Get image offset compared to local player
+            var image_x = (img.width * x) + origin_x - local_car_x;
+            var image_y = (img.height * y) + origin_y - local_car_y;
 
-          if (base != img) {
-              drawing.world.context.drawImage(base, image_x, image_y);
+            if (base != img) {
+                drawing.world.context.drawImage(base, image_x, image_y);
+            }
+
+            drawing.world.context.drawImage(img, image_x, image_y);
           }
-
-          console.log(img);
-
-          drawing.world.context.drawImage(img, image_x, image_y);
         }
+
+        world_drawn++;
       }
+
+
 
       drawing.players.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 

@@ -13,6 +13,8 @@ define(['./game', 'domReady'], function (game) {
   var car_width = 21 * scale, car_height = 25 * scale;
   var wheel_base = car_height + wheel_length / 4;
 
+  var lastCalledTime, fps;
+
   function worldLoaded() {
     if (drawing.world_dummy.canvas.width === 0) {
       drawing.world_dummy.canvas.width = game.getWorldDimensions().WIDTH * 128;
@@ -62,6 +64,8 @@ define(['./game', 'domReady'], function (game) {
   }
 
   function loaded() {
+    lastCalledTime = 0, fps = 0;
+
     game.setWorldLoadedListener(worldLoaded);
 
     var world_canvas = document.getElementById('world_canvas');
@@ -169,6 +173,18 @@ define(['./game', 'domReady'], function (game) {
   }
 
   function draw() {
+    if(lastCalledTime === 0) {
+      lastCalledTime = Date.now();
+      fps = 0;
+
+      requestAnimationFrame(draw);
+      return;
+    }
+
+    delta = (new Date().getTime() - lastCalledTime)/1000;
+    lastCalledTime = Date.now();
+    fps = 1/delta;
+
     var local_car = game.getLocalPlayer();
 
     if (local_car != undefined) {
@@ -199,6 +215,12 @@ define(['./game', 'domReady'], function (game) {
 
       drawGearInformation();
     }
+
+    drawing.world.context.save();
+    drawing.world.context.font = "20px Arial";
+    drawing.world.context.fillStyle = "yellow";
+    drawing.world.context.fillText("FPS: " + fps.toFixed(0), 25, 45);
+    drawing.world.context.restore();
 
     requestAnimationFrame(draw);
 

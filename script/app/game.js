@@ -28,16 +28,6 @@ define(['./key_handler'], function (key_handler) {
 
   var GEAR_WAIT_TIME = 20, LOWEST_GEAR = -1, HIGHEST_GEAR = 1;
 
-  var TRACK_COLOURS =
-  [
-    [164, 199, 201],
-    [168, 203, 205],
-    [184, 214, 215],
-    [189, 218, 219],
-    [158, 192, 194],
-    [161, 196, 198],
-  ];
-
   var movement_network_listener;
 
   function setMovementListener(listener) {
@@ -52,18 +42,10 @@ define(['./key_handler'], function (key_handler) {
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.UP)) {
-      if (player_gear == -1) {
-        if (local_car.speed - 0.5 > -2.0) {
-          local_car.speed -= 0.3;
-        } else {
-          local_car.speed = -2.0;
-        }
-      } else if (player_gear > 0) {
-        if (local_car.speed + 0.5 < 4.0) {
-          local_car.speed += 0.3;
-        } else {
-          local_car.speed = 4.0;
-        }
+      if (local_car_engine_force + 6.0 > 100.0) {
+        local_car_engine_force = 100.0;
+      } else {
+        local_car_engine_force += 6.0;
       }
 
       if (movement_network_listener != undefined)
@@ -72,30 +54,25 @@ define(['./key_handler'], function (key_handler) {
       }
     }
 
-    if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-      // We need to apply different speeds if we're reversing
-      if (local_car.speed < 0.0) {
-        if (local_car.speed < -0.5) {
-          local_car.speed *= 0.8;
-        } else if (local_car.speed >= -0.5 && local_car.speed < -0.1) {
-          local_car.speed *= 0.6;
-        } else {
-          local_car.speed = 0.0;
-        }
+    if (!key_handler.pressing(key_handler.KeyCodes.UP)) {
+      if (local_car_engine_force - 0.75 < 0.0) {
+        local_car_engine_force = 0.0;
       } else {
-        if (local_car.speed > 0.5) {
-          local_car.speed *= 0.8;
-        } else if (local_car.speed <= 0.5 && local_car.speed > 0.1) {
-          local_car.speed *= 0.6;
-        } else {
-          local_car.speed = 0.0;
-        }
+        local_car_engine_force -= 0.75;
       }
+    }
+
+    if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
+      local_car_braking_force = 50.0;
 
       if (movement_network_listener != undefined)
       {
         movement_network_listener();
       }
+    }
+
+    if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
+      local_car_braking_force = 0.0;
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.LEFT)) {
@@ -136,11 +113,69 @@ define(['./key_handler'], function (key_handler) {
     });
   }
 
-  function moveCar(car) {
-    var wheel_rotation_rad = (car.position.rotation.wheel_deg - 90) * (Math.PI / 180);
-    var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
+  var local_car_engine_force = 0, local_car_braking_force = 0, local_car_velocity_x = 0, local_car_velocity_y = 0;
 
+  var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;
+  var DRAG_CONSTANT = 0.5 * FRICTION_COEFFICIENT * CAR_FRONTAL_AREA * AIR_DENSITY;
+
+  var DRAG_ROLLING_RESISTANCE = 30 * DRAG_CONSTANT;
+
+  function moveCar(car) {
     var dt = 1;
+
+    var car_rotation_rad = Math.radians(car.position.rotation.car_deg - 90);
+    var wheel_rotation_rad = Math.radians(car.position.rotation.wheel_deg - 90);
+
+    var car_heading_vector_x = Math.cos(car_rotation_rad);
+    var car_heading_vector_y = Math.sin(car_rotation_rad);
+
+    var f_traction_x;
+    var f_traction_y;
+
+    var speed = Math.sqrt(local_car_velocity_x * local_car_velocity_x + local_car_velocity_y * local_car_velocity_y);
+
+    var f_engine_traction_x = (car_heading_vector_x * local_car_engine_force);
+    var f_engine_traction_y = (car_heading_vector_y * local_car_engine_force);
+
+    var f_braking_traction_x = ((car_heading_vector_x * -1) * local_car_braking_force);
+    var f_braking_traction_y = ((car_heading_vector_y * -1) * local_car_braking_force);
+
+    var total_engine_traction = Math.sqrt(f_engine_traction_x * f_engine_traction_x + f_engine_traction_y * f_engine_traction_y);
+    var total_braking_traction = Math.sqrt(f_braking_traction_x * f_braking_traction_x + f_braking_traction_y * f_braking_traction_y);
+
+    if (total_engine_traction === 0.0)
+    {
+      f_braking_traction_x = 0.0;
+      f_braking_traction_y = 0.0;
+      local_car_braking_force = 0.0;
+      f_traction_x = 0;
+      f_traction_y = 0;
+    } else {
+      f_traction_x = f_engine_traction_x + f_braking_traction_x;
+      f_traction_y = f_engine_traction_y + f_braking_traction_y;
+    }
+
+    var total_traction = Math.sqrt(f_traction_x * f_traction_x + f_traction_y * f_traction_y);
+
+    var f_drag_x = (DRAG_CONSTANT * -1) * local_car_velocity_x * speed;
+    var f_drag_y = (DRAG_CONSTANT * -1) * local_car_velocity_y * speed;
+
+    var f_rolling_resistance_x = (DRAG_ROLLING_RESISTANCE * -1) * local_car_velocity_x;
+    var f_rolling_resistance_y = (DRAG_ROLLING_RESISTANCE * -1) * local_car_velocity_y;
+
+    var f_longitudinal_x, f_longitudinal_y;
+
+    f_longitudinal_x = f_traction_x + f_drag_x + f_rolling_resistance_x;
+    f_longitudinal_y = f_traction_y + f_drag_y + f_rolling_resistance_y;
+
+    var acceleration_x = f_longitudinal_x / CAR_MASS;
+    var acceleration_y = f_longitudinal_y / CAR_MASS;
+
+    local_car_velocity_x = local_car_velocity_x + dt * acceleration_x;
+    local_car_velocity_y = local_car_velocity_y + dt * acceleration_y;
+
+    car.position.x = car.position.x + dt * local_car_velocity_x;
+    car.position.y = car.position.y + dt * local_car_velocity_y;
 
     var front_modifier = 0;
     var back_modifier = 0;
@@ -148,11 +183,11 @@ define(['./key_handler'], function (key_handler) {
     front_modifier = (car_rotation_rad + wheel_rotation_rad);
     back_modifier = car_rotation_rad;
 
-    car.position.wheels.front.x += car.speed * dt * Math.cos(front_modifier);
-    car.position.wheels.front.y += car.speed * dt * Math.sin(front_modifier);
+    car.position.wheels.front.x += speed * dt * Math.cos(front_modifier);
+    car.position.wheels.front.y += speed * dt * Math.sin(front_modifier);
 
-    car.position.wheels.back.x += car.speed * dt * Math.cos(back_modifier);
-    car.position.wheels.back.y += car.speed * dt * Math.sin(back_modifier);
+    car.position.wheels.back.x += speed * dt * Math.cos(back_modifier);
+    car.position.wheels.back.y += speed * dt * Math.sin(back_modifier);
 
     car.position.x = (car.position.wheels.front.x + car.position.wheels.back.x) / 2;
     car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;
@@ -385,12 +420,14 @@ define(['./key_handler'], function (key_handler) {
         var close_to_y = (data.position.y.closeTo(car_array[id].position.y, 2.0));
 
         if (!close_to_x || !close_to_y) {
-          car_array[id].position.x = data.position.x;
+          /*car_array[id].position.x = data.position.x;
           car_array[id].position.y = data.position.y;
           car_array[id].position.rotation.car_deg = data.position.rotation.car_deg;
-          car_array[id].position.rotation.car_rad = data.position.rotation.car_rad;
+          car_array[id].position.rotation.car_rad = data.position.rotation.car_rad;*/
         }
       } else {
+        alert("Fix game.SetCarData and networking.updatePlayer - you commented stuff out!");
+
         requires_full_update = true;
       }
     } else {
@@ -401,6 +438,16 @@ define(['./key_handler'], function (key_handler) {
       car_array[id] = data;
     }
   }
+
+  // Converts from degrees to radians.
+  Math.radians = function(degrees) {
+    return degrees * Math.PI / 180;
+  };
+
+  // Converts from radians to degrees.
+  Math.degrees = function(radians) {
+    return radians * 180 / Math.PI;
+  };
 
   return {
     getLocalPlayer: getLocalPlayer,

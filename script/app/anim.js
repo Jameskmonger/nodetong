@@ -53,8 +53,6 @@ define(['./game', 'domReady'], function (game) {
         }
       }
 
-      console.log(drawn_tiles + " " + (GAME_WORLD_WIDTH * GAME_WORLD_HEIGHT));
-
       if (drawn_tiles === (GAME_WORLD_WIDTH * GAME_WORLD_HEIGHT)) {
         world_loaded = true;
 

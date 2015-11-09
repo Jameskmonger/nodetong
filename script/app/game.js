@@ -109,10 +109,6 @@ define(['./key_handler', './Vector'], function (key_handler, Vector) {
     });
   }
 
-  function getVectorMagnitude(x, y) {
-    return Math.sqrt(x * x + y * y);
-  }
-
   var local_car_engine_force = 0, local_car_braking_force = 0;
 
   var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;

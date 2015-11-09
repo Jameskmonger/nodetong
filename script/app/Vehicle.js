@@ -4,6 +4,11 @@ define(function () {
     var LEFT_TURN_MAX = 40, RIGHT_TURN_MAX = 140;
     var WHEEL_TURN_INCREMENT = 2.5, WHEEL_STRAIGHTEN_INCREMENT = 4.0;
 
+    var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;
+    var DRAG_CONSTANT = 0.5 * FRICTION_COEFFICIENT * CAR_FRONTAL_AREA * AIR_DENSITY;
+
+    var DRAG_ROLLING_RESISTANCE = 30 * DRAG_CONSTANT;
+
     var scale = 1.4;
 
     var wheel_width = 5 * scale, wheel_length = 11 * scale;
@@ -24,6 +29,7 @@ define(function () {
       this.color = 0;
       this.model = 0;
 
+      this.engine_power = 0.0;
       this.speed = 0.0;
     }
 
@@ -94,12 +100,8 @@ define(function () {
         listener();
       },
 
-      accelerate: function (amount) {
-        this.speed += amount;
-      },
-
-      brake: function (amount) {
-        this.speed -= amount;
+      setEnginePower: function (value) {
+        this.engine_power = value;
       },
 
       processMovement: function () {
@@ -118,6 +120,18 @@ define(function () {
         };
 
         var wheel_rads = Math.radians(this.rotation.wheel - 90);
+
+        var force_traction = this.engine_power;
+
+        var force_drag = this.speed * (DRAG_CONSTANT * -1);
+
+        var force_rolling_res = this.speed * (DRAG_ROLLING_RESISTANCE * -1);
+
+        var forwards_force = force_traction + force_drag + force_rolling_res;
+
+        var acceleration = forwards_force / CAR_MASS;
+
+        this.speed = this.speed + dt * acceleration;
 
         // this.speed is a scalar with the speed of the vehicle relative to the vehicle.
         // 1 is travelling at 1 unit forwards, -1 is travelling at 1 unit backwards

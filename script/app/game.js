@@ -25,15 +25,15 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.UP)) {
-      local_car.accelerate(0.5);
+      local_car.setEnginePower(100.0);
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.UP)) {
-
+      local_car.setEnginePower(0.0);
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-      local_car.brake(1.0);
+
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
@@ -58,13 +58,6 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
       }
     });
   }
-
-  var local_car_engine_force = 0, local_car_braking_force = 0;
-
-  var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;
-  var DRAG_CONSTANT = 0.5 * FRICTION_COEFFICIENT * CAR_FRONTAL_AREA * AIR_DENSITY;
-
-  var DRAG_ROLLING_RESISTANCE = 30 * DRAG_CONSTANT;
 
   /*
    * The local player is always sent first, so it will

@@ -3,21 +3,10 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
 
   var LOCAL_PLAYER_ID;
 
-  var world_canvas;
-
-  var local_car_velocity;
-
   loaded();
 
   function loaded() {
     setInterval(game_loop, GAME_LOOP_INTERVAL);
-
-    local_car_velocity = new Vector(0, 0);
-
-    world_canvas = {
-      canvas: document.getElementById('world_canvas'),
-      context: document.getElementById('world_canvas').getContext('2d')
-    };
   }
 
   var car_array = [];
@@ -36,29 +25,19 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.UP)) {
-      local_car_engine_force = 100.0;
-
-      if (movement_network_listener != undefined)
-      {
-        movement_network_listener();
-      }
+      local_car.accelerate(0.5);
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.UP)) {
-      local_car_engine_force = 0.0;
+
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-      local_car_braking_force = 50.0;
-
-      if (movement_network_listener != undefined)
-      {
-        movement_network_listener();
-      }
+      local_car.brake(1.0);
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-      local_car_braking_force = 0.0;
+
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.LEFT)) {
@@ -75,10 +54,7 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
 
     _.forEach(car_array, function(car) {
       if (car != undefined) {
-        calculateRotationRad(car);
-
-        // Calculate all cars movements locally to prevent jumpiness.
-        moveCar(car);
+        car.processMovement();
       }
     });
   }
@@ -89,14 +65,6 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
   var DRAG_CONSTANT = 0.5 * FRICTION_COEFFICIENT * CAR_FRONTAL_AREA * AIR_DENSITY;
 
   var DRAG_ROLLING_RESISTANCE = 30 * DRAG_CONSTANT;
-
-  function moveCar(car) {
-
-  }
-
-  function calculateRotationRad(car) {
-    car.position.rotation.car_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
-  }
 
   /*
    * The local player is always sent first, so it will
@@ -197,6 +165,10 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
   }
 
   function setCarData(id, data) {
+    if (data == null) {
+      return;
+    }
+
     var requires_full_update;
 
     if (id === LOCAL_PLAYER_ID) {

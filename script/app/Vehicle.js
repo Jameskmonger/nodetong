@@ -13,15 +13,18 @@ define(function () {
     function Vehicle() {
       this.position = {
         x: 0,
-        y: 0,
-        rotation: {
-          wheel_deg: 90.0,
-          car_deg: 90.0
-        }
+        y: 0
+      };
+
+      this.rotation = {
+        vehicle: 90.0,
+        wheel: 90.0
       };
 
       this.color = 0;
       this.model = 0;
+
+      this.speed = 0.0;
     }
 
     Vehicle.prototype = {
@@ -33,7 +36,7 @@ define(function () {
       },
 
       getWheelRotation: function() {
-        return this.position.rotation.wheel_deg;
+        return this.rotation.wheel;
       },
 
       setWheelRotation: function (value) {
@@ -45,7 +48,7 @@ define(function () {
           return;
         }
 
-        this.position.rotation.wheel_deg = value;
+        this.rotation.wheel = value;
         return;
       },
 
@@ -90,6 +93,47 @@ define(function () {
 
         listener();
       },
+
+      accelerate: function (amount) {
+        this.speed += amount;
+      },
+
+      brake: function (amount) {
+        this.speed -= amount;
+      },
+
+      processMovement: function () {
+        var dt = 1.0;
+
+        var rads = Math.radians(this.rotation.vehicle - 90);
+
+        var front_wheels = {
+          x: this.position.x + (wheel_base / 2) * Math.cos(rads),
+          y: this.position.y + (wheel_base / 2) * Math.sin(rads)
+        };
+
+        var back_wheels = {
+          x: this.position.x - (wheel_base / 2) * Math.cos(rads),
+          y: this.position.y - (wheel_base / 2) * Math.sin(rads)
+        };
+
+        var wheel_rads = Math.radians(this.rotation.wheel - 90);
+
+        // this.speed is a scalar with the speed of the vehicle relative to the vehicle.
+        // 1 is travelling at 1 unit forwards, -1 is travelling at 1 unit backwards
+        // relative to the car
+
+        front_wheels.x += this.speed * dt * Math.cos(rads + wheel_rads);
+        front_wheels.y += this.speed * dt * Math.sin(rads + wheel_rads);
+
+        back_wheels.x += this.speed * dt * Math.cos(rads);
+        back_wheels.y += this.speed * dt * Math.sin(rads);
+
+        this.position.x = (front_wheels.x + back_wheels.x) / 2;
+        this.position.y = (front_wheels.y + back_wheels.y) / 2;
+
+        this.rotation.vehicle = Math.degrees(Math.atan2(front_wheels.y - back_wheels.y, front_wheels.x - back_wheels.x)) + 90;
+      }
     };
 
     return Vehicle;

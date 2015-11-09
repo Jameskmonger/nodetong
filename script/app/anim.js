@@ -139,7 +139,7 @@ define(['./game', 'domReady'], function (game) {
   }
 
   function getPositionRotationRad(car) {
-    return (car.position.rotation.car_deg) * (Math.PI/180);
+    return (car.rotation.vehicle) * (Math.PI/180);
   }
 
   function getWorldPositionForScreenCoordinates(x, y) {
@@ -235,7 +235,7 @@ define(['./game', 'domReady'], function (game) {
       var front_wheel_rotation = 90;
       var back_wheel_rotation = 90;
 
-      front_wheel_rotation = car.position.rotation.wheel_deg;
+      front_wheel_rotation = car.rotation.wheel;
       back_wheel_rotation = 90;
 
       drawRotatedRect(drawing.players.context, front_left_wheel_x, front_left_wheel_y, wheel_length, wheel_width, front_wheel_rotation);

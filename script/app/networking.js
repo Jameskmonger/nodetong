@@ -36,7 +36,7 @@ define(['./game'], function (game) {
     }
 
     var data = {
-      wheel: player.position.rotation.wheel_deg,
+      wheel: player.rotation.wheel,
       speed: player.speed
     };
 

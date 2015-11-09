@@ -1,4 +1,4 @@
-define(['./key_handler'], function (key_handler) {
+define(['./key_handler', './Vector'], function (key_handler, Vector) {
   var GAME_LOOP_INTERVAL = 25;
 
   var LOCAL_PLAYER_ID;
@@ -11,10 +11,14 @@ define(['./key_handler'], function (key_handler) {
 
   var world_canvas;
 
+  var local_car_velocity;
+
   loaded();
 
   function loaded() {
     setInterval(game_loop, GAME_LOOP_INTERVAL);
+
+    local_car_velocity = new Vector(0, 0);
 
     world_canvas = {
       canvas: document.getElementById('world_canvas'),
@@ -42,11 +46,7 @@ define(['./key_handler'], function (key_handler) {
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.UP)) {
-      if (local_car_engine_force + 6.0 > 100.0) {
-        local_car_engine_force = 100.0;
-      } else {
-        local_car_engine_force += 6.0;
-      }
+      local_car_engine_force = 100.0;
 
       if (movement_network_listener != undefined)
       {
@@ -55,11 +55,7 @@ define(['./key_handler'], function (key_handler) {
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.UP)) {
-      if (local_car_engine_force - 0.75 < 0.0) {
-        local_car_engine_force = 0.0;
-      } else {
-        local_car_engine_force -= 0.75;
-      }
+      local_car_engine_force = 0.0;
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
@@ -117,7 +113,7 @@ define(['./key_handler'], function (key_handler) {
     return Math.sqrt(x * x + y * y);
   }
 
-  var local_car_engine_force = 0, local_car_braking_force = 0, local_car_velocity_x = 0, local_car_velocity_y = 0;
+  var local_car_engine_force = 0, local_car_braking_force = 0;
 
   var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;
   var DRAG_CONSTANT = 0.5 * FRICTION_COEFFICIENT * CAR_FRONTAL_AREA * AIR_DENSITY;
@@ -128,35 +124,30 @@ define(['./key_handler'], function (key_handler) {
     var dt = 1;
 
     var car_rotation_rad = Math.radians(car.position.rotation.car_deg - 90);
+    var car_backwards_rotation_rad = car_rotation_rad - Math.PI;
 
     var wheel_rotation_rad = Math.radians(car.position.rotation.wheel_deg - 90);
 
-    var car_heading_vector_x = Math.cos(car_rotation_rad);
-    var car_heading_vector_y = Math.sin(car_rotation_rad);
+    var car_heading = new Vector(Math.cos(car_rotation_rad), Math.sin(car_rotation_rad));
 
     var speed;
 
-    speed = getVectorMagnitude(local_car_velocity_x, local_car_velocity_y);
+    speed = local_car_velocity.magnitude();
 
-    var f_traction_x = (car_heading_vector_x * local_car_engine_force);
-    var f_traction_y = (car_heading_vector_y * local_car_engine_force);
+    var f_traction = car_heading.multiplyScalar(local_car_engine_force);
 
-    var f_drag_x = (DRAG_CONSTANT * -1) * local_car_velocity_x * speed;
-    var f_drag_y = (DRAG_CONSTANT * -1) * local_car_velocity_y * speed;
+    var f_drag = local_car_velocity.multiplyScalar(speed * (DRAG_CONSTANT * -1));
 
-    var f_rolling_resistance_x = (DRAG_ROLLING_RESISTANCE * -1) * local_car_velocity_x;
-    var f_rolling_resistance_y = (DRAG_ROLLING_RESISTANCE * -1) * local_car_velocity_y;
+    var f_rolling_resistance = local_car_velocity.multiplyScalar(DRAG_ROLLING_RESISTANCE * -1);
 
-    var f_longitudinal_x = f_traction_x + f_drag_x + f_rolling_resistance_x;
-    var f_longitudinal_y = f_traction_y + f_drag_y + f_rolling_resistance_y;
+    var f_longitudinal = f_traction.addVector(f_drag).addVector(f_rolling_resistance);
 
-    var acceleration_x = f_longitudinal_x / CAR_MASS;
-    var acceleration_y = f_longitudinal_y / CAR_MASS;
+    // Divide by CAR_MASS
+    var acceleration = f_longitudinal.multiplyScalar(1 / CAR_MASS);
 
-    local_car_velocity_x = local_car_velocity_x + dt * acceleration_x;
-    local_car_velocity_y = local_car_velocity_y + dt * acceleration_y;
+    local_car_velocity = local_car_velocity.addVector(acceleration.multiplyScalar(dt));
 
-    speed = getVectorMagnitude(local_car_velocity_x, local_car_velocity_y);
+    speed = local_car_velocity.magnitude();
 
     var front_modifier = 0;
     var back_modifier = 0;

@@ -113,6 +113,10 @@ define(['./key_handler'], function (key_handler) {
     });
   }
 
+  function getVectorMagnitude(x, y) {
+    return Math.sqrt(x * x + y * y);
+  }
+
   var local_car_engine_force = 0, local_car_braking_force = 0, local_car_velocity_x = 0, local_car_velocity_y = 0;
 
   var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;
@@ -124,38 +128,18 @@ define(['./key_handler'], function (key_handler) {
     var dt = 1;
 
     var car_rotation_rad = Math.radians(car.position.rotation.car_deg - 90);
+
     var wheel_rotation_rad = Math.radians(car.position.rotation.wheel_deg - 90);
 
     var car_heading_vector_x = Math.cos(car_rotation_rad);
     var car_heading_vector_y = Math.sin(car_rotation_rad);
 
-    var f_traction_x;
-    var f_traction_y;
+    var speed;
 
-    var speed = Math.sqrt(local_car_velocity_x * local_car_velocity_x + local_car_velocity_y * local_car_velocity_y);
+    speed = getVectorMagnitude(local_car_velocity_x, local_car_velocity_y);
 
-    var f_engine_traction_x = (car_heading_vector_x * local_car_engine_force);
-    var f_engine_traction_y = (car_heading_vector_y * local_car_engine_force);
-
-    var f_braking_traction_x = ((car_heading_vector_x * -1) * local_car_braking_force);
-    var f_braking_traction_y = ((car_heading_vector_y * -1) * local_car_braking_force);
-
-    var total_engine_traction = Math.sqrt(f_engine_traction_x * f_engine_traction_x + f_engine_traction_y * f_engine_traction_y);
-    var total_braking_traction = Math.sqrt(f_braking_traction_x * f_braking_traction_x + f_braking_traction_y * f_braking_traction_y);
-
-    if (total_engine_traction === 0.0)
-    {
-      f_braking_traction_x = 0.0;
-      f_braking_traction_y = 0.0;
-      local_car_braking_force = 0.0;
-      f_traction_x = 0;
-      f_traction_y = 0;
-    } else {
-      f_traction_x = f_engine_traction_x + f_braking_traction_x;
-      f_traction_y = f_engine_traction_y + f_braking_traction_y;
-    }
-
-    var total_traction = Math.sqrt(f_traction_x * f_traction_x + f_traction_y * f_traction_y);
+    var f_traction_x = (car_heading_vector_x * local_car_engine_force);
+    var f_traction_y = (car_heading_vector_y * local_car_engine_force);
 
     var f_drag_x = (DRAG_CONSTANT * -1) * local_car_velocity_x * speed;
     var f_drag_y = (DRAG_CONSTANT * -1) * local_car_velocity_y * speed;
@@ -163,10 +147,8 @@ define(['./key_handler'], function (key_handler) {
     var f_rolling_resistance_x = (DRAG_ROLLING_RESISTANCE * -1) * local_car_velocity_x;
     var f_rolling_resistance_y = (DRAG_ROLLING_RESISTANCE * -1) * local_car_velocity_y;
 
-    var f_longitudinal_x, f_longitudinal_y;
-
-    f_longitudinal_x = f_traction_x + f_drag_x + f_rolling_resistance_x;
-    f_longitudinal_y = f_traction_y + f_drag_y + f_rolling_resistance_y;
+    var f_longitudinal_x = f_traction_x + f_drag_x + f_rolling_resistance_x;
+    var f_longitudinal_y = f_traction_y + f_drag_y + f_rolling_resistance_y;
 
     var acceleration_x = f_longitudinal_x / CAR_MASS;
     var acceleration_y = f_longitudinal_y / CAR_MASS;
@@ -174,8 +156,7 @@ define(['./key_handler'], function (key_handler) {
     local_car_velocity_x = local_car_velocity_x + dt * acceleration_x;
     local_car_velocity_y = local_car_velocity_y + dt * acceleration_y;
 
-    car.position.x = car.position.x + dt * local_car_velocity_x;
-    car.position.y = car.position.y + dt * local_car_velocity_y;
+    speed = getVectorMagnitude(local_car_velocity_x, local_car_velocity_y);
 
     var front_modifier = 0;
     var back_modifier = 0;

@@ -104,19 +104,6 @@ define(['./game', 'domReady'], function (game) {
     drawing.players.canvas.height = window.innerHeight;
   }
 
-  function getGearText() {
-    switch (game.getPlayerGear()) {
-      case -1:
-        return "R";
-      case 0:
-        return "N";
-      case 1:
-        return "1";
-    }
-
-    return "N";
-  }
-
   var PRELOAD_VEHICLE_MODEL_COUNT = 5, PRELOAD_VEHICLE_COLOR_COUNT = 5;
 
   var vehicle_images = new Array();
@@ -211,7 +198,6 @@ define(['./game', 'domReady'], function (game) {
         });
       }
 
-      drawGearInformation();
     }
 
     drawing.world.context.save();
@@ -221,14 +207,6 @@ define(['./game', 'domReady'], function (game) {
     drawing.world.context.restore();
 
     requestAnimationFrame(draw);
-
-    function drawGearInformation() {
-      drawing.players.context.save();
-      drawing.players.context.font = "42px Arial";
-      drawing.players.context.fillStyle = "#ffffff";
-      drawing.players.context.fillText(getGearText(), 25, drawing.players.canvas.height - 25);
-      drawing.players.context.restore();
-    }
 
     function drawCar(car) {
       // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html

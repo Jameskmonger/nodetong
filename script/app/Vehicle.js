@@ -1,4 +1,4 @@
-define(function () {
+define(['./Vector'], function (Vector) {
     "use strict";
 
     var LEFT_TURN_MAX = 40, RIGHT_TURN_MAX = 140;
@@ -16,10 +16,7 @@ define(function () {
     var wheel_base = car_height + wheel_length / 4;
 
     function Vehicle() {
-      this.position = {
-        x: 0,
-        y: 0
-      };
+      this.position = new Vector(0, 0);
 
       this.rotation = {
         vehicle: 90.0,
@@ -30,6 +27,7 @@ define(function () {
       this.model = 0;
 
       this.engine_power = 0.0;
+      this.braking_force = 0.0;
       this.speed = 0.0;
     }
 
@@ -37,8 +35,7 @@ define(function () {
       constructor: Vehicle,
 
       setPosition: function (x, y) {
-        this.position.x = x;
-        this.position.y = y;
+        this.position = new Vector(x, y);
       },
 
       getWheelRotation: function() {
@@ -104,24 +101,29 @@ define(function () {
         this.engine_power = value;
       },
 
+      setBrakingForce: function (value) {
+        this.braking_force = value;
+      },
+
       processMovement: function () {
         var dt = 1.0;
 
         var rads = Math.radians(this.rotation.vehicle - 90);
 
-        var front_wheels = {
-          x: this.position.x + (wheel_base / 2) * Math.cos(rads),
-          y: this.position.y + (wheel_base / 2) * Math.sin(rads)
-        };
+        var wheel_base_offset = new Vector((wheel_base / 2) * Math.cos(rads), (wheel_base / 2) * Math.sin(rads));
 
-        var back_wheels = {
-          x: this.position.x - (wheel_base / 2) * Math.cos(rads),
-          y: this.position.y - (wheel_base / 2) * Math.sin(rads)
-        };
-
-        var wheel_rads = Math.radians(this.rotation.wheel - 90);
+        var front_wheels = new Vector(this.position.x, this.position.y).addVector(wheel_base_offset);
+        var back_wheels = new Vector(this.position.x, this.position.y).subtractVector(wheel_base_offset);
 
         var force_traction = this.engine_power;
+
+        if (this.speed > 0.1)
+        {
+          force_traction -= this.braking_force;
+        } else if (this.braking_force > 10.0) {
+          this.speed = 0.0;
+          force_traction = 0.0
+        }
 
         var force_drag = this.speed * (DRAG_CONSTANT * -1);
 
@@ -133,18 +135,17 @@ define(function () {
 
         this.speed = this.speed + dt * acceleration;
 
-        // this.speed is a scalar with the speed of the vehicle relative to the vehicle.
-        // 1 is travelling at 1 unit forwards, -1 is travelling at 1 unit backwards
-        // relative to the car
+        var wheel_rads = Math.radians(this.rotation.wheel - 90);
 
-        front_wheels.x += this.speed * dt * Math.cos(rads + wheel_rads);
-        front_wheels.y += this.speed * dt * Math.sin(rads + wheel_rads);
+        var front_wheel_movement = new Vector(Math.cos(rads + wheel_rads), Math.sin(rads + wheel_rads)).multiplyScalar(this.speed);
 
-        back_wheels.x += this.speed * dt * Math.cos(rads);
-        back_wheels.y += this.speed * dt * Math.sin(rads);
+        front_wheels = front_wheels.addVector(front_wheel_movement);
 
-        this.position.x = (front_wheels.x + back_wheels.x) / 2;
-        this.position.y = (front_wheels.y + back_wheels.y) / 2;
+        var back_wheel_movement = new Vector(Math.cos(rads), Math.sin(rads)).multiplyScalar(this.speed);
+
+        back_wheels = back_wheels.addVector(back_wheel_movement);
+
+        this.position = front_wheels.addVector(back_wheels).multiplyScalar(1 / 2);
 
         this.rotation.vehicle = Math.degrees(Math.atan2(front_wheels.y - back_wheels.y, front_wheels.x - back_wheels.x)) + 90;
       }

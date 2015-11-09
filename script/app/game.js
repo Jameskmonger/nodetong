@@ -33,11 +33,11 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-
+      local_car.setBrakingForce(50.0);
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-
+      local_car.setBrakingForce(0.0);
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.LEFT)) {

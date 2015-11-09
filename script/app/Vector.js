@@ -25,7 +25,6 @@ define(function () {
       },
 
       multiplyScalar: function (scalar) {
-
         var new_x = (this.x * scalar);
         var new_y = (this.y * scalar);
 

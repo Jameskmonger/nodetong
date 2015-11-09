@@ -127,9 +127,7 @@ define(['./key_handler', './Vector'], function (key_handler, Vector) {
     var car_heading = new Vector(Math.cos(car_rotation_rad), Math.sin(car_rotation_rad));
     var car_backwards_heading = new Vector(Math.cos(car_backwards_rotation_rad), Math.sin(car_backwards_rotation_rad));
 
-    var speed;
-
-    speed = local_car_velocity.magnitude();
+    var speed = local_car_velocity.magnitude();
 
     var f_engine = car_heading.multiplyScalar(local_car_engine_force);
 
@@ -150,17 +148,14 @@ define(['./key_handler', './Vector'], function (key_handler, Vector) {
 
     speed = local_car_velocity.magnitude();
 
-    var front_modifier = 0;
-    var back_modifier = 0;
+    var front_modifier = (Math.atan2(car_heading.y, car_heading.x) + wheel_rotation_rad);
+    var back_modifier = Math.atan2(car_heading.y, car_heading.x);
 
-    front_modifier = (car_rotation_rad + wheel_rotation_rad);
-    back_modifier = car_rotation_rad;
+    car.position.wheels.front.x += speed * Math.cos(front_modifier);
+    car.position.wheels.front.y += speed * Math.sin(front_modifier);
 
-    car.position.wheels.front.x += speed * dt * Math.cos(front_modifier);
-    car.position.wheels.front.y += speed * dt * Math.sin(front_modifier);
-
-    car.position.wheels.back.x += speed * dt * Math.cos(back_modifier);
-    car.position.wheels.back.y += speed * dt * Math.sin(back_modifier);
+    car.position.wheels.back.x += speed * Math.cos(back_modifier);
+    car.position.wheels.back.y += speed * Math.sin(back_modifier);
 
     car.position.x = (car.position.wheels.front.x + car.position.wheels.back.x) / 2;
     car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;

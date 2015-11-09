@@ -125,12 +125,17 @@ define(['./key_handler', './Vector'], function (key_handler, Vector) {
     var wheel_rotation_rad = Math.radians(car.position.rotation.wheel_deg - 90);
 
     var car_heading = new Vector(Math.cos(car_rotation_rad), Math.sin(car_rotation_rad));
+    var car_backwards_heading = new Vector(Math.cos(car_backwards_rotation_rad), Math.sin(car_backwards_rotation_rad));
 
     var speed;
 
     speed = local_car_velocity.magnitude();
 
-    var f_traction = car_heading.multiplyScalar(local_car_engine_force);
+    var f_engine = car_heading.multiplyScalar(local_car_engine_force);
+
+    var f_braking = car_backwards_heading.multiplyScalar(local_car_braking_force);
+
+    var f_traction = f_engine.addVector(f_braking);
 
     var f_drag = local_car_velocity.multiplyScalar(speed * (DRAG_CONSTANT * -1));
 

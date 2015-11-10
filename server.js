@@ -6,7 +6,7 @@ var shortid = require('shortid');
 var config = require('./config');
 
 var Vehicle = require('./script/app/Vehicle');
-var Player = require('./Player');
+var Player = require('./script/app/Player');
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
@@ -137,8 +137,8 @@ io.sockets.on('connection', function(socket) {
 	console.log("Player " + id + " connected. [" + player_count + " players online]");
 
   socket.on("update player", function(player_data) {
-    socket.player_data.speed = player_data.speed;
-    socket.player_data.position.rotation.wheel_deg = player_data.wheel;
+    socket.player_data.getVehicle().setSpeed(player_data.speed);
+    socket.player_data.getVehicle().setWheelRotation(player_data.wheel);
   });
 
 	socket.on('disconnect', function() {
@@ -165,57 +165,8 @@ function loop() {
 
     var car = socketList[i].player_data;
 
-    moveCar(car);
-
     io.emit("player update", car);
   }
-}
-
-function calculateFrontWheel(car) {
-  var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
-
-  car.position.wheels.front.x = car.position.x + wheel_base/2 * Math.cos(car_rotation_rad);
-  car.position.wheels.front.y = car.position.y + wheel_base/2 * Math.sin(car_rotation_rad);
-}
-
-function calculateBackWheel(car) {
-  var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
-
-  car.position.wheels.back.x = car.position.x - wheel_base/2 * Math.cos(car_rotation_rad);
-  car.position.wheels.back.y = car.position.y - wheel_base/2 * Math.sin(car_rotation_rad);
-}
-
-var scale = 1.4;
-
-var wheel_width = 5 * scale, wheel_length = 11 * scale;
-var car_width = 21 * scale, car_height = 25 * scale;
-var wheel_base = car_height + wheel_length / 4;
-
-function moveCar(car) {
-  calculateFrontWheel(car);
-  calculateBackWheel(car);
-
-  var wheel_rotation_rad = (car.position.rotation.wheel_deg - 90) * (Math.PI / 180);
-  var car_rotation_rad = (car.position.rotation.car_deg - 90) * (Math.PI/180);
-
-  var dt = 2;
-
-  var front_modifier = 0;
-  var back_modifier = 0;
-
-  front_modifier = (car_rotation_rad + wheel_rotation_rad);
-  back_modifier = car_rotation_rad;
-
-  car.position.wheels.front.x += car.speed * dt * Math.cos(front_modifier);
-  car.position.wheels.front.y += car.speed * dt * Math.sin(front_modifier);
-
-  car.position.wheels.back.x += car.speed * dt * Math.cos(back_modifier);
-  car.position.wheels.back.y += car.speed * dt * Math.sin(back_modifier);
-
-  car.position.x = (car.position.wheels.front.x + car.position.wheels.back.x) / 2;
-  car.position.y = (car.position.wheels.front.y + car.position.wheels.back.y) / 2;
-
-  car.position.rotation.car_deg = (Math.atan2(car.position.wheels.front.y - car.position.wheels.back.y , car.position.wheels.front.x - car.position.wheels.back.x) * (180/Math.PI)) + 90;
 }
 
 var VEHICLE_COLOR_COUNT = 4;
@@ -229,41 +180,13 @@ function getRandomInt(min, max) {
 }
 
 function createPlayerObject(id) {
-  var player = new Player(id, "Boris");
+  var player = new Player({id: id, name: "Boris"});
 
-  player.getVehicle().setPosition(1470.0, 635.0);
+  var player_vehicle = player.getVehicle();
 
-  var vehicle = new Vehicle();
-  vehicle.setPosition(1470.0, 635.0);
-  vehicle.setWheelRotation(90.0);
-  vehicle.setVehicleRotation(90.0);
+  player_vehicle.setPosition(1470.0, 635.0);
+  player_vehicle.setWheelRotation(90.0);
+  player_vehicle.setVehicleRotation(90.0);
 
-  return ({
-    player: player,
-    id: id,
-    vehicle: vehicle,
-    position: {
-      wheels: {
-        front: {
-          x: 0,
-          y: 0
-        },
-        back: {
-          x: 0,
-          y: 0
-        }
-      },
-      rotation: {
-        wheel_deg: 90,
-        car_deg: 90,
-        car_rad: 1.5708
-      },
-      x: 1470.00,
-      y: 635.00
-    },
-    color: getRandomColor(),
-    model: 0,
-    speed: 0.0,
-    steering_mode: 0
-  });
+  return player;
 }

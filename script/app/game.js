@@ -1,4 +1,4 @@
-define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector, Vehicle) {
+define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_handler, Vector, Vehicle, Player) {
   var GAME_LOOP_INTERVAL = 25;
 
   var LOCAL_PLAYER_ID;
@@ -9,8 +9,6 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     setInterval(game_loop, GAME_LOOP_INTERVAL);
   }
 
-  var car_array = [];
-
   var movement_network_listener;
 
   function setMovementListener(listener) {
@@ -18,9 +16,13 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
   };
 
   function game_loop() {
-    var local_car = getLocalPlayer();
+    if (getLocalPlayer() === undefined) {
+      return;
+    }
 
-    if (local_car == undefined) {
+    var local_car = getLocalPlayer().getVehicle();
+
+    if (local_car === undefined) {
       return;
     }
 
@@ -52,9 +54,9 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
       local_car.straightenWheel(movement_network_listener);
     }
 
-    _.forEach(car_array, function(car) {
-      if (car != undefined) {
-        car.processMovement();
+    _.forEach(player_array, function(player) {
+      if (player !== undefined) {
+        player.getVehicle().processMovement();
       }
     });
   }
@@ -65,7 +67,7 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
    */
 
   function getLocalPlayer() {
-    return car_array[LOCAL_PLAYER_ID];
+    return player_array[LOCAL_PLAYER_ID];
   }
 
   var WORLD_HEIGHT_TILE;
@@ -157,6 +159,8 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     LOCAL_PLAYER_ID = id;
   }
 
+  var player_array = [];
+
   function setCarData(id, data) {
     if (data == null) {
       return;
@@ -165,14 +169,14 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     var requires_full_update;
 
     if (id === LOCAL_PLAYER_ID) {
-      if (car_array[id] !== undefined) {
-        var close_to_x = (data.position.x.closeTo(car_array[id].position.x, 2.0));
+      if (player_array[id] !== undefined) {
+        /*var close_to_x = (data.position.x.closeTo(car_array[id].position.x, 2.0));
         var close_to_y = (data.position.y.closeTo(car_array[id].position.y, 2.0));
 
         if (!close_to_x || !close_to_y) {
-          //car_array[id].setPosition(data.position.x, data.position.y);
-          //car_array[id].setRotation(data.position.rotation.car_deg);
-        }
+          car_array[id].setPosition(data.position.x, data.position.y);
+          car_array[id].setRotation(data.position.rotation.car_deg);
+        }*/
       } else {
         requires_full_update = true;
       }
@@ -181,19 +185,16 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     }
 
     if (requires_full_update) {
-      console.log(data);
+      var player = new Player(data);
 
-      var new_car = new Vehicle();
+      player._vehicle = new Vehicle(player._vehicle);
 
-      var car_position = new Vector(data.vehicle.position);
-      var car_rotation = data.vehicle.rotation;
-
-      new_car.setPosition(car_position.x, car_position.y);
-      new_car.setVehicleRotation(car_rotation.vehicle);
-      new_car.setWheelRotation(car_rotation.wheel);
-
-      car_array[id] = new_car;
+      player_array[id] = player;
     }
+  }
+
+  function getPlayerArray() {
+    return player_array;
   }
 
   return {
@@ -201,7 +202,7 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     getBaseTileImage: getBaseTileImage,
     getWorldDimensions: getWorldDimensions,
     getWorldTile: getWorldTile,
-    car_array: car_array,
+    getPlayerArray: getPlayerArray,
     setLocalPlayerId: setLocalPlayerId,
     setCarData: setCarData,
     setMovementListener: setMovementListener,

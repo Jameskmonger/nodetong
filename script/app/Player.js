@@ -2,12 +2,14 @@ if (typeof define !== 'function') {
   var define = require('amdefine')(module);
 }
 
-define(['./script/app/Vehicle'], function (Vehicle) {
+define(['./Vehicle'], function (Vehicle) {
 
-  function Player(id, name) {
-    this._id = id;
-    this._name = name;
+  function Player(obj) {
     this._vehicle = new Vehicle();
+
+    for (var prop in obj) {
+      this[prop] = obj[prop];
+    }
   }
 
   Player.prototype = {

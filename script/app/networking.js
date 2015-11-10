@@ -29,11 +29,11 @@ define(['./game'], function (game) {
   var last_sent_player;
 
   function updatePlayer() {
-    var player = game.getLocalPlayer();
-
-    if (player === undefined) {
+    if (game.getLocalPlayer() === undefined) {
       return;
     }
+
+    var player = game.getLocalPlayer().getVehicle();
 
     var data = {
       wheel: player.rotation.wheel,

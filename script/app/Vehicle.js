@@ -19,7 +19,7 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
     var car_width = 21 * scale, car_height = 25 * scale;
     var wheel_base = car_height + wheel_length / 4;
 
-    function Vehicle() {
+    function Vehicle(obj) {
       this.position = new Vector({x: 0, y: 0});
 
       this.rotation = {
@@ -33,6 +33,16 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
       this.engine_power = 0.0;
       this.braking_force = 0.0;
       this.speed = 0.0;
+
+      if (obj !== undefined) {
+        for (var prop in obj) {
+          this[prop] = obj[prop];
+        }
+
+        if ("position" in obj) {
+          this.position = new Vector(obj.position);
+        }
+      }
     }
 
     Vehicle.prototype = {
@@ -44,6 +54,10 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
 
       setVehicleRotation: function (deg) {
         this.rotation.vehicle = deg;
+      },
+
+      setSpeed: function (speed) {
+        this.speed = speed;
       },
 
       getWheelRotation: function () {

@@ -170,9 +170,14 @@ define(['./game', 'domReady'], function (game) {
     lastCalledTime = Date.now();
     fps = 1/delta;
 
-    var local_car = game.getLocalPlayer();
+    if (game.getLocalPlayer() === undefined) {
+      requestAnimationFrame(draw);
+      return;
+    }
 
-    if (local_car != undefined) {
+    var local_car = game.getLocalPlayer().getVehicle();
+
+    if (local_car !== undefined) {
       var local_car_x = local_car.position.x;
       var local_car_y = local_car.position.y;
 
@@ -191,9 +196,9 @@ define(['./game', 'domReady'], function (game) {
 
         drawing.players.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
-        _.forEach(game.car_array, function(car) {
-          if (car != undefined) {
-            drawCar(car);
+        _.forEach(game.getPlayerArray(), function(player) {
+          if (player !== undefined) {
+            drawCar(player.getVehicle());
           }
         });
       }

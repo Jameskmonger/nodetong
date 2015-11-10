@@ -1,4 +1,8 @@
-define(['./Vector'], function (Vector) {
+if (typeof define !== 'function') {
+  var define = require('amdefine')(module);
+}
+
+define(['./Vector', './Utils'], function (Vector, Utils) {
     "use strict";
 
     var LEFT_TURN_MAX = 40, RIGHT_TURN_MAX = 140;

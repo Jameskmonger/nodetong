@@ -170,8 +170,8 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
         var close_to_y = (data.position.y.closeTo(car_array[id].position.y, 2.0));
 
         if (!close_to_x || !close_to_y) {
-          car_array[id].setPosition(data.position.x, data.position.y);
-          car_array[id].setRotation(data.position.rotation.car_deg);
+          //car_array[id].setPosition(data.position.x, data.position.y);
+          //car_array[id].setRotation(data.position.rotation.car_deg);
         }
       } else {
         requires_full_update = true;
@@ -188,16 +188,6 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
       car_array[id] = new_car;
     }
   }
-
-  // Converts from degrees to radians.
-  Math.radians = function(degrees) {
-    return degrees * Math.PI / 180;
-  };
-
-  // Converts from radians to degrees.
-  Math.degrees = function(radians) {
-    return radians * 180 / Math.PI;
-  };
 
   return {
     getLocalPlayer: getLocalPlayer,

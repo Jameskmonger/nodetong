@@ -181,6 +181,8 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     }
 
     if (requires_full_update) {
+      console.log(data);
+
       var new_car = new Vehicle();
 
       var car_position = new Vector(data.vehicle.position);

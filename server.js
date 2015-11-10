@@ -6,6 +6,7 @@ var shortid = require('shortid');
 var config = require('./config');
 
 var Vehicle = require('./script/app/Vehicle');
+var Player = require('./Player');
 
 shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
@@ -228,12 +229,17 @@ function getRandomInt(min, max) {
 }
 
 function createPlayerObject(id) {
+  var player = new Player(id, "Boris");
+
+  player.getVehicle().setPosition(1470.0, 635.0);
+
   var vehicle = new Vehicle();
   vehicle.setPosition(1470.0, 635.0);
   vehicle.setWheelRotation(90.0);
   vehicle.setVehicleRotation(90.0);
 
   return ({
+    player: player,
     id: id,
     vehicle: vehicle,
     position: {

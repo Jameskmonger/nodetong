@@ -38,7 +38,11 @@ define(['./Vector'], function (Vector) {
         this.position = new Vector(x, y);
       },
 
-      getWheelRotation: function() {
+      setVehicleRotation: function (deg) {
+        this.rotation.vehicle = deg;
+      },
+
+      getWheelRotation: function () {
         return this.rotation.wheel;
       },
 
@@ -133,7 +137,7 @@ define(['./Vector'], function (Vector) {
 
         var acceleration = forwards_force / CAR_MASS;
 
-        this.speed = this.speed + dt * acceleration;
+        this.speed = this.speed + (dt * acceleration);
 
         var wheel_rads = Math.radians(this.rotation.wheel - 90);
 

@@ -33,7 +33,7 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
-      local_car.setBrakingForce(50.0);
+      local_car.setBrakingForce(150.0);
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
@@ -170,14 +170,10 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
         var close_to_y = (data.position.y.closeTo(car_array[id].position.y, 2.0));
 
         if (!close_to_x || !close_to_y) {
-          /*car_array[id].position.x = data.position.x;
-          car_array[id].position.y = data.position.y;
-          car_array[id].position.rotation.car_deg = data.position.rotation.car_deg;
-          car_array[id].position.rotation.car_rad = data.position.rotation.car_rad;*/
+          car_array[id].setPosition(data.position.x, data.position.y);
+          car_array[id].setRotation(data.position.rotation.car_deg);
         }
       } else {
-        alert("Fix game.SetCarData and networking.updatePlayer - you commented stuff out!");
-
         requires_full_update = true;
       }
     } else {
@@ -187,6 +183,7 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
     if (requires_full_update) {
       var new_car = new Vehicle();
       new_car.setPosition(data.position.x, data.position.y);
+      new_car.setVehicleRotation(data.position.rotation.car_deg);
 
       car_array[id] = new_car;
     }

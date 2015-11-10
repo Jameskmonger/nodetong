@@ -46,6 +46,6 @@ define(['./game'], function (game) {
 
     last_sent_player = data;
 
-    //socket.emit("update player", data);
+    socket.emit("update player", data);
   }
 });

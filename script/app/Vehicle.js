@@ -20,7 +20,7 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
     var wheel_base = car_height + wheel_length / 4;
 
     function Vehicle() {
-      this.position = new Vector(0, 0);
+      this.position = new Vector({x: 0, y: 0});
 
       this.rotation = {
         vehicle: 90.0,
@@ -39,7 +39,7 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
       constructor: Vehicle,
 
       setPosition: function (x, y) {
-        this.position = new Vector(x, y);
+        this.position = new Vector({x: x, y: y});
       },
 
       setVehicleRotation: function (deg) {
@@ -118,10 +118,10 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
 
         var rads = Math.radians(this.rotation.vehicle - 90);
 
-        var wheel_base_offset = new Vector((wheel_base / 2) * Math.cos(rads), (wheel_base / 2) * Math.sin(rads));
+        var wheel_base_offset = new Vector({x: ((wheel_base / 2) * Math.cos(rads)), y: ((wheel_base / 2) * Math.sin(rads))});
 
-        var front_wheels = new Vector(this.position.x, this.position.y).addVector(wheel_base_offset);
-        var back_wheels = new Vector(this.position.x, this.position.y).subtractVector(wheel_base_offset);
+        var front_wheels = new Vector({x: this.position.x, y: this.position.y}).addVector(wheel_base_offset);
+        var back_wheels = new Vector({x: this.position.x, y: this.position.y}).subtractVector(wheel_base_offset);
 
         var force_traction = this.engine_power;
 
@@ -145,11 +145,11 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
 
         var wheel_rads = Math.radians(this.rotation.wheel - 90);
 
-        var front_wheel_movement = new Vector(Math.cos(rads + wheel_rads), Math.sin(rads + wheel_rads)).multiplyScalar(this.speed);
+        var front_wheel_movement = new Vector({x: Math.cos(rads + wheel_rads), y: Math.sin(rads + wheel_rads)}).multiplyScalar(this.speed);
 
         front_wheels = front_wheels.addVector(front_wheel_movement);
 
-        var back_wheel_movement = new Vector(Math.cos(rads), Math.sin(rads)).multiplyScalar(this.speed);
+        var back_wheel_movement = new Vector({x: Math.cos(rads), y: Math.sin(rads)}).multiplyScalar(this.speed);
 
         back_wheels = back_wheels.addVector(back_wheel_movement);
 

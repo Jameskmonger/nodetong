@@ -5,13 +5,15 @@ if (typeof define !== 'function') {
 define(function () {
     "use strict";
 
-    function Vector(x, y) {
+    function Vector(obj) {
         if (!(this instanceof Vector)) {
             throw new TypeError("Vector constructor cannot be called as a function.");
         }
 
-        this.x = x;
-        this.y = y;
+        this.x = 0;
+        this.y = 0;
+
+        for (var prop in obj) this[prop] = obj[prop];
     }
 
     Vector.prototype = {
@@ -25,7 +27,7 @@ define(function () {
         var new_x = (this.x + vec.x);
         var new_y = (this.y + vec.y);
 
-        return new Vector(new_x, new_y);
+        return new Vector({x: new_x, y: new_y});
       },
 
       subtractVector: function (vec) {
@@ -36,14 +38,14 @@ define(function () {
         var new_x = (this.x - vec.x);
         var new_y = (this.y - vec.y);
 
-        return new Vector(new_x, new_y);
+        return new Vector({x: new_x, y: new_y});
       },
 
       multiplyScalar: function (scalar) {
         var new_x = (this.x * scalar);
         var new_y = (this.y * scalar);
 
-        return new Vector(new_x, new_y);
+        return new Vector({x: new_x, y: new_y});
       },
 
       magnitude: function() {

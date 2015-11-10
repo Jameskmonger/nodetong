@@ -228,8 +228,14 @@ function getRandomInt(min, max) {
 }
 
 function createPlayerObject(id) {
+  var vehicle = new Vehicle();
+  vehicle.setPosition(1470.0, 635.0);
+  vehicle.setWheelRotation(90.0);
+  vehicle.setVehicleRotation(90.0);
+
   return ({
     id: id,
+    vehicle: vehicle,
     position: {
       wheels: {
         front: {

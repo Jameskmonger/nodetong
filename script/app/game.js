@@ -182,8 +182,13 @@ define(['./key_handler', './Vector', './Vehicle'], function (key_handler, Vector
 
     if (requires_full_update) {
       var new_car = new Vehicle();
-      new_car.setPosition(data.position.x, data.position.y);
-      new_car.setVehicleRotation(data.position.rotation.car_deg);
+
+      var car_position = new Vector(data.vehicle.position);
+      var car_rotation = data.vehicle.rotation;
+
+      new_car.setPosition(car_position.x, car_position.y);
+      new_car.setVehicleRotation(car_rotation.vehicle);
+      new_car.setWheelRotation(car_rotation.wheel);
 
       car_array[id] = new_car;
     }

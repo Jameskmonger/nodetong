@@ -28,30 +28,44 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
 
     if (key_handler.pressing(key_handler.KeyCodes.UP)) {
       local_car.setEnginePower(100.0);
+
+      movement_network_listener();
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.UP)) {
       local_car.setEnginePower(0.0);
+
+      movement_network_listener();
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
       local_car.setBrakingForce(150.0);
+
+      movement_network_listener();
     }
 
     if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
       local_car.setBrakingForce(0.0);
+
+      movement_network_listener();
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.LEFT)) {
       local_car.turnWheelLeft(movement_network_listener);
+
+      movement_network_listener();
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.RIGHT)) {
       local_car.turnWheelRight(movement_network_listener);
+
+      movement_network_listener();
     }
 
     if (key_handler.pressing(key_handler.KeyCodes.LEFT) != true && key_handler.pressing(key_handler.KeyCodes.RIGHT) != true) {
       local_car.straightenWheel(movement_network_listener);
+
+      movement_network_listener();
     }
 
     _.forEach(player_array, function(player) {
@@ -162,7 +176,7 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
   var player_array = [];
 
   function setCarData(id, data) {
-    if (data == null) {
+    if (data === undefined) {
       return;
     }
 
@@ -170,13 +184,21 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
 
     if (id === LOCAL_PLAYER_ID) {
       if (player_array[id] !== undefined) {
-        /*var close_to_x = (data.position.x.closeTo(car_array[id].position.x, 2.0));
-        var close_to_y = (data.position.y.closeTo(car_array[id].position.y, 2.0));
+        var vehicle = new Vehicle(data._vehicle);
+        var player_vehicle = player_array[id].getVehicle();
+
+        var close_to_x = (vehicle.position.x.closeTo(player_vehicle.position.x, 0.1));
+        var close_to_y = (vehicle.position.y.closeTo(player_vehicle.position.y, 0.1));
 
         if (!close_to_x || !close_to_y) {
-          car_array[id].setPosition(data.position.x, data.position.y);
-          car_array[id].setRotation(data.position.rotation.car_deg);
-        }*/
+          player_array[id].getVehicle().setPosition(vehicle.position.x, vehicle.position.y);
+        }
+
+        var matches_rotation = (vehicle.rotation.vehicle == player_vehicle.rotation.vehicle);
+
+        if (!matches_rotation) {
+          player_array[id].getVehicle().setVehicleRotation(vehicle.rotation.vehicle);
+        }
       } else {
         requires_full_update = true;
       }

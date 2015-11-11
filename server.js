@@ -139,6 +139,8 @@ io.sockets.on('connection', function(socket) {
   socket.on("update player", function(player_data) {
     socket.player_data.getVehicle().setSpeed(player_data.speed);
     socket.player_data.getVehicle().setWheelRotation(player_data.wheel);
+    socket.player_data.getVehicle().setEnginePower(player_data.force.engine);
+    socket.player_data.getVehicle().setBrakingForce(player_data.force.braking);
   });
 
 	socket.on('disconnect', function() {
@@ -163,9 +165,11 @@ function loop() {
       continue;
     }
 
-    var car = socketList[i].player_data;
+    var player = socketList[i].player_data;
 
-    io.emit("player update", car);
+    player.getVehicle().processMovement();
+
+    io.emit("player update", player);
   }
 }
 
@@ -187,6 +191,8 @@ function createPlayerObject(id) {
   player_vehicle.setPosition(1470.0, 635.0);
   player_vehicle.setWheelRotation(90.0);
   player_vehicle.setVehicleRotation(90.0);
+
+  player_vehicle.color = getRandomColor();
 
   return player;
 }

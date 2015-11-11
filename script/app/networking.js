@@ -37,11 +37,20 @@ define(['./game'], function (game) {
 
     var data = {
       wheel: player.rotation.wheel,
-      speed: player.speed
+      speed: player.speed,
+      force: {
+        engine: player.engine_power,
+        braking: player.braking_force
+      }
     };
 
-    if (last_sent_player === data) {
-      return;
+    if (last_sent_player !== undefined) {
+      if (last_sent_player.wheel === data.wheel &&
+          last_sent_player.speed === data.speed &&
+          last_sent_player.force.engine === data.force.engine &&
+          last_sent_player.force.braking === data.force.braking) {
+        return;
+      }
     }
 
     last_sent_player = data;

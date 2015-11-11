@@ -1,4 +1,4 @@
-define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_handler, Vector, Vehicle, Player) {
+define(['./KeyHandler', './Vector', './Vehicle', './Player'], function (KeyHandler, Vector, Vehicle, Player) {
   var KEY_DETECTION_INTERVAL = 25;
   var GAME_LOOP_INTERVAL = 50;
 
@@ -6,7 +6,11 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
 
   loaded();
 
+  var key_handler;
+
   function loaded() {
+    key_handler = new KeyHandler(document);
+
     setInterval(key_detection_loop, KEY_DETECTION_INTERVAL);
     setInterval(game_loop, GAME_LOOP_INTERVAL);
   }
@@ -28,43 +32,43 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
       return;
     }
 
-    if (key_handler.pressing(key_handler.KeyCodes.UP)) {
+    if (key_handler.pressing(KeyHandler.KeyCodes.UP)) {
       local_car.setEnginePower(100.0);
 
       movement_network_listener();
     }
 
-    if (!key_handler.pressing(key_handler.KeyCodes.UP)) {
+    if (!key_handler.pressing(KeyHandler.KeyCodes.UP)) {
       local_car.setEnginePower(0.0);
 
       movement_network_listener();
     }
 
-    if (key_handler.pressing(key_handler.KeyCodes.DOWN)) {
+    if (key_handler.pressing(KeyHandler.KeyCodes.DOWN)) {
       local_car.setBrakingForce(150.0);
 
       movement_network_listener();
     }
 
-    if (!key_handler.pressing(key_handler.KeyCodes.DOWN)) {
+    if (!key_handler.pressing(KeyHandler.KeyCodes.DOWN)) {
       local_car.setBrakingForce(0.0);
 
       movement_network_listener();
     }
 
-    if (key_handler.pressing(key_handler.KeyCodes.LEFT)) {
+    if (key_handler.pressing(KeyHandler.KeyCodes.LEFT)) {
       local_car.turnWheelLeft(movement_network_listener);
 
       movement_network_listener();
     }
 
-    if (key_handler.pressing(key_handler.KeyCodes.RIGHT)) {
+    if (key_handler.pressing(KeyHandler.KeyCodes.RIGHT)) {
       local_car.turnWheelRight(movement_network_listener);
 
       movement_network_listener();
     }
 
-    if (key_handler.pressing(key_handler.KeyCodes.LEFT) != true && key_handler.pressing(key_handler.KeyCodes.RIGHT) != true) {
+    if (key_handler.pressing(KeyHandler.KeyCodes.LEFT) !== true && key_handler.pressing(KeyHandler.KeyCodes.RIGHT) !== true) {
       local_car.straightenWheel(movement_network_listener);
 
       movement_network_listener();

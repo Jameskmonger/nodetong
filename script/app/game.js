@@ -179,6 +179,10 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
 
   var player_array = [];
 
+  function removePlayer(id) {
+    player_array[id] = undefined;
+  }
+
   function setCarData(id, data) {
     if (data === undefined) {
       return;
@@ -233,6 +237,7 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
     setCarData: setCarData,
     setMovementListener: setMovementListener,
     setWorldTiles: setWorldTiles,
-    setWorldLoadedListener: setWorldLoadedListener
+    setWorldLoadedListener: setWorldLoadedListener,
+    removePlayer: removePlayer
   }
 });

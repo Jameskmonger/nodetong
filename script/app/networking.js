@@ -19,7 +19,7 @@ define(['./game'], function (game) {
   });
 
   socket.on("player leave", function(player_id) {
-    game.setCarData(player_id, undefined);
+    game.removePlayer(player_id);
   });
 
   socket.on("player update", function(player_data) {

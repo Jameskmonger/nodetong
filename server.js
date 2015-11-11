@@ -173,6 +173,12 @@ function loop() {
   }
 }
 
+var NAMES = ["Boris", "Oscar", "Giovanni", "Patrick", "Derek", "Quentin", "Quagmire", "Milton", "Glen", "Hubert"];
+
+function getRandomName() {
+  return NAMES[getRandomInt(0, NAMES.length - 1)];
+}
+
 var VEHICLE_COLOR_COUNT = 4;
 
 function getRandomColor() {
@@ -184,7 +190,7 @@ function getRandomInt(min, max) {
 }
 
 function createPlayerObject(id) {
-  var player = new Player({id: id, name: "Boris"});
+  var player = new Player({id: id, name: getRandomName()});
 
   var player_vehicle = player.getVehicle();
 

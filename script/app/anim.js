@@ -197,8 +197,8 @@ define(['./game', 'domReady'], function (game) {
         drawing.players.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
         _.forEach(game.getPlayerArray(), function(player) {
-          if (player !== undefined) {
-            drawCar(player.getVehicle());
+          if (player !== undefined && player.getVehicle() !== undefined) {
+            drawPlayer(player);
           }
         });
       }
@@ -213,7 +213,9 @@ define(['./game', 'domReady'], function (game) {
 
     requestAnimationFrame(draw);
 
-    function drawCar(car) {
+    function drawPlayer(player) {
+      var car = player.getVehicle();
+
       // http://engineeringdotnet.blogspot.co.uk/2010/04/simple-2d-car-physics-in-games.html
 
       var car_pos_x = car.position.x + origin_x - local_car_x;
@@ -258,9 +260,21 @@ define(['./game', 'domReady'], function (game) {
 
       drawing.players.context.restore();
 
-      var line_y = car_pos_y - 20;
+      drawing.players.context.save();
+      drawing.players.context.font = "bold 20px Arial";
+      drawing.players.context.fillStyle = "#222222";
+      drawing.players.context.textAlign = 'center';
 
-      /*drawing.players.context.fillText("id: " + car.id, car_pos_x + car_width, line_y);
+      drawing.players.context.translate(car_pos_x, car_pos_y);
+      drawing.players.context.rotate(Math.radians(270));
+      drawing.players.context.translate(-(car_pos_x), -(car_pos_y));
+
+      drawing.players.context.fillText(player.getName(), car_pos_x, car_pos_y - car_height * 0.8);
+      drawing.players.context.restore();
+
+      /*var line_y = car_pos_y - 20;
+
+      drawing.players.context.fillText("id: " + car.id, car_pos_x + car_width, line_y);
       line_y += 20;
 
       drawing.players.context.fillText("draw_x: " + car_pos_x.toFixed(2), car_pos_x + car_width, line_y);

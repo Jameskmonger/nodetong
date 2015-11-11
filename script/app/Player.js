@@ -18,6 +18,10 @@ define(['./Vehicle'], function (Vehicle) {
     getVehicle: function () {
       return this._vehicle;
     },
+
+    getName: function() {
+      return this.name;
+    },
   };
 
   return Player;

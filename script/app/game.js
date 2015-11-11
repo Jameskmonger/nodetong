@@ -1,11 +1,13 @@
 define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_handler, Vector, Vehicle, Player) {
-  var GAME_LOOP_INTERVAL = 25;
+  var KEY_DETECTION_INTERVAL = 25;
+  var GAME_LOOP_INTERVAL = 50;
 
   var LOCAL_PLAYER_ID;
 
   loaded();
 
   function loaded() {
+    setInterval(key_detection_loop, KEY_DETECTION_INTERVAL);
     setInterval(game_loop, GAME_LOOP_INTERVAL);
   }
 
@@ -15,7 +17,7 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
     movement_network_listener = listener;
   };
 
-  function game_loop() {
+  function key_detection_loop() {
     if (getLocalPlayer() === undefined) {
       return;
     }
@@ -67,7 +69,9 @@ define(['./key_handler', './Vector', './Vehicle', './Player'], function (key_han
 
       movement_network_listener();
     }
+  }
 
+  function game_loop() {
     _.forEach(player_array, function(player) {
       if (player !== undefined) {
         player.getVehicle().processMovement();

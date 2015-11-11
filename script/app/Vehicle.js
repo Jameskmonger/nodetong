@@ -128,7 +128,7 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
       },
 
       processMovement: function () {
-        var dt = 1.0;
+        var dt = 2.0;
 
         var rads = Math.radians(this.rotation.vehicle - 90);
 

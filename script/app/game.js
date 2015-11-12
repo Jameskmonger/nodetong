@@ -1,4 +1,4 @@
-define(['./KeyHandler', './Vector', './Vehicle', './Player'], function (KeyHandler, Vector, Vehicle, Player) {
+define(['./KeyHandler', './Vector', './Vehicle', './Player', './World'], function (KeyHandler, Vector, Vehicle, Player, World) {
   var KEY_DETECTION_INTERVAL = 25;
   var GAME_LOOP_INTERVAL = 50;
 
@@ -6,13 +6,18 @@ define(['./KeyHandler', './Vector', './Vehicle', './Player'], function (KeyHandl
 
   loaded();
 
-  var key_handler;
+  var key_handler, world;
 
   function loaded() {
     key_handler = new KeyHandler(document);
+    world = new World();
 
     setInterval(key_detection_loop, KEY_DETECTION_INTERVAL);
     setInterval(game_loop, GAME_LOOP_INTERVAL);
+  }
+
+  function getWorld() {
+    return world;
   }
 
   var movement_network_listener;
@@ -117,30 +122,7 @@ define(['./KeyHandler', './Vector', './Vehicle', './Player'], function (KeyHandl
     world_loaded_listener = listener;
   }
 
-  function setWorldTiles(world_data) {
-    WORLD_HEIGHT_TILE = world_data.height;
-    WORLD_WIDTH_TILE = world_data.width;
-    BASE_TILE_ID = world_data.base;
-
-    world_tiles = new Array();
-
-    // Define an array of x tiles for each y tile
-    for (var x = 0; x < WORLD_WIDTH_TILE; x++) {
-      world_tiles[x] = new Array();
-    }
-
-    BASE_TILE_IMAGE = getTrackTileImage(BASE_TILE_ID);
-
-    for (var x = 0; x < WORLD_WIDTH_TILE; x++) {
-      for (var y = 0; y < WORLD_HEIGHT_TILE; y++) {
-        if (world_data.tiles[x][y] != undefined) {
-          world_tiles[x][y] = getTrackTileImage(world_data.tiles[x][y]);
-        }
-      }
-    }
-
-    world_loaded_listener();
-  }
+  
 
   var track_tile_images;
 
@@ -242,6 +224,7 @@ define(['./KeyHandler', './Vector', './Vehicle', './Player'], function (KeyHandl
     setMovementListener: setMovementListener,
     setWorldTiles: setWorldTiles,
     setWorldLoadedListener: setWorldLoadedListener,
-    removePlayer: removePlayer
+    removePlayer: removePlayer,
+    getWorld: getWorld
   }
 });

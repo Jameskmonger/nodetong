@@ -77,21 +77,17 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
         return;
       },
 
-      turnWheelRight: function (listener) {
+      turnWheelRight: function () {
         this.setWheelRotation(this.getWheelRotation() + WHEEL_TURN_INCREMENT);
-
-        listener();
         return;
       },
 
-      turnWheelLeft: function (listener) {
+      turnWheelLeft: function () {
         this.setWheelRotation(this.getWheelRotation() - WHEEL_TURN_INCREMENT);
-
-        listener()
         return;
       },
 
-      straightenWheel: function (listener) {
+      straightenWheel: function () {
         var original_rotation = this.getWheelRotation();
 
         var new_rotation;
@@ -115,8 +111,6 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
         }
 
         this.setWheelRotation(new_rotation);
-
-        listener();
       },
 
       setEnginePower: function (value) {

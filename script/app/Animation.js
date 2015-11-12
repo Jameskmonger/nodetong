@@ -49,9 +49,11 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
     setGame: function (game) {
       this.game = game;
 
-      console.log("setgame");
+      this.game.getWorld().setLoadListener(this.worldLoaded.bind(this));
+    },
 
-      this.game.getWorld().setLoadListener(this.worldLoaded);
+    isWorldLoaded: function () {
+      return this.world_loaded;
     },
 
     getDrawingDetails: function () {
@@ -122,13 +124,14 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
 
     worldLoaded: function () {
       var world = this.game.getWorld();
+      var details = this.getDrawingDetails();
 
-      if (this.drawing.world_dummy.canvas.width === 0) {
-        this.drawing.world_dummy.canvas.width = world.getDimensions().WIDTH * 128;
+      if (details.world_dummy.canvas.width === 0) {
+        details.world_dummy.canvas.width = world.getDimensions().WIDTH * 128;
       }
 
-      if (this.drawing.world_dummy.canvas.height === 0) {
-        this.drawing.world_dummy.canvas.height = world.getDimensions().HEIGHT * 128;
+      if (details.world_dummy.canvas.height === 0) {
+        details.world_dummy.canvas.height = world.getDimensions().HEIGHT * 128;
       }
 
       var GAME_WORLD_WIDTH = world.getDimensions().WIDTH,
@@ -149,10 +152,10 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
             var image_y = (128 * y);
 
             if (base != img) {
-                this.drawing.world_dummy.context.drawImage(base, image_x, image_y);
+                details.world_dummy.context.drawImage(base, image_x, image_y);
             }
 
-            this.drawing.world_dummy.context.drawImage(img, image_x, image_y);
+            details.world_dummy.context.drawImage(img, image_x, image_y);
 
             if (img.complete) {
               drawn_tiles++;
@@ -161,11 +164,11 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
         }
 
         if (drawn_tiles === (GAME_WORLD_WIDTH * GAME_WORLD_HEIGHT)) {
-          world_loaded = true;
+          this.world_loaded = true;
 
           clearInterval(try_to_draw_interval);
         }
-      }, 25);
+      }.bind(this), 25);
     }
   };
 

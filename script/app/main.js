@@ -9,6 +9,10 @@ define(function (require) {
 
   _anim.setGame(_game);
 
+  var Networking = require('./Networking');
+
+  var _net = new Networking(_game);
+
   //var anim = require('./anim');
 
   //var net = require('./networking');

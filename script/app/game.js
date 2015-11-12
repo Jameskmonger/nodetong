@@ -28,8 +28,6 @@ define(['./KeyHandler', './Vehicle', './Player', './World'], function (KeyHandle
     },
 
     getWorld: function () {
-      console.log("getworld");
-
       return this._world;
     },
 
@@ -125,19 +123,19 @@ define(['./KeyHandler', './Vehicle', './Player', './World'], function (KeyHandle
       }
 
       if (this._key_handler.pressing(KeyHandler.KeyCodes.LEFT)) {
-        local_car.turnWheelLeft(movement_network_listener);
+        local_car.turnWheelLeft();
 
         this.callMovementListener();
       }
 
       if (this._key_handler.pressing(KeyHandler.KeyCodes.RIGHT)) {
-        local_car.turnWheelRight(movement_network_listener);
+        local_car.turnWheelRight();
 
         this.callMovementListener();
       }
 
       if (this._key_handler.pressing(KeyHandler.KeyCodes.LEFT) !== true && this._key_handler.pressing(KeyHandler.KeyCodes.RIGHT) !== true) {
-        local_car.straightenWheel(movement_network_listener);
+        local_car.straightenWheel();
 
         this.callMovementListener();
       }

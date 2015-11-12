@@ -1,60 +1,77 @@
-define(['./game'], function (game) {
-  var socket;
+define(function (require) {
+  "use strict";
 
-  loaded();
+  function Networking(game) {
+    this.socket = io({reconnection: false});
 
-  function loaded() {
-    socket = io({reconnection: false});
+    this.parent = game;
+    this.parent.setMovementListener(this.updatePlayer);
 
-    game.setMovementListener(updatePlayer);
+    this.socket.on("initialise local player", function(data) {
+      if (this.parent !== undefined) {
+        this.parent.getWorld().setData(data.world);
+        this.parent.setLocalPlayerId(data.id);
+      }
+    }.bind(this));
+
+    this.socket.on("player join", function(player_data) {
+      if (this.parent !== undefined) {
+        this.parent.setCarData(player_data.id, player_data);
+      }
+    }.bind(this));
+
+    this.socket.on("player leave", function(player_id) {
+      if (this.parent !== undefined) {
+        this.parent.removePlayer(player_id);
+      }
+    }.bind(this));
+
+    this.socket.on("player update", function(player_data) {
+      if (this.parent !== undefined) {
+        this.parent.setCarData(player_data.id, player_data);
+      }
+    }.bind(this));
   }
 
-  socket.on("initialise local player", function(data) {
-    game.getWorld().setData(data.world);
-    game.setLocalPlayerId(data.id);
-  });
+  Networking.prototype = {
+    constructor: Networking,
 
-  socket.on("player join", function(player_data) {
-    game.setCarData(player_data.id, player_data);
-  });
+    updatePlayer: function () {
+      var game = this.parent;
 
-  socket.on("player leave", function(player_id) {
-    game.removePlayer(player_id);
-  });
-
-  socket.on("player update", function(player_data) {
-    game.setCarData(player_data.id, player_data);
-  });
-
-  var last_sent_player;
-
-  function updatePlayer() {
-    if (game.getLocalPlayer() === undefined) {
-      return;
-    }
-
-    var player = game.getLocalPlayer().getVehicle();
-
-    var data = {
-      wheel: player.rotation.wheel,
-      speed: player.speed,
-      force: {
-        engine: player.engine_power,
-        braking: player.braking_force
-      }
-    };
-
-    if (last_sent_player !== undefined) {
-      if (last_sent_player.wheel === data.wheel &&
-          last_sent_player.speed === data.speed &&
-          last_sent_player.force.engine === data.force.engine &&
-          last_sent_player.force.braking === data.force.braking) {
+      if (game === undefined) {
         return;
       }
+
+      if (game.getLocalPlayer() === undefined) {
+        return;
+      }
+
+      var player = game.getLocalPlayer().getVehicle();
+
+      var data = {
+        wheel: player.rotation.wheel,
+        speed: player.speed,
+        force: {
+          engine: player.engine_power,
+          braking: player.braking_force
+        }
+      };
+
+      if (this.last_sent_player !== undefined) {
+        if (this.last_sent_player.wheel === data.wheel &&
+            this.last_sent_player.speed === data.speed &&
+            this.last_sent_player.force.engine === data.force.engine &&
+            this.last_sent_player.force.braking === data.force.braking) {
+          return;
+        }
+      }
+
+      this.last_sent_player = data;
+
+      socket.emit("update player", data);
     }
+  };
 
-    last_sent_player = data;
-
-    socket.emit("update player", data);
-  }
+  return Networking;
 });

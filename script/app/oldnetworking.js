@@ -1,0 +1,4 @@
+define(['./game'], function (game) {
+
+  
+});

@@ -97,56 +97,6 @@ define(['./KeyHandler', './Vector', './Vehicle', './Player', './World'], functio
     return player_array[LOCAL_PLAYER_ID];
   }
 
-  var WORLD_HEIGHT_TILE;
-  var WORLD_WIDTH_TILE;
-
-  var world_tiles;
-
-  var BASE_TILE_ID;
-  var BASE_TILE_IMAGE;
-
-  function getBaseTileImage() {
-    return BASE_TILE_IMAGE;
-  }
-
-  function getWorldDimensions() {
-    return {
-      HEIGHT: WORLD_HEIGHT_TILE,
-      WIDTH: WORLD_WIDTH_TILE
-    };
-  }
-
-  var world_loaded_listener;
-
-  function setWorldLoadedListener(listener) {
-    world_loaded_listener = listener;
-  }
-
-  
-
-  var track_tile_images;
-
-  function getTrackTileImage(id) {
-    if (track_tile_images === undefined) {
-      track_tile_images = new Array();
-    }
-
-    if (track_tile_images[id] === undefined) {
-      track_tile_images[id] = new Image();
-      track_tile_images[id].src = '/assets/tiles/' + id + '.png';
-    }
-
-    return track_tile_images[id];
-  }
-
-  function getWorldTile(x, y) {
-    if (world_tiles[x][y] === undefined) {
-      return getTrackTileImage(BASE_TILE_ID);
-    } else {
-      return world_tiles[x][y];
-    }
-  }
-
   Number.prototype.betweenEquals = function (min, max) {
       return (this >= min && this <= max);
   }
@@ -215,15 +165,10 @@ define(['./KeyHandler', './Vector', './Vehicle', './Player', './World'], functio
 
   return {
     getLocalPlayer: getLocalPlayer,
-    getBaseTileImage: getBaseTileImage,
-    getWorldDimensions: getWorldDimensions,
-    getWorldTile: getWorldTile,
     getPlayerArray: getPlayerArray,
     setLocalPlayerId: setLocalPlayerId,
     setCarData: setCarData,
     setMovementListener: setMovementListener,
-    setWorldTiles: setWorldTiles,
-    setWorldLoadedListener: setWorldLoadedListener,
     removePlayer: removePlayer,
     getWorld: getWorld
   }

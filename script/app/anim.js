@@ -16,27 +16,29 @@ define(['./game', 'domReady'], function (game) {
   var lastCalledTime, fps;
 
   function worldLoaded() {
+    var world = game.getWorld();
+
     if (drawing.world_dummy.canvas.width === 0) {
-      drawing.world_dummy.canvas.width = game.getWorldDimensions().WIDTH * 128;
+      drawing.world_dummy.canvas.width = world.getDimensions().WIDTH * 128;
     }
 
     if (drawing.world_dummy.canvas.height === 0) {
-      drawing.world_dummy.canvas.height = game.getWorldDimensions().HEIGHT * 128;
+      drawing.world_dummy.canvas.height = world.getDimensions().HEIGHT * 128;
     }
 
-    var GAME_WORLD_WIDTH = game.getWorldDimensions().WIDTH,
-        GAME_WORLD_HEIGHT = game.getWorldDimensions().HEIGHT;
+    var GAME_WORLD_WIDTH = world.getDimensions().WIDTH,
+        GAME_WORLD_HEIGHT = world.getDimensions().HEIGHT;
 
     var drawn_tiles = 0;
 
     var try_to_draw_interval = setInterval(function() {
       drawn_tiles = 0;
 
-      var base = game.getBaseTileImage();
+      var base = world.getBaseTile();
 
       for (var y = 0; y < GAME_WORLD_HEIGHT; y++) {
         for (var x = 0; x < GAME_WORLD_WIDTH; x++) {
-          var img = game.getWorldTile(x, y);
+          var img = world.getTile(x, y);
 
           var image_x = (128 * x);
           var image_y = (128 * y);
@@ -64,7 +66,7 @@ define(['./game', 'domReady'], function (game) {
   function loaded() {
     lastCalledTime = 0, fps = 0;
 
-    game.setWorldLoadedListener(worldLoaded);
+    game.getWorld().setLoadListener(worldLoaded);
 
     var world_canvas = document.getElementById('world_canvas');
     var player_canvas = document.getElementById('players_canvas');

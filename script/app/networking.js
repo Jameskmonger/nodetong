@@ -10,7 +10,7 @@ define(['./game'], function (game) {
   }
 
   socket.on("initialise local player", function(data) {
-    game.setWorldTiles(data.world);
+    game.getWorld().setData(data.world);
     game.setLocalPlayerId(data.id);
   });
 

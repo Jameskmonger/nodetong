@@ -15,131 +15,6 @@ define(['./game', 'domReady'], function (game) {
 
   var lastCalledTime, fps;
 
-  function worldLoaded() {
-    var world = game.getWorld();
-
-    if (drawing.world_dummy.canvas.width === 0) {
-      drawing.world_dummy.canvas.width = world.getDimensions().WIDTH * 128;
-    }
-
-    if (drawing.world_dummy.canvas.height === 0) {
-      drawing.world_dummy.canvas.height = world.getDimensions().HEIGHT * 128;
-    }
-
-    var GAME_WORLD_WIDTH = world.getDimensions().WIDTH,
-        GAME_WORLD_HEIGHT = world.getDimensions().HEIGHT;
-
-    var drawn_tiles = 0;
-
-    var try_to_draw_interval = setInterval(function() {
-      drawn_tiles = 0;
-
-      var base = world.getBaseTile();
-
-      for (var y = 0; y < GAME_WORLD_HEIGHT; y++) {
-        for (var x = 0; x < GAME_WORLD_WIDTH; x++) {
-          var img = world.getTile(x, y);
-
-          var image_x = (128 * x);
-          var image_y = (128 * y);
-
-          if (base != img) {
-              drawing.world_dummy.context.drawImage(base, image_x, image_y);
-          }
-
-          drawing.world_dummy.context.drawImage(img, image_x, image_y);
-
-          if (img.complete) {
-            drawn_tiles++;
-          }
-        }
-      }
-
-      if (drawn_tiles === (GAME_WORLD_WIDTH * GAME_WORLD_HEIGHT)) {
-        world_loaded = true;
-
-        clearInterval(try_to_draw_interval);
-      }
-    }, 25);
-  }
-
-  function loaded() {
-    lastCalledTime = 0, fps = 0;
-
-    game.getWorld().setLoadListener(worldLoaded);
-
-    var world_canvas = document.getElementById('world_canvas');
-    var player_canvas = document.getElementById('players_canvas');
-
-    var dummy = document.createElement("canvas");
-    dummy.width = 0;
-    dummy.height = 0;
-
-    drawing = {
-      world: {
-        canvas: world_canvas,
-        context: world_canvas.getContext('2d')
-      },
-      players: {
-        canvas: player_canvas,
-        context: player_canvas.getContext('2d')
-      },
-      world_dummy: {
-        canvas: dummy,
-        context: dummy.getContext('2d')
-      }
-    };
-
-    resized();
-
-    loadVehicleImages();
-
-    world_loaded = false;
-
-    requestAnimationFrame(draw);
-  }
-
-  function resized() {
-    drawing.world.canvas.width = window.innerWidth;
-    drawing.world.canvas.height = window.innerHeight;
-    drawing.players.canvas.width = window.innerWidth;
-    drawing.players.canvas.height = window.innerHeight;
-  }
-
-  var PRELOAD_VEHICLE_MODEL_COUNT = 5, PRELOAD_VEHICLE_COLOR_COUNT = 5;
-
-  var vehicle_images = new Array();
-
-  function getVehicleImage(id, color) {
-    return loadVehicleImage(id, color);
-  }
-
-  function loadVehicleImages() {
-    for (var m = 0; m < PRELOAD_VEHICLE_MODEL_COUNT; m++) {
-      vehicle_images[m] = new Array();
-
-      for (var c = 0; c < PRELOAD_VEHICLE_COLOR_COUNT; c++) {
-        vehicle_images[m][c] = new Image();
-        vehicle_images[m][c].src = getVehicleImageSrc(m, c);
-      }
-    }
-  }
-
-  function getVehicleImageSrc(model, color) {
-    return ('/assets/vehicles/' + model + '_' + color + '.png');
-  }
-
-  function loadVehicleImage(model, color) {
-    if (vehicle_images[model] == undefined) {
-      vehicle_images[model] = new Array();
-    }
-
-    vehicle_images[model][color] = new Image();
-    vehicle_images[model][color].src = getVehicleImageSrc(model, color);
-
-    return vehicle_images[model][color];
-  }
-
   function getPositionRotationRad(car) {
     return (car.rotation.vehicle) * (Math.PI/180);
   }
@@ -186,11 +61,6 @@ define(['./game', 'domReady'], function (game) {
       var origin_x = drawing.world.canvas.width / 2;
       var origin_y = drawing.world.canvas.height / 2;
 
-      drawing.world.context.save();
-      drawing.world.context.fillStyle = "#333333"
-      drawing.world.context.fillRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
-      drawing.world.context.restore();
-
       if (world_loaded) {
         drawing.world.context.clearRect(0, 0, drawing.world.canvas.width, drawing.world.canvas.height);
 
@@ -206,12 +76,6 @@ define(['./game', 'domReady'], function (game) {
       }
 
     }
-
-    drawing.world.context.save();
-    drawing.world.context.font = "20px Arial";
-    drawing.world.context.fillStyle = "yellow";
-    drawing.world.context.fillText("FPS: " + fps.toFixed(0), 25, 45);
-    drawing.world.context.restore();
 
     requestAnimationFrame(draw);
 
@@ -273,26 +137,6 @@ define(['./game', 'domReady'], function (game) {
 
       drawing.players.context.fillText(player.getName(), car_pos_x, car_pos_y - car_height * 0.8);
       drawing.players.context.restore();
-
-      /*var line_y = car_pos_y - 20;
-
-      drawing.players.context.fillText("id: " + car.id, car_pos_x + car_width, line_y);
-      line_y += 20;
-
-      drawing.players.context.fillText("draw_x: " + car_pos_x.toFixed(2), car_pos_x + car_width, line_y);
-      line_y += 15;
-
-      drawing.players.context.fillText("draw_y: " + car_pos_y.toFixed(2), car_pos_x + car_width, line_y);
-      line_y += 20;
-
-      drawing.players.context.fillText("pos_x: " + car.position.x.toFixed(2), car_pos_x + car_width, line_y);
-      line_y += 15;
-
-      drawing.players.context.fillText("pos_y: " + car.position.y.toFixed(2), car_pos_x + car_width, line_y);
-      line_y += 20;
-
-      drawing.players.context.fillText("speed: " + car.speed.toFixed(1), car_pos_x + car_width, line_y);
-      line_y += 15;*/
 
       drawing.players.context.restore();
     }

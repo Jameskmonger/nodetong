@@ -17,6 +17,8 @@ define(function (require) {
     constructor: World,
 
     setLoadListener: function (listener) {
+      console.log("setloadlistener");
+
       this.loaded_listener = listener;
     },
 
@@ -43,6 +45,8 @@ define(function (require) {
       }
 
       if (this.loaded_listener !== undefined) {
+        console.log("loaded listener called");
+
         this.loaded_listener();
       }
     },

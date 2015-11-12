@@ -1,9 +1,13 @@
 define(function (require) {
-  require('./request_animation_frame');
-
   var Game = require('./Game');
 
-  var g = new Game();
+  var _game = new Game();
+
+  var Animation = require('./Animation');
+
+  var _anim = new Animation();
+
+  _anim.setGame(_game);
 
   //var anim = require('./anim');
 

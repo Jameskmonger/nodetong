@@ -28,6 +28,8 @@ define(['./KeyHandler', './Vehicle', './Player', './World'], function (KeyHandle
     },
 
     getWorld: function () {
+      console.log("getworld");
+
       return this._world;
     },
 

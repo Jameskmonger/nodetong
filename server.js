@@ -35,6 +35,11 @@ app.get("/script/app/:filename", function(req, res) {
   res.sendFile(__dirname + '/script/app/' + filename);
 });
 
+app.get("/script/app/Animation/:filename", function(req, res) {
+  var filename = req.params.filename;
+  res.sendFile(__dirname + '/script/app/Animation/' + filename);
+});
+
 var MAX_PLAYER_COUNT = 2000;
 
 var socketList = [];

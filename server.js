@@ -35,9 +35,13 @@ app.get("/script/app/:filename", function(req, res) {
   res.sendFile(__dirname + '/script/app/' + filename);
 });
 
-app.get("/script/app/Animation/:filename", function(req, res) {
+app.get("/script/app/:folder/:filename", function(req, res) {
+  var folder = req.params.folder;
   var filename = req.params.filename;
-  res.sendFile(__dirname + '/script/app/Animation/' + filename);
+
+  if (folder === 'Animation' || folder === 'Networking') {
+    res.sendFile(__dirname + '/script/app/' + folder + '/' + filename);
+  }
 });
 
 var MAX_PLAYER_COUNT = 2000;

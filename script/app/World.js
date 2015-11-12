@@ -1,4 +1,4 @@
-define(function (require) {
+define(['./World/FrictionMap'], function (FrictionMap) {
   "use strict";
 
   function World() {
@@ -42,9 +42,15 @@ define(function (require) {
         }
       }
 
+      this.friction_map = new FrictionMap(this, world_data.tiles);
+
       if (this.loaded_listener !== undefined) {
         this.loaded_listener();
       }
+    },
+
+    getFrictionMap: function (id) {
+      return this.friction_map;
     },
 
     getTrackTileImage: function (id) {

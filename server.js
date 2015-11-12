@@ -13,6 +13,7 @@ shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 app.use("/assets/vehicles", express.static(__dirname + "/assets/vehicles"));
 
 app.use("/assets/tiles", express.static(__dirname + '/assets/tiles'));
+app.use("/assets/friction_maps", express.static(__dirname + '/assets/friction_maps'));
 
 app.use("/lib", express.static(__dirname + '/lib'));
 
@@ -39,7 +40,7 @@ app.get("/script/app/:folder/:filename", function(req, res) {
   var folder = req.params.folder;
   var filename = req.params.filename;
 
-  if (folder === 'Animation' || folder === 'Networking') {
+  if (folder === 'Animation' || folder === 'Networking' || folder === 'World') {
     res.sendFile(__dirname + '/script/app/' + folder + '/' + filename);
   }
 });

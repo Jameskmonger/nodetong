@@ -83,6 +83,8 @@ define(['./KeyHandler', './Vehicle', './Player', './World'], function (KeyHandle
 
         player._vehicle = new Vehicle(player._vehicle);
 
+        player._vehicle.setGame(this);
+
         this._player_array[id] = player;
       }
     },

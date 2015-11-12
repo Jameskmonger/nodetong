@@ -8,10 +8,7 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
     var LEFT_TURN_MAX = 40, RIGHT_TURN_MAX = 140;
     var WHEEL_TURN_INCREMENT = 2.5, WHEEL_STRAIGHTEN_INCREMENT = 4.0;
 
-    var FRICTION_COEFFICIENT = 0.30, CAR_MASS = 1000, CAR_FRONTAL_AREA = 2.2, AIR_DENSITY = 1.29;
-    var DRAG_CONSTANT = 0.5 * FRICTION_COEFFICIENT * CAR_FRONTAL_AREA * AIR_DENSITY;
-
-    var DRAG_ROLLING_RESISTANCE = 30 * DRAG_CONSTANT;
+    var CAR_MASS = 1000;
 
     var scale = 1.4;
 
@@ -47,6 +44,39 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
 
     Vehicle.prototype = {
       constructor: Vehicle,
+
+      setGame: function (game) {
+        this.game = game;
+      },
+
+      getFrictionCoefficient: function () {
+        if (this.game === undefined) {
+          return 0.30;
+        }
+
+        var fric = this.game.getWorld().getFrictionMap();
+
+        fric.getPositionColor(this.position.x, this.position.y);
+
+        //var pos = new Vector(fric.getTileCoordinates(this.position.x, this.position.y));
+
+        //console.log(fric.getFrictionTile(pos.x, pos.y));
+
+        return 0.30;
+      },
+
+      getDragConstant: function () {
+        var CAR_FRONTAL_AREA = 2.2;
+        var AIR_DENSITY = 1.29;
+
+        var friction_coef = this.getFrictionCoefficient();
+
+        return (0.5 * friction_coef * CAR_FRONTAL_AREA * AIR_DENSITY);
+      },
+
+      getRollingResistance: function(DRAG_CONSTANT) {
+        return (30 * DRAG_CONSTANT);
+      },
 
       setPosition: function (x, y) {
         this.position = new Vector({x: x, y: y});
@@ -138,12 +168,14 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
           force_traction -= this.braking_force;
         } else if (this.braking_force > 10.0) {
           this.speed = 0.0;
-          force_traction = 0.0
+          force_traction = 0.0;
         }
 
-        var force_drag = this.speed * (DRAG_CONSTANT * -1);
+        var drag_const = this.getDragConstant();
 
-        var force_rolling_res = this.speed * (DRAG_ROLLING_RESISTANCE * -1);
+        var force_drag = this.speed * (drag_const * -1);
+
+        var force_rolling_res = this.speed * (this.getRollingResistance(drag_const) * -1);
 
         var forwards_force = force_traction + force_drag + force_rolling_res;
 

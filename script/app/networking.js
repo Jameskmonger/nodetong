@@ -5,7 +5,7 @@ define(function (require) {
     this.socket = io({reconnection: false});
 
     this.parent = game;
-    this.parent.setMovementListener(this.updatePlayer);
+    this.parent.setMovementListener(this.updatePlayer.bind(this));
 
     this.socket.on("initialise local player", function(data) {
       if (this.parent !== undefined) {
@@ -69,7 +69,7 @@ define(function (require) {
 
       this.last_sent_player = data;
 
-      socket.emit("update player", data);
+      this.socket.emit("update player", data);
     }
   };
 

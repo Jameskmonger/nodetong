@@ -1,7 +1,11 @@
-define(['./request_animation_frame', './Animation/WorldAnimation'], function (requestAnimationFrame, WorldAnimation) {
+define(['./request_animation_frame', './Animation/WorldAnimation', './Animation/PlayerAnimation'], function (requestAnimationFrame, WorldAnimation, PlayerAnimation) {
 
-  function Animation() {
-    this.game = undefined;
+  function Animation(game) {
+    window.onresize = this.resized.bind(this);
+
+    this.game = game;
+
+    this.game.getWorld().setLoadListener(this.worldLoaded.bind(this));
 
     var world_canvas = document.getElementById('world_canvas');
     var player_canvas = document.getElementById('players_canvas');
@@ -39,6 +43,7 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
     this.world_loaded = false;
 
     this.world_animation = new WorldAnimation(this);
+    this.player_animation = new PlayerAnimation(this);
 
     window.requestAnimationFrame(this.draw.bind(this));
   }
@@ -46,14 +51,16 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
   Animation.prototype = {
     constructor: Animation,
 
-    setGame: function (game) {
-      this.game = game;
-
-      this.game.getWorld().setLoadListener(this.worldLoaded.bind(this));
-    },
-
     isWorldLoaded: function () {
       return this.world_loaded;
+    },
+
+    drawRotatedRect: function (ctx, x, y, width, height, rotation) {
+      ctx.save();
+      ctx.translate(x + width / 2, y + height / 2);
+      ctx.rotate(rotation * Math.PI / 180);
+      ctx.fillRect(-width / 2, -height / 2, width, height);
+      ctx.restore();
     },
 
     getDrawingDetails: function () {
@@ -64,7 +71,7 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
       return this.fps;
     },
 
-    getVehicleImage: function (id, color) {
+    getVehicleImage: function (model, color) {
       if (this.vehicle_images[model] === undefined) {
         this.vehicle_images[model] = [];
       }
@@ -112,12 +119,13 @@ define(['./request_animation_frame', './Animation/WorldAnimation'], function (re
       this.lastCalledTime = Date.now();
       this.fps = 1 / delta;
 
-      /*if (this.game.getLocalPlayer() === undefined) {
+      if (this.game.getLocalPlayer() === undefined) {
         window.requestAnimationFrame(this.draw.bind(this));
         return;
-      }*/
+      }
 
       this.world_animation.draw();
+      this.player_animation.draw();
 
       window.requestAnimationFrame(this.draw.bind(this));
     },

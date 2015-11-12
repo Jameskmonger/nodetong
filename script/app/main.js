@@ -1,7 +1,11 @@
 define(function (require) {
   require('./request_animation_frame');
 
-  var anim = require('./anim');
+  var Game = require('./Game');
 
-  var net = require('./networking');
+  var g = new Game();
+
+  //var anim = require('./anim');
+
+  //var net = require('./networking');
 });

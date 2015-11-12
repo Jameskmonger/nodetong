@@ -53,9 +53,7 @@ define(function (require) {
     },
 
     getPositionColor: function (x, y) {
-      var p = this.context.getImageData(x, y, 1, 1).data;
-
-      console.log(p);
+      return this.context.getImageData(x, y, 1, 1).data[0];
     },
 
     getTileCoordinates: function (x, y) {
@@ -70,8 +68,7 @@ define(function (require) {
     },
 
     getFrictionTileImage: function (id) {
-      if (id !== 52 && id !== 101) {
-      //if (id === null) {
+      if (id === null || id === undefined) {
         id = 9007199254740991;
       }
 

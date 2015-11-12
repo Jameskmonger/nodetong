@@ -56,13 +56,11 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
 
         var fric = this.game.getWorld().getFrictionMap();
 
-        fric.getPositionColor(this.position.x, this.position.y);
+        var color = fric.getPositionColor(this.position.x, this.position.y);
 
-        //var pos = new Vector(fric.getTileCoordinates(this.position.x, this.position.y));
+        var friction_coefficient = (1 - (color / 255));
 
-        //console.log(fric.getFrictionTile(pos.x, pos.y));
-
-        return 0.30;
+        return friction_coefficient;
       },
 
       getDragConstant: function () {

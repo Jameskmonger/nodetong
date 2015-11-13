@@ -26,4 +26,23 @@ define(function () {
 
     return (this.betweenEquals(lower_bound, upper_bound));
   };
+
+  function getTileCoordinates (x, y) {
+    return {
+      x: Math.floor(x / 128),
+      y: Math.floor(y / 128)
+    };
+  }
+
+  function getTileInteriorPosition (x, y) {
+    return {
+      x: Math.floor(x % 128),
+      y: Math.floor(y % 128)
+    };
+  }
+
+  return {
+    getTileCoordinates: getTileCoordinates,
+    getTileInteriorPosition: getTileInteriorPosition
+  };
 });

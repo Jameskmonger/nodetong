@@ -45,38 +45,106 @@ app.get("/script/app/:folder/:filename", function(req, res) {
   }
 });
 
+var fs = require('fs'),
+    PNG = require('pngjs').PNG;
+
 var MAX_PLAYER_COUNT = 2000;
 
-var socketList = [];
+var WORLD_HEIGHT_TILE, WORLD_WIDTH_TILE, BASE_TILE_ID;
 
-function getFirstEmptyPlayerSlot() {
-  for (var i = 0; i < MAX_PLAYER_COUNT; i++) {
-    if (socketList[i] == undefined) {
-      return i;
+var friction_maps = [];
+
+function initialiseFrictionMaps() {
+  for (var t = 0; t < HIGHEST_TILE_ID; t++) {
+    friction_maps[t] = [];
+
+    for (var x = 0; x < 128; x++) {
+      friction_maps[t][x] = [];
     }
   }
 
-  return -1;
+  fillFrictionMaps();
 }
 
-var player_count = 0;
+function fillFrictionMaps() {
+  for (var t = 0; t < HIGHEST_TILE_ID; t++) {
+    if (used_in_world[t] !== true) {
+      continue;
+    }
 
-io.sockets.on('connection', function(socket) {
-  var id = getFirstEmptyPlayerSlot();
-	socket.player_data = createPlayerObject(id);
+    loadFrictionMap(t);
+  }
 
-	socketList[id] = socket;
-  player_count++;
+  console.log("Friction maps loaded");
+}
 
+function setFrictionMap(id, map) {
+  friction_maps[id] = map;
+}
+
+function loadFrictionMap(id) {
+  if (used_in_world[id] !== true) {
+    return undefined;
+  }
+
+  fs.createReadStream(__dirname + '/assets/friction_maps/' + id + '.png')
+    .pipe(new PNG({
+        filterType: 4
+    }))
+    .on('parsed', function() {
+      var map = [];
+
+        for (var x = 0; x < this.width; x++) {
+          map[x] = [];
+            for (var y = 0; y < this.height; y++) {
+                var idx = (this.width * y + x) << 2;
+
+                map[x][y] = this.data[idx];
+            }
+        }
+
+        setFrictionMap(id, map);
+    });
+}
+
+var used_in_world = [];
+
+function getHighestTileId() {
+  var highest = -9999;
+
+  for (var x = 0; x < WORLD_WIDTH_TILE; x++) {
+    for (var y = 0; y < WORLD_HEIGHT_TILE; y++) {
+      if (world_tiles[x][y] === undefined) {
+        continue;
+      }
+
+      used_in_world[world_tiles[x][y]] = true;
+
+      if (world_tiles[x][y] > highest) {
+        highest = world_tiles[x][y];
+      }
+    }
+  }
+
+  return highest;
+}
+
+var world_tiles = [];
+
+var socketList = [];
+
+var HIGHEST_TILE_ID;
+
+loaded();
+
+function loaded() {
   WORLD_HEIGHT_TILE = 20;
   WORLD_WIDTH_TILE = 28;
   BASE_TILE_ID = 3;
 
-  var world_tiles = new Array();
-
   // Define an array of x tiles for each y tile
   for (var x = 0; x < WORLD_WIDTH_TILE; x++) {
-    world_tiles[x] = new Array();
+    world_tiles[x] = [];
   }
 
   world_tiles[8][4] = 20;
@@ -121,13 +189,37 @@ io.sockets.on('connection', function(socket) {
   world_tiles[15][7] = 13;
   world_tiles[15][8] = 53;
 
+  HIGHEST_TILE_ID = getHighestTileId();
+
+  initialiseFrictionMaps();
+}
+
+function getFirstEmptyPlayerSlot() {
+  for (var i = 0; i < MAX_PLAYER_COUNT; i++) {
+    if (socketList[i] == undefined) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+var player_count = 0;
+
+io.sockets.on('connection', function(socket) {
+  var id = getFirstEmptyPlayerSlot();
+	socket.player_data = createPlayerObject(id);
+
+	socketList[id] = socket;
+  player_count++;
+
   var world_data =
   {
     width: WORLD_WIDTH_TILE,
     height: WORLD_HEIGHT_TILE,
     base: BASE_TILE_ID,
     tiles: world_tiles
-  }
+  };
 
   var initialisation_data =
   {
@@ -196,7 +288,19 @@ function getRandomColor() {
 }
 
 function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getTileId(x, y) {
+  if (world_tiles[x][y] === undefined) {
+    return BASE_TILE_ID;
+  }
+
+  return world_tiles[x][y];
+}
+
+function getFrictionMapPixelColor(id, x, y) {
+  return friction_maps[id][x][y];
 }
 
 function createPlayerObject(id) {
@@ -209,6 +313,15 @@ function createPlayerObject(id) {
   player_vehicle.setVehicleRotation(90.0);
 
   player_vehicle.color = getRandomColor();
+
+  player_vehicle.is_server_instance = true;
+
+  var methods = {
+    getTileId: getTileId,
+    getFrictionMapPixelColor: getFrictionMapPixelColor
+  };
+
+  player_vehicle._server_methods = methods;
 
   return player;
 }

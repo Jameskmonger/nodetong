@@ -56,13 +56,6 @@ define(function (require) {
       return this.context.getImageData(x, y, 1, 1).data[0];
     },
 
-    getTileCoordinates: function (x, y) {
-      return {
-        x: Math.floor(x / 128),
-        y: Math.floor(y / 128)
-      };
-    },
-
     getFrictionTile: function (x, y) {
       return this.world_tiles[x][y];
     },

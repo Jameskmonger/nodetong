@@ -19,6 +19,8 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
     function Vehicle(obj) {
       this.position = new Vector({x: 0, y: 0});
 
+      this.is_server_instance = false;
+
       this.rotation = {
         vehicle: 90.0,
         wheel: 90.0
@@ -49,18 +51,43 @@ define(['./Vector', './Utils'], function (Vector, Utils) {
         this.game = game;
       },
 
+      isServerInstance: function () {
+        return this.is_server_instance;
+      },
+
       getFrictionCoefficient: function () {
-        if (this.game === undefined) {
-          return 0.30;
+        // We act differently based on whether the vehicle is an instance
+        // on the server or the client - ugly! :-(
+
+        if (this.isServerInstance()) {
+          var coords = Utils.getTileCoordinates(this.position.x, this.position.y);
+
+          var tile_pos = Utils.getTileInteriorPosition(this.position.x, this.position.y);
+
+          var tile_id = this._server_methods.getTileId(coords.x, coords.y);
+
+          var pixel_color = this._server_methods.getFrictionMapPixelColor(tile_id, tile_pos.x, tile_pos.y);
+
+          if (pixel_color === undefined) {
+            return 0.30;
+          }
+
+          var friction_coefficient = (1 - (pixel_color / 255));
+
+          return friction_coefficient;
+        } else {
+          if (this.game === undefined) {
+            return 0.30;
+          }
+
+          var fric = this.game.getWorld().getFrictionMap();
+
+          var color = fric.getPositionColor(this.position.x, this.position.y);
+
+          var friction_coefficient = (1 - (color / 255));
+
+          return friction_coefficient;
         }
-
-        var fric = this.game.getWorld().getFrictionMap();
-
-        var color = fric.getPositionColor(this.position.x, this.position.y);
-
-        var friction_coefficient = (1 - (color / 255));
-
-        return friction_coefficient;
       },
 
       getDragConstant: function () {

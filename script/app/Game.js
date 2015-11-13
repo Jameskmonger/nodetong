@@ -52,6 +52,9 @@ define(['./KeyHandler', './Vehicle', './Player', './World'], function (KeyHandle
         return;
       }
 
+      data._vehicle.is_server_instance = false;
+      data._vehicle._server_methods = undefined;
+
       var requires_full_update;
 
       if (id === this.LOCAL_PLAYER_ID) {

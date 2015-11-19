@@ -1,5 +1,4 @@
 require.config({
-  baseUrl: '/script/modules',
   paths: {
     app: '/script/app'
   }

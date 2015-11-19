@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var config = require('./config');
@@ -20,11 +21,6 @@ app.get('/', function(req, res) {
 app.get("/script/:filename", function(req, res) {
   var filename = req.params.filename;
   res.sendFile(__dirname + '/script/' + filename);
-});
-
-app.get("/script/modules/:filename", function(req, res) {
-  var filename = req.params.filename;
-  res.sendFile(__dirname + '/script/modules/' + filename);
 });
 
 app.get("/script/app/:filename", function(req, res) {

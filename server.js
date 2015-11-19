@@ -1,14 +1,10 @@
-var express = require('express');
-var app = express();
+var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var shortid = require('shortid');
 var config = require('./config');
 
 var Vehicle = require('./script/app/Vehicle');
 var Player = require('./script/app/Player');
-
-shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
 app.use("/assets/vehicles", express.static(__dirname + "/assets/vehicles"));
 

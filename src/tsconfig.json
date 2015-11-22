@@ -22,6 +22,7 @@
     ],
     "files": [
         "ts/GameServer.ts",
+        "ts/Player/Player.ts",
         "ts/RouteManager.ts",
         "ts/server.ts",
         "typings/express/express.d.ts",

@@ -7,40 +7,8 @@ var config = require('./config');
 var Vehicle = require('./script/app/Vehicle');
 var Player = require('./script/app/Player');
 
-app.use("/assets/vehicles", express.static(__dirname + "/assets/vehicles"));
-
-app.use("/assets/tiles", express.static(__dirname + '/assets/tiles'));
-app.use("/assets/friction_maps", express.static(__dirname + '/assets/friction_maps'));
-
-app.use("/lib", express.static(__dirname + '/lib'));
-
-app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/index.html');
-});
-
-app.get("/script/:filename", function(req, res) {
-  var filename = req.params.filename;
-  res.sendFile(__dirname + '/script/' + filename);
-});
-
-app.get("/script/app/:filename", function(req, res) {
-  var filename = req.params.filename;
-  res.sendFile(__dirname + '/script/app/' + filename);
-});
-
-app.get("/script/app/:folder/:filename", function(req, res) {
-  var folder = req.params.folder;
-  var filename = req.params.filename;
-
-  if (folder === 'Animation' || folder === 'Networking' || folder === 'World') {
-    res.sendFile(__dirname + '/script/app/' + folder + '/' + filename);
-  }
-});
-
 var fs = require('fs'),
     PNG = require('pngjs').PNG;
-
-var MAX_PLAYER_COUNT = 2000;
 
 var WORLD_HEIGHT_TILE, WORLD_WIDTH_TILE, BASE_TILE_ID;
 
@@ -186,16 +154,6 @@ function loaded() {
   initialiseFrictionMaps();
 }
 
-function getFirstEmptyPlayerSlot() {
-  for (var i = 0; i < MAX_PLAYER_COUNT; i++) {
-    if (socketList[i] == undefined) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
 var player_count = 0;
 
 io.sockets.on('connection', function(socket) {
@@ -236,15 +194,6 @@ io.sockets.on('connection', function(socket) {
     socket.player_data.getVehicle().setEnginePower(player_data.force.engine);
     socket.player_data.getVehicle().setBrakingForce(player_data.force.braking);
   });
-
-	socket.on('disconnect', function() {
-    socketList[id] = undefined;
-    player_count--;
-
-		io.emit("player leave", id);
-
-		console.log("Player " + id + " disconnected. [" + player_count + " players online]");
-	});
 });
 
 http.listen(config.port, function() {
@@ -267,20 +216,12 @@ function loop() {
   }
 }
 
-var NAMES = ["Boris", "Oscar", "Giovanni", "Patrick", "Derek", "Quentin", "Quagmire", "Milton", "Glen", "Hubert"];
 
-function getRandomName() {
-  return NAMES[getRandomInt(0, NAMES.length - 1)];
-}
 
 var VEHICLE_COLOR_COUNT = 4;
 
 function getRandomColor() {
 	return getRandomInt(0, VEHICLE_COLOR_COUNT);
-}
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getTileId(x, y) {

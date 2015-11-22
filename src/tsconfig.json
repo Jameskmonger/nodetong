@@ -21,7 +21,12 @@
         "!node_modules/**"
     ],
     "files": [
-        "ts/server.ts"
+        "ts/server.ts",
+        "typings/express/express.d.ts",
+        "typings/mime/mime.d.ts",
+        "typings/node/node.d.ts",
+        "typings/serve-static/serve-static.d.ts",
+        "typings/socket.io/socket.io.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

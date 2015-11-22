@@ -1,0 +1,405 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '-g',
+1 verbose cli   'typescript' ]
+2 info using npm@1.3.10
+3 info using node@v0.10.25
+4 verbose cache add [ 'typescript', null ]
+5 verbose cache add name=undefined spec="typescript" args=["typescript",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'typescript',
+6 verbose parsed url   path: 'typescript',
+6 verbose parsed url   href: 'typescript' }
+7 silly lockFile fb9da861-typescript typescript
+8 verbose lock typescript /home/james/.npm/fb9da861-typescript.lock
+9 silly lockFile fb9da861-typescript typescript
+10 silly lockFile fb9da861-typescript typescript
+11 verbose addNamed [ 'typescript', '' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile b598c0ef-typescript typescript@
+14 verbose lock typescript@ /home/james/.npm/b598c0ef-typescript.lock
+15 silly addNameRange { name: 'typescript', range: '*', hasData: false }
+16 verbose url raw typescript
+17 verbose url resolving [ 'https://registry.npmjs.org/', './typescript' ]
+18 verbose url resolved https://registry.npmjs.org/typescript
+19 info trying registry request attempt 1 at 13:00:04
+20 http GET https://registry.npmjs.org/typescript
+21 http 200 https://registry.npmjs.org/typescript
+22 silly registry.get cb [ 200,
+22 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+22 silly registry.get     etag: '"9EX3WL3TMYEFZND4MST91P1GZ"',
+22 silly registry.get     'content-type': 'application/json',
+22 silly registry.get     'cache-control': 'max-age=60',
+22 silly registry.get     'content-length': '216763',
+22 silly registry.get     'accept-ranges': 'bytes',
+22 silly registry.get     date: 'Sun, 22 Nov 2015 13:00:04 GMT',
+22 silly registry.get     via: '1.1 varnish',
+22 silly registry.get     age: '0',
+22 silly registry.get     connection: 'keep-alive',
+22 silly registry.get     'x-served-by': 'cache-lhr6332-LHR',
+22 silly registry.get     'x-cache': 'HIT',
+22 silly registry.get     'x-cache-hits': '1',
+22 silly registry.get     'x-timer': 'S1448197204.354188,VS0,VE627',
+22 silly registry.get     vary: 'Accept' } ]
+23 silly addNameRange number 2 { name: 'typescript', range: '*', hasData: true }
+24 silly addNameRange versions [ 'typescript',
+24 silly addNameRange   [ '0.8.0',
+24 silly addNameRange     '0.8.1',
+24 silly addNameRange     '0.8.1-1',
+24 silly addNameRange     '0.8.2',
+24 silly addNameRange     '0.8.3',
+24 silly addNameRange     '0.9.0',
+24 silly addNameRange     '0.9.0-1',
+24 silly addNameRange     '0.9.1',
+24 silly addNameRange     '0.9.1-1',
+24 silly addNameRange     '0.9.5',
+24 silly addNameRange     '0.9.7',
+24 silly addNameRange     '1.0.0',
+24 silly addNameRange     '1.0.1',
+24 silly addNameRange     '1.1.0-1',
+24 silly addNameRange     '1.3.0',
+24 silly addNameRange     '1.4.1',
+24 silly addNameRange     '1.5.0-alpha',
+24 silly addNameRange     '1.5.0-beta',
+24 silly addNameRange     '1.5.3',
+24 silly addNameRange     '1.6.0-dev.20150722.1',
+24 silly addNameRange     '1.6.0-dev.20150723',
+24 silly addNameRange     '1.6.0-dev.20150724',
+24 silly addNameRange     '1.6.0-dev.20150725',
+24 silly addNameRange     '1.6.0-dev.20150726',
+24 silly addNameRange     '1.6.0-dev.20150727',
+24 silly addNameRange     '1.6.0-dev.20150728',
+24 silly addNameRange     '1.6.0-dev.20150729',
+24 silly addNameRange     '1.6.0-dev.20150730',
+24 silly addNameRange     '1.6.0-dev.20150731',
+24 silly addNameRange     '1.6.0-dev.20150801',
+24 silly addNameRange     '1.6.0-dev.20150802',
+24 silly addNameRange     '1.6.0-dev.20150803',
+24 silly addNameRange     '1.6.0-dev.20150804',
+24 silly addNameRange     '1.6.0-dev.20150805',
+24 silly addNameRange     '1.6.0-dev.20150806',
+24 silly addNameRange     '1.6.0-dev.20150807',
+24 silly addNameRange     '1.6.0-dev.20150808',
+24 silly addNameRange     '1.6.0-dev.20150809',
+24 silly addNameRange     '1.6.0-dev.20150810',
+24 silly addNameRange     '1.6.0-dev.20150811',
+24 silly addNameRange     '1.6.0-dev.20150812',
+24 silly addNameRange     '1.6.0-dev.20150813',
+24 silly addNameRange     '1.6.0-dev.20150814',
+24 silly addNameRange     '1.6.0-dev.20150815',
+24 silly addNameRange     '1.6.0-dev.20150816',
+24 silly addNameRange     '1.6.0-dev.20150817',
+24 silly addNameRange     '1.6.0-dev.20150818',
+24 silly addNameRange     '1.6.0-dev.20150819',
+24 silly addNameRange     '1.6.0-dev.20150820',
+24 silly addNameRange     '1.6.0-dev.20150821',
+24 silly addNameRange     '1.6.0-dev.20150822',
+24 silly addNameRange     '1.6.0-dev.20150823',
+24 silly addNameRange     '1.6.0-dev.20150824',
+24 silly addNameRange     '1.6.0-dev.20150825',
+24 silly addNameRange     '1.7.0-dev.20150826',
+24 silly addNameRange     '1.7.0-dev.20150827',
+24 silly addNameRange     '1.7.0-dev.20150828',
+24 silly addNameRange     '1.7.0-dev.20150829',
+24 silly addNameRange     '1.7.0-dev.20150830',
+24 silly addNameRange     '1.7.0-dev.20150831',
+24 silly addNameRange     '1.7.0-dev.20150901',
+24 silly addNameRange     '1.7.0-dev.20150902',
+24 silly addNameRange     '1.6.0-beta',
+24 silly addNameRange     '1.7.0-dev.20150903',
+24 silly addNameRange     '1.7.0-dev.20150904',
+24 silly addNameRange     '1.6.0-dev.20150905',
+24 silly addNameRange     '1.6.0-dev.20150906',
+24 silly addNameRange     '1.6.0-dev.20150907',
+24 silly addNameRange     '1.6.0-dev.20150908',
+24 silly addNameRange     '1.6.0-dev.20150909',
+24 silly addNameRange     '1.6.0-dev.20150910',
+24 silly addNameRange     '1.6.0-dev.20150911',
+24 silly addNameRange     '1.6.0-dev.20150912',
+24 silly addNameRange     '1.6.0-dev.20150913',
+24 silly addNameRange     '1.6.0-dev.20150914',
+24 silly addNameRange     '1.6.0-dev.20150915',
+24 silly addNameRange     '1.7.0-dev.20150916',
+24 silly addNameRange     '1.6.2',
+24 silly addNameRange     '1.7.0-dev.20150917',
+24 silly addNameRange     '1.7.0-dev.20150918',
+24 silly addNameRange     '1.7.0-dev.20150919',
+24 silly addNameRange     '1.7.0-dev.20150920',
+24 silly addNameRange     '1.7.0-dev.20150921',
+24 silly addNameRange     '1.7.0-dev.20150922',
+24 silly addNameRange     '1.7.0-dev.20150923',
+24 silly addNameRange     '1.7.0-dev.20150924',
+24 silly addNameRange     '1.7.0-dev.20150925',
+24 silly addNameRange     '1.7.0-dev.20150926',
+24 silly addNameRange     '1.7.0-dev.20150927',
+24 silly addNameRange     '1.7.0-dev.20150928',
+24 silly addNameRange     '1.7.0-dev.20150929',
+24 silly addNameRange     '1.7.0-dev.20150930',
+24 silly addNameRange     '1.7.0-dev.20151001',
+24 silly addNameRange     '1.7.0-dev.20151002',
+24 silly addNameRange     '1.7.0-dev.20151003',
+24 silly addNameRange     '1.7.0-dev.20151004',
+24 silly addNameRange     '1.7.0-dev.20151005',
+24 silly addNameRange     '1.7.0-dev.20151006',
+24 silly addNameRange     '1.7.0-dev.20151014',
+24 silly addNameRange     '1.7.0-dev.20151015',
+24 silly addNameRange     '1.7.0-dev.20151016',
+24 silly addNameRange     '1.8.0-dev.20151017',
+24 silly addNameRange     '1.8.0-dev.20151018',
+24 silly addNameRange     '1.8.0-dev.20151019',
+24 silly addNameRange     '1.8.0-dev.20151020',
+24 silly addNameRange     '1.8.0-dev.20151021',
+24 silly addNameRange     '1.8.0-dev.20151022',
+24 silly addNameRange     '1.8.0-dev.20151023',
+24 silly addNameRange     '1.8.0-dev.20151024',
+24 silly addNameRange     '1.8.0-dev.20151025',
+24 silly addNameRange     '1.8.0-dev.20151026',
+24 silly addNameRange     '1.8.0-dev.20151027',
+24 silly addNameRange     '1.8.0-dev.20151028',
+24 silly addNameRange     '1.8.0-dev.20151029',
+24 silly addNameRange     '1.8.0-dev.20151030',
+24 silly addNameRange     '1.8.0-dev.20151031',
+24 silly addNameRange     '1.8.0-dev.20151101',
+24 silly addNameRange     '1.8.0-dev.20151102',
+24 silly addNameRange     '1.8.0-dev.20151103',
+24 silly addNameRange     '1.8.0-dev.20151104',
+24 silly addNameRange     '1.8.0-dev.20151105',
+24 silly addNameRange     '1.8.0-dev.20151106',
+24 silly addNameRange     '1.8.0-dev.20151107',
+24 silly addNameRange     '1.8.0-dev.20151108',
+24 silly addNameRange     '1.8.0-dev.20151109',
+24 silly addNameRange     '1.8.0-dev.20151110',
+24 silly addNameRange     '1.8.0-dev.20151111',
+24 silly addNameRange     '1.8.0-dev.20151112',
+24 silly addNameRange     '1.8.0-dev.20151113',
+24 silly addNameRange     '1.8.0-dev.20151114',
+24 silly addNameRange     '1.8.0-dev.20151115',
+24 silly addNameRange     '1.8.0-dev.20151116',
+24 silly addNameRange     '1.8.0-dev.20151117',
+24 silly addNameRange     '1.8.0-dev.20151118',
+24 silly addNameRange     '1.8.0-dev.20151119',
+24 silly addNameRange     '1.8.0-dev.20151120',
+24 silly addNameRange     '1.8.0-dev.20151121',
+24 silly addNameRange     '1.8.0-dev.20151122' ] ]
+25 verbose addNamed [ 'typescript', '1.6.2' ]
+26 verbose addNamed [ '1.6.2', '1.6.2' ]
+27 silly lockFile 380e6963-typescript-1-6-2 typescript@1.6.2
+28 verbose lock typescript@1.6.2 /home/james/.npm/380e6963-typescript-1-6-2.lock
+29 silly lockFile 03c86d0b--typescript-typescript-1-6-2-tgz https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz
+30 verbose lock https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz /home/james/.npm/03c86d0b--typescript-typescript-1-6-2-tgz.lock
+31 verbose addRemoteTarball [ 'https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz',
+31 verbose addRemoteTarball   '5b27254abeb111027cbf9450d3431bc5843191dd' ]
+32 info retry fetch attempt 1 at 13:00:05
+33 verbose fetch to= /home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/tmp.tgz
+34 http GET https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz
+35 http 200 https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz
+36 verbose tar unpack /home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/tmp.tgz
+37 silly lockFile 9bd0bf58-205345-0-869709994411096-package tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+38 verbose lock tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package /home/james/.npm/9bd0bf58-205345-0-869709994411096-package.lock
+39 silly lockFile 5b37be4b-205345-0-869709994411096-tmp-tgz tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/tmp.tgz
+40 verbose lock tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/tmp.tgz /home/james/.npm/5b37be4b-205345-0-869709994411096-tmp-tgz.lock
+41 silly gunzTarPerm modes [ '755', '644' ]
+42 silly gunzTarPerm extractEntry package.json
+43 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+44 silly gunzTarPerm extractEntry .npmignore
+45 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+46 silly gunzTarPerm extractEntry README.md
+47 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+48 silly gunzTarPerm extractEntry Jakefile.js
+49 silly gunzTarPerm modified mode [ 'Jakefile.js', 438, 420 ]
+50 silly gunzTarPerm extractEntry ThirdPartyNoticeText.txt
+51 silly gunzTarPerm modified mode [ 'ThirdPartyNoticeText.txt', 438, 420 ]
+52 silly gunzTarPerm extractEntry AUTHORS.md
+53 silly gunzTarPerm modified mode [ 'AUTHORS.md', 438, 420 ]
+54 silly gunzTarPerm extractEntry CONTRIBUTING.md
+55 silly gunzTarPerm modified mode [ 'CONTRIBUTING.md', 438, 420 ]
+56 silly gunzTarPerm extractEntry CopyrightNotice.txt
+57 silly gunzTarPerm modified mode [ 'CopyrightNotice.txt', 438, 420 ]
+58 silly gunzTarPerm extractEntry .gitattributes
+59 silly gunzTarPerm modified mode [ '.gitattributes', 438, 420 ]
+60 silly gunzTarPerm extractEntry LICENSE.txt
+61 silly gunzTarPerm modified mode [ 'LICENSE.txt', 438, 420 ]
+62 silly gunzTarPerm extractEntry .editorconfig
+63 silly gunzTarPerm modified mode [ '.editorconfig', 438, 420 ]
+64 silly gunzTarPerm extractEntry bin/tsc
+65 silly gunzTarPerm modified mode [ 'bin/tsc', 438, 420 ]
+66 silly gunzTarPerm extractEntry bin/tsserver
+67 silly gunzTarPerm modified mode [ 'bin/tsserver', 438, 420 ]
+68 silly gunzTarPerm extractEntry lib/typescriptServices.js
+69 silly gunzTarPerm modified mode [ 'lib/typescriptServices.js', 438, 420 ]
+70 silly gunzTarPerm extractEntry lib/tsc.js
+71 silly gunzTarPerm modified mode [ 'lib/tsc.js', 438, 420 ]
+72 silly gunzTarPerm extractEntry lib/tsserver.js
+73 silly gunzTarPerm modified mode [ 'lib/tsserver.js', 438, 420 ]
+74 silly gunzTarPerm extractEntry lib/typescript.js
+75 silly gunzTarPerm modified mode [ 'lib/typescript.js', 438, 420 ]
+76 silly gunzTarPerm extractEntry lib/lib.es6.d.ts
+77 silly gunzTarPerm modified mode [ 'lib/lib.es6.d.ts', 438, 420 ]
+78 silly gunzTarPerm extractEntry lib/lib.scriptHost.d.ts
+79 silly gunzTarPerm modified mode [ 'lib/lib.scriptHost.d.ts', 438, 420 ]
+80 silly gunzTarPerm extractEntry lib/lib.core.es6.d.ts
+81 silly gunzTarPerm modified mode [ 'lib/lib.core.es6.d.ts', 438, 420 ]
+82 silly gunzTarPerm extractEntry lib/lib.core.d.ts
+83 silly gunzTarPerm modified mode [ 'lib/lib.core.d.ts', 438, 420 ]
+84 silly gunzTarPerm extractEntry lib/lib.d.ts
+85 silly gunzTarPerm modified mode [ 'lib/lib.d.ts', 438, 420 ]
+86 silly gunzTarPerm extractEntry lib/typescript.d.ts
+87 silly gunzTarPerm modified mode [ 'lib/typescript.d.ts', 438, 420 ]
+88 silly gunzTarPerm extractEntry lib/lib.dom.d.ts
+89 silly gunzTarPerm modified mode [ 'lib/lib.dom.d.ts', 438, 420 ]
+90 silly gunzTarPerm extractEntry lib/typescriptServices.d.ts
+91 silly gunzTarPerm modified mode [ 'lib/typescriptServices.d.ts', 438, 420 ]
+92 silly gunzTarPerm extractEntry lib/lib.webworker.d.ts
+93 silly gunzTarPerm modified mode [ 'lib/lib.webworker.d.ts', 438, 420 ]
+94 silly gunzTarPerm extractEntry tslint.json
+95 silly gunzTarPerm modified mode [ 'tslint.json', 438, 420 ]
+96 silly lockFile 9bd0bf58-205345-0-869709994411096-package tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+97 silly lockFile 9bd0bf58-205345-0-869709994411096-package tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+98 silly lockFile 5b37be4b-205345-0-869709994411096-tmp-tgz tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/tmp.tgz
+99 silly lockFile 5b37be4b-205345-0-869709994411096-tmp-tgz tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/tmp.tgz
+100 verbose tar pack [ '/home/james/.npm/typescript/1.6.2/package.tgz',
+100 verbose tar pack   '/home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package' ]
+101 verbose tarball /home/james/.npm/typescript/1.6.2/package.tgz
+102 verbose folder /home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+103 silly lockFile 9bd0bf58-205345-0-869709994411096-package tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+104 verbose lock tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package /home/james/.npm/9bd0bf58-205345-0-869709994411096-package.lock
+105 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+106 verbose lock tar:///home/james/.npm/typescript/1.6.2/package.tgz /home/james/.npm/8aeed393-npm-typescript-1-6-2-package-tgz.lock
+107 silly lockFile 9bd0bf58-205345-0-869709994411096-package tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+108 silly lockFile 9bd0bf58-205345-0-869709994411096-package tar:///home/james/tmp/npm-3165--W6B8kpk/1448197205345-0.869709994411096/package
+109 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+110 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+111 silly lockFile f605069e-mes-npm-typescript-1-6-2-package /home/james/.npm/typescript/1.6.2/package
+112 verbose lock /home/james/.npm/typescript/1.6.2/package /home/james/.npm/f605069e-mes-npm-typescript-1-6-2-package.lock
+113 silly lockFile f605069e-mes-npm-typescript-1-6-2-package /home/james/.npm/typescript/1.6.2/package
+114 silly lockFile f605069e-mes-npm-typescript-1-6-2-package /home/james/.npm/typescript/1.6.2/package
+115 verbose tar unpack /home/james/.npm/typescript/1.6.2/package.tgz
+116 silly lockFile 14eee6ac-mes-npm-typescript-1-6-2-package tar:///home/james/.npm/typescript/1.6.2/package
+117 verbose lock tar:///home/james/.npm/typescript/1.6.2/package /home/james/.npm/14eee6ac-mes-npm-typescript-1-6-2-package.lock
+118 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+119 verbose lock tar:///home/james/.npm/typescript/1.6.2/package.tgz /home/james/.npm/8aeed393-npm-typescript-1-6-2-package-tgz.lock
+120 silly gunzTarPerm modes [ '755', '644' ]
+121 silly gunzTarPerm extractEntry package.json
+122 silly gunzTarPerm extractEntry .npmignore
+123 silly gunzTarPerm extractEntry README.md
+124 silly gunzTarPerm extractEntry Jakefile.js
+125 silly gunzTarPerm extractEntry LICENSE.txt
+126 silly gunzTarPerm extractEntry CopyrightNotice.txt
+127 silly gunzTarPerm extractEntry .editorconfig
+128 silly gunzTarPerm extractEntry .gitattributes
+129 silly gunzTarPerm extractEntry AUTHORS.md
+130 silly gunzTarPerm extractEntry ThirdPartyNoticeText.txt
+131 silly gunzTarPerm extractEntry bin/tsc
+132 silly gunzTarPerm extractEntry bin/tsserver
+133 silly gunzTarPerm extractEntry lib/typescriptServices.js
+134 silly gunzTarPerm extractEntry lib/tsc.js
+135 silly gunzTarPerm extractEntry lib/tsserver.js
+136 silly gunzTarPerm extractEntry lib/typescript.js
+137 silly gunzTarPerm extractEntry lib/lib.es6.d.ts
+138 silly gunzTarPerm extractEntry lib/lib.scriptHost.d.ts
+139 silly gunzTarPerm extractEntry lib/lib.core.es6.d.ts
+140 silly gunzTarPerm extractEntry lib/lib.core.d.ts
+141 silly gunzTarPerm extractEntry lib/lib.d.ts
+142 silly gunzTarPerm extractEntry lib/typescript.d.ts
+143 silly gunzTarPerm extractEntry lib/lib.dom.d.ts
+144 silly gunzTarPerm extractEntry lib/typescriptServices.d.ts
+145 silly gunzTarPerm extractEntry lib/lib.webworker.d.ts
+146 silly gunzTarPerm extractEntry CONTRIBUTING.md
+147 silly gunzTarPerm extractEntry tslint.json
+148 silly lockFile 14eee6ac-mes-npm-typescript-1-6-2-package tar:///home/james/.npm/typescript/1.6.2/package
+149 silly lockFile 14eee6ac-mes-npm-typescript-1-6-2-package tar:///home/james/.npm/typescript/1.6.2/package
+150 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+151 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+152 verbose chmod /home/james/.npm/typescript/1.6.2/package.tgz 644
+153 verbose chown /home/james/.npm/typescript/1.6.2/package.tgz [ 1000, 1000 ]
+154 silly lockFile 03c86d0b--typescript-typescript-1-6-2-tgz https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz
+155 silly lockFile 03c86d0b--typescript-typescript-1-6-2-tgz https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz
+156 silly lockFile 380e6963-typescript-1-6-2 typescript@1.6.2
+157 silly lockFile 380e6963-typescript-1-6-2 typescript@1.6.2
+158 silly lockFile b598c0ef-typescript typescript@
+159 silly lockFile b598c0ef-typescript typescript@
+160 silly resolved [ { name: 'typescript',
+160 silly resolved     author: { name: 'Microsoft Corp.' },
+160 silly resolved     homepage: 'http://typescriptlang.org/',
+160 silly resolved     version: '1.6.2',
+160 silly resolved     license: 'Apache-2.0',
+160 silly resolved     description: 'TypeScript is a language for application scale JavaScript development',
+160 silly resolved     keywords: [ 'TypeScript', 'Microsoft', 'compiler', 'language', 'javascript' ],
+160 silly resolved     bugs: { url: 'https://github.com/Microsoft/TypeScript/issues' },
+160 silly resolved     repository:
+160 silly resolved      { type: 'git',
+160 silly resolved        url: 'https://github.com/Microsoft/TypeScript.git' },
+160 silly resolved     main: './lib/typescript.js',
+160 silly resolved     typings: './lib/typescript.d.ts',
+160 silly resolved     bin: { tsc: './bin/tsc', tsserver: './bin/tsserver' },
+160 silly resolved     engines: { node: '>=0.8.0' },
+160 silly resolved     devDependencies:
+160 silly resolved      { jake: 'latest',
+160 silly resolved        mocha: 'latest',
+160 silly resolved        chai: 'latest',
+160 silly resolved        browserify: 'latest',
+160 silly resolved        istanbul: 'latest',
+160 silly resolved        'mocha-fivemat-progress-reporter': 'latest',
+160 silly resolved        tslint: 'latest' },
+160 silly resolved     scripts:
+160 silly resolved      { pretest: 'jake tests',
+160 silly resolved        test: 'jake runtests',
+160 silly resolved        build: 'npm run build:compiler && npm run build:tests',
+160 silly resolved        'build:compiler': 'jake local',
+160 silly resolved        'build:tests': 'jake tests',
+160 silly resolved        clean: 'jake clean' },
+160 silly resolved     browser: { buffer: false, fs: false, os: false, path: false },
+160 silly resolved     readme: '[![Build Status](https://travis-ci.org/Microsoft/TypeScript.svg?branch=master)](https://travis-ci.org/Microsoft/TypeScript)\r\n[![npm version](https://badge.fury.io/js/typescript.svg)](http://badge.fury.io/js/typescript)\r\n[![Downloads](http://img.shields.io/npm/dm/TypeScript.svg)](https://npmjs.org/package/typescript)\r\n\r\n# TypeScript\r\n\r\n[![Join the chat at https://gitter.im/Microsoft/TypeScript](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Microsoft/TypeScript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)\r\n\r\n[TypeScript](http://www.typescriptlang.org/) is a language for application-scale JavaScript. TypeScript adds optional types, classes, and modules to JavaScript. TypeScript supports tools for large-scale JavaScript applications for any browser, for any host, on any OS. TypeScript compiles to readable, standards-based JavaScript. Try it out at the [playground](http://www.typescriptlang.org/Playground), and stay up to date via [our blog](http://blogs.msdn.com/typescript) and [Twitter account](https://twitter.com/typescriptlang).\r\n\r\n## Installing\r\n\r\nFor the latest stable version:\r\n\r\n```\r\nnpm install -g typescript\r\n```\r\n\r\nFor our nightly builds:\r\n\r\n```\r\nnpm install -g typescript@next\r\n```\r\n\r\n## Contribute\r\n\r\nThere are many ways to [contribute](https://github.com/Microsoft/TypeScript/blob/master/CONTRIBUTING.md) to TypeScript.\r\n* [Submit bugs](https://github.com/Microsoft/TypeScript/issues) and help us verify fixes as they are checked in.\r\n* Review the [source code changes](https://github.com/Microsoft/TypeScript/pulls).\r\n* Engage with other TypeScript users and developers on [StackOverflow](http://stackoverflow.com/questions/tagged/typescript). \r\n* Join the [#typescript](http://twitter.com/#!/search/realtime/%23typescript) discussion on Twitter.\r\n* [Contribute bug fixes](https://github.com/Microsoft/TypeScript/blob/master/CONTRIBUTING.md).\r\n* Read the language specification ([docx](http://go.microsoft.com/fwlink/?LinkId=267121), [pdf](http://go.microsoft.com/fwlink/?LinkId=267238)).\r\n\r\n\r\n## Documentation\r\n\r\n*  [Quick tutorial](http://www.typescriptlang.org/Tutorial)\r\n*  [Programming handbook](http://www.typescriptlang.org/Handbook)\r\n*  [Language specification](https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md)\r\n*  [Homepage](http://www.typescriptlang.org/)\r\n\r\n## Building\r\n\r\nIn order to build the TypeScript compiler, ensure that you have [Git](http://git-scm.com/downloads) and [Node.js](http://nodejs.org/) installed.\r\n\r\nClone a copy of the repo:\r\n\r\n```\r\ngit clone https://github.com/Microsoft/TypeScript.git\r\n```\r\n\r\nChange to the TypeScript directory:\r\n\r\n```\r\ncd TypeScript\r\n```\r\n\r\nInstall Jake tools and dev dependencies:\r\n\r\n```\r\nnpm install -g jake\r\nnpm install\r\n```\r\n\r\nUse one of the following to build and test:\r\n\r\n```\r\njake local            # Build the compiler into built/local \r\njake clean            # Delete the built compiler \r\njake LKG              # Replace the last known good with the built one.\r\n                      # Bootstrapping step to be executed when the built compiler reaches a stable state.\r\njake tests            # Build the test infrastructure using the built compiler. \r\njake runtests         # Run tests using the built compiler and test infrastructure. \r\n                      # You can override the host or specify a test for this command. \r\n                      # Use host=<hostName> or tests=<testPath>. \r\njake runtests-browser # Runs the tests using the built run.js file. Syntax is jake runtests. Optional\r\n                        parameters \'host=\', \'tests=[regex], reporter=[list|spec|json|<more>]\'.\r\njake baseline-accept  # This replaces the baseline test results with the results obtained from jake runtests.\r\njake lint             # Runs tslint on the TypeScript source.\r\njake -T               # List the above commands. \r\n```\r\n\r\n\r\n## Usage\r\n\r\n```shell\r\nnode built/local/tsc.js hello.ts\r\n```\r\n\r\n\r\n## Roadmap\r\n\r\nFor details on our planned features and future direction please refer to our [roadmap](https://github.com/Microsoft/TypeScript/wiki/Roadmap).\r\n',
+160 silly resolved     readmeFilename: 'README.md',
+160 silly resolved     _id: 'typescript@1.6.2',
+160 silly resolved     dist: { shasum: '5abfdf500f9fe083e40d96dcd7ac8de4316c9d0c' },
+160 silly resolved     _from: 'typescript@',
+160 silly resolved     _resolved: 'https://registry.npmjs.org/typescript/-/typescript-1.6.2.tgz' } ]
+161 info install typescript@1.6.2 into /usr/local/lib
+162 info installOne typescript@1.6.2
+163 info /usr/local/lib/node_modules/typescript unbuild
+164 verbose tar unpack /home/james/.npm/typescript/1.6.2/package.tgz
+165 silly lockFile 2d878377-ocal-lib-node-modules-typescript tar:///usr/local/lib/node_modules/typescript
+166 verbose lock tar:///usr/local/lib/node_modules/typescript /home/james/.npm/2d878377-ocal-lib-node-modules-typescript.lock
+167 silly lockFile 8aeed393-npm-typescript-1-6-2-package-tgz tar:///home/james/.npm/typescript/1.6.2/package.tgz
+168 verbose lock tar:///home/james/.npm/typescript/1.6.2/package.tgz /home/james/.npm/8aeed393-npm-typescript-1-6-2-package-tgz.lock
+169 silly gunzTarPerm modes [ '755', '644' ]
+170 error Error: EACCES, mkdir '/usr/local/lib/node_modules'
+170 error  { [Error: EACCES, mkdir '/usr/local/lib/node_modules']
+170 error   errno: 3,
+170 error   code: 'EACCES',
+170 error   path: '/usr/local/lib/node_modules',
+170 error   fstream_type: 'Directory',
+170 error   fstream_path: '/usr/local/lib/node_modules/typescript',
+170 error   fstream_class: 'DirWriter',
+170 error   fstream_stack:
+170 error    [ '/usr/lib/nodejs/fstream/lib/writer.js:171:23',
+170 error      '/usr/lib/nodejs/mkdirp/index.js:37:53',
+170 error      'Object.oncomplete (fs.js:107:15)' ] }
+171 error Please try running this command again as root/Administrator.
+172 error System Linux 3.19.0-33-generic
+173 error command "/usr/bin/nodejs" "/usr/bin/npm" "install" "-g" "typescript"
+174 error cwd /home/james/Development/nodetong
+175 error node -v v0.10.25
+176 error npm -v 1.3.10
+177 error path /usr/local/lib/node_modules
+178 error fstream_path /usr/local/lib/node_modules/typescript
+179 error fstream_type Directory
+180 error fstream_class DirWriter
+181 error code EACCES
+182 error errno 3
+183 error stack Error: EACCES, mkdir '/usr/local/lib/node_modules'
+184 error fstream_stack /usr/lib/nodejs/fstream/lib/writer.js:171:23
+184 error fstream_stack /usr/lib/nodejs/mkdirp/index.js:37:53
+184 error fstream_stack Object.oncomplete (fs.js:107:15)
+185 verbose exit [ 3, true ]

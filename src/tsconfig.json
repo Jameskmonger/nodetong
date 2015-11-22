@@ -21,8 +21,9 @@
         "!node_modules/**"
     ],
     "files": [
+        "ts/GameServer.ts",
+        "ts/RouteManager.ts",
         "ts/server.ts",
-        "ts/test/test.ts",
         "typings/express/express.d.ts",
         "typings/mime/mime.d.ts",
         "typings/node/node.d.ts",

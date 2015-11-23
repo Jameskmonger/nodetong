@@ -1,3 +1,5 @@
+import Path = require('path');
+
 export class RouteManager {
   server: any;
   app: any;
@@ -9,12 +11,12 @@ export class RouteManager {
   }
 
   setupRoutes() {
-    this.app.use("/assets", this.express.static(__dirname + "/assets"));
+    this.app.use("/assets", this.express.static(Path.resolve(__dirname + "/../assets")));
 
-    this.app.use("/script", this.express.static(__dirname + "/script"));
+    this.app.use("/script", this.express.static(Path.resolve(__dirname + "/../script")));
 
     this.app.get('/', function(req, res) {
-      res.sendFile(__dirname + '/index.html');
+      res.sendFile(Path.resolve(__dirname + '/../index.html'));
     });
   }
 

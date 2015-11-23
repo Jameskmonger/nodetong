@@ -13,7 +13,8 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "outDir": "../build"
+        "outDir": "../build",
+        "rootDir": "./ts"
     },
     "filesGlob": [
         "**/*.ts",
@@ -21,10 +22,10 @@
         "!node_modules/**"
     ],
     "files": [
-        "ts/GameServer.ts",
-        "ts/Player/Player.ts",
-        "ts/RouteManager.ts",
-        "ts/server.ts",
+        "ts/server/GameServer.ts",
+        "ts/server/Player/Player.ts",
+        "ts/server/RouteManager.ts",
+        "ts/server/server.ts",
         "typings/express/express.d.ts",
         "typings/mime/mime.d.ts",
         "typings/node/node.d.ts",

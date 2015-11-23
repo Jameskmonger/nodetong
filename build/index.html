@@ -5,16 +5,69 @@
   <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 
   <style>
+    body {
+      background-color: #000000;
+    }
+
     .canvas {
       position: absolute;
       top: 0;
       left: 0;
+      z-index: -999;
+    }
+
+    .name-selection {
+      margin: auto;
+      position: absolute;
+      top: 0; left: 0; bottom: 300px; right: 0;
+
+      height: 104px;
+      width: 250px;
+      text-align: center;
+    }
+
+    h4.name-label {
+      margin: 8px 0;
+      font-family: 'Arial', sans-serif;
+      color: #ffffff;
+    }
+
+    .play-button {
+      display: block;
+      padding: 6px 12px;
+      margin: 8px auto 0;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-image: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+
+      color: #fff;
+      background-color: #5cb85c;
+      border-color: #4cae4c;
+    }
+
+    .play-button:hover {
+      background-color: #449d44;
+      border-color: #398439;
     }
   </style>
 
   <script data-main="/script/app" src="assets/lib/require.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
+  <div class="name-selection">
+    <h4 class="name-label">Enter your name</h4>
+    <form>
+      <input id="nick" class="nick-input" placeholder="Nickname" maxlength="15" autofocus="">
+      <button id="connect" type="submit" class="play-button">Play</button>
+    </form>
+  </div>
   <canvas id="world_canvas" class="canvas" width="600" height="400"></canvas>
   <canvas id="players_canvas" class="canvas" width="600" height="400"></canvas>
 </body>

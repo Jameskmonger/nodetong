@@ -1,4 +1,4 @@
-define(['./Observer/LoginScreenObserver', './Login/LoginScreen', './KeyHandler', './Vehicle', './Player', './World'],
+define(['./Login/LoginScreenObserver', './Login/LoginScreen', './KeyHandler', './Vehicle', './Player', './World'],
         function (_loginScreenObserver, _loginScreen, KeyHandler, Vehicle, Player, World) {
 
   var LoginScreen = _loginScreen.LoginScreen;

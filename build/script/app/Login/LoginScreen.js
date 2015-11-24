@@ -5,9 +5,15 @@ define(["require", "exports", './LoginScreenSubmissionEvent'], function (require
             this.observers = [];
             this.getLoginForm().addEventListener("submit", function (event) {
                 event.preventDefault();
-                this.notify(new LoginScreenSubmissionEvent_1.LoginScreenSubmissionEvent(this.getNicknameBox().value));
+                var nick = this.getEnteredNickname();
+                if (nick.length > 0) {
+                    this.notify(new LoginScreenSubmissionEvent_1.LoginScreenSubmissionEvent(nick));
+                }
             }.bind(this));
         }
+        LoginScreen.prototype.getEnteredNickname = function () {
+            return this.getNicknameBox().value;
+        };
         LoginScreen.prototype.getLoginForm = function () {
             return this.scope.querySelector('div.name-selection > form');
         };

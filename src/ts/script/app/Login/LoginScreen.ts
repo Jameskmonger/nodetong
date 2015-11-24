@@ -12,9 +12,17 @@ export class LoginScreen {
       function (event) {
         event.preventDefault();
 
-        this.notify(new LoginScreenSubmissionEvent(this.getNicknameBox().value));
+        var nick: string = this.getEnteredNickname();
+
+        if (nick.length > 0) {
+          this.notify(new LoginScreenSubmissionEvent(nick));
+        }
       }.bind(this)
     );
+  }
+
+  private getEnteredNickname() {
+    return this.getNicknameBox().value;
   }
 
   private getLoginForm() {
@@ -22,7 +30,7 @@ export class LoginScreen {
   }
 
   private getNicknameBox() {
-    return this.getLoginForm().querySelector('input#nick');
+    return <HTMLInputElement>this.getLoginForm().querySelector('input#nick');
   }
 
   public observe(observer: any) {

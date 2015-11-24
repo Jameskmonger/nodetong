@@ -1,7 +1,8 @@
-define(["require", "exports", './LoginScreenSubmissionEvent'], function (require, exports, LoginScreenSubmissionEvent_1) {
+define(["require", "exports", './LoginScreenSubmissionEvent', '../Networking/Connection'], function (require, exports, LoginScreenSubmissionEvent_1, Connection_1) {
     var LoginScreen = (function () {
         function LoginScreen(scope) {
             this.scope = scope;
+            var con = new Connection_1.Connection();
             this.observers = [];
             this.getLoginForm().addEventListener("submit", function (event) {
                 event.preventDefault();

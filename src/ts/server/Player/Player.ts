@@ -4,6 +4,10 @@ export class Player {
   constructor(public id: number, public name: string, private socket: any) {
     this.listeners = [];
 
+    socket.on('ping', function (data) {
+      console.log("we've had a ping!: " + data);
+    });
+
     socket.on('disconnect', function() {
       this.notifyEventListeners(Event.DISCONNECT);
   	}.bind(this));

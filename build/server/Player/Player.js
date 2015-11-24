@@ -4,6 +4,9 @@ var Player = (function () {
         this.name = name;
         this.socket = socket;
         this.listeners = [];
+        socket.on('ping', function (data) {
+            console.log("we've had a ping!: " + data);
+        });
         socket.on('disconnect', function () {
             this.notifyEventListeners(Event.DISCONNECT);
         }.bind(this));

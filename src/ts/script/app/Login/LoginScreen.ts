@@ -1,11 +1,14 @@
 import { LoginScreenSubmissionEvent } from './LoginScreenSubmissionEvent';
 import { NodetongEvent } from '../Event/NodetongEvent';
 import { NodetongObserver } from '../Observer/NodetongObserver';
+import { Connection } from '../Networking/Connection';
 
 export class LoginScreen {
   private observers: Array<NodetongObserver>;
 
   constructor(private scope: HTMLDocument) {
+    var con = new Connection();
+
     this.observers = [];
 
     this.getLoginForm().addEventListener("submit",

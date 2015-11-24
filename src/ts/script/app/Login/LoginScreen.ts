@@ -33,7 +33,7 @@ export class LoginScreen {
     return <HTMLInputElement>this.getLoginForm().querySelector('input#nick');
   }
 
-  public observe(observer: any) {
+  public observe(observer: NodetongObserver) {
     this.observers.push(observer);
   }
 

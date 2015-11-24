@@ -13,8 +13,18 @@ export class Player {
   	}.bind(this));
   }
 
+  partial(func, ...args) {
+    // Concatenates functions... somehow
+
+    return function() {
+      var allArguments = args.concat(Array.prototype.slice.call(arguments));
+
+      return func.apply(this, allArguments);
+    };
+  }
+
   registerPacketHandler(packet: PacketHandlers.IPacketHandler) {
-    this.socket.on(packet.event, packet.handler);
+    this.socket.on(packet.event, this.partial(packet.handler, this));
   }
 
   registerEventListener(evt: Event, listener: any) {

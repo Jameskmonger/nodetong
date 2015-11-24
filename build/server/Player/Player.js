@@ -8,8 +8,18 @@ var Player = (function () {
             this.notifyEventListeners(Event.DISCONNECT);
         }.bind(this));
     }
+    Player.prototype.partial = function (func) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return function () {
+            var allArguments = args.concat(Array.prototype.slice.call(arguments));
+            return func.apply(this, allArguments);
+        };
+    };
     Player.prototype.registerPacketHandler = function (packet) {
-        this.socket.on(packet.event, packet.handler);
+        this.socket.on(packet.event, this.partial(packet.handler, this));
     };
     Player.prototype.registerEventListener = function (evt, listener) {
         if (this.listeners[evt] === undefined) {

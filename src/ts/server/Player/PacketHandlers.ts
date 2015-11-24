@@ -1,11 +1,12 @@
+import Player = require("./Player");
 export interface IPacketHandler {
   event: string;
-  handler: (payload: any) => any;
+  handler: (receiver: Player.Player, payload: any) => any;
 }
 
 export class PingPacketHandler implements IPacketHandler {
   event = "ping";
-  handler (payload: string) {
-    console.log("PingPacketHandler received: " + payload);
+  handler (receiver: Player.Player, payload: string) {
+    console.log("PingPacketHandler received '" + receiver.name + "': " + payload);
   }
 }

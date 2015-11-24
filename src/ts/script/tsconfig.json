@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": "../../../build/script",
+        "rootDir": "./"
+    },
+    "filesGlob": [
+        "**/*.ts",
+        "**/*.tsx",
+        "!node_modules/**"
+    ],
+    "files": [
+        "app/Event/NodetongEvent.ts",
+        "app/Event/NodetongEventType.ts",
+        "app/Login/LoginScreen.ts",
+        "app/Login/LoginScreenObserver.ts",
+        "app/Login/LoginScreenSubmissionEvent.ts",
+        "app/Observer/NodetongObserver.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

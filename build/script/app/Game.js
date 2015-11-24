@@ -1,5 +1,8 @@
-define(['./Login/LoginScreen', './KeyHandler', './Vehicle', './Player', './World'],
-        function (LoginScreen, KeyHandler, Vehicle, Player, World) {
+define(['./Observer/LoginScreenObserver', './Login/LoginScreen', './KeyHandler', './Vehicle', './Player', './World'],
+        function (_loginScreenObserver, _loginScreen, KeyHandler, Vehicle, Player, World) {
+
+  var LoginScreen = _loginScreen.LoginScreen;
+  var LoginScreenObserver = _loginScreenObserver.LoginScreenObserver;
 
   function Game() {
     var KEY_DETECTION_INTERVAL = 25;
@@ -16,13 +19,7 @@ define(['./Login/LoginScreen', './KeyHandler', './Vehicle', './Player', './World
 
     this._login_screen = new LoginScreen(document);
 
-    var LoginScreenObserver = {
-      observed: function(event) {
-        console.log(event);
-      }
-    };
-
-    this._login_screen.observe(LoginScreenObserver);
+    this._login_screen.observe(new LoginScreenObserver());
   }
 
   Game.prototype = {

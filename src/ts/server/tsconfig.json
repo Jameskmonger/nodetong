@@ -13,8 +13,8 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "outDir": "../build",
-        "rootDir": "./ts"
+        "outDir": "../../../build/server",
+        "rootDir": "./"
     },
     "filesGlob": [
         "**/*.ts",
@@ -22,16 +22,10 @@
         "!node_modules/**"
     ],
     "files": [
-        "ts/script/app/Login/LoginScreen.ts",
-        "ts/server/GameServer.ts",
-        "ts/server/Player/Player.ts",
-        "ts/server/RouteManager.ts",
-        "ts/server/server.ts",
-        "typings/express/express.d.ts",
-        "typings/mime/mime.d.ts",
-        "typings/node/node.d.ts",
-        "typings/serve-static/serve-static.d.ts",
-        "typings/socket.io/socket.io.d.ts"
+        "GameServer.ts",
+        "Player/Player.ts",
+        "RouteManager.ts",
+        "server.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

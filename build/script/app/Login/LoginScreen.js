@@ -1,50 +1,26 @@
-define(function (require) {
-  "use strict";
-
-  function LoginScreen(scope) {
-    this._observers = [];
-
-    _getLoginForm().addEventListener("submit",
-      function (event) {
-        (_formSubmitEvent.bind(this))(event);
-      }.bind(this)
-    );
-
-    function _getLoginForm() {
-      return scope.querySelector('div.name-selection > form');
-    }
-
-    function _getNicknameBox() {
-      return _getLoginForm().querySelector('input#nick');
-    }
-
-    function _formSubmitEvent(event) {
-      event.preventDefault();
-
-      var LOGIN_SUBMISSION_CODE = 3;
-
-      var data = {
-        type: LOGIN_SUBMISSION_CODE,
-        payload: [_getNicknameBox().value]
-      };
-
-      this.notify(data);
-    }
-  }
-
-  LoginScreen.prototype = {
-    constructor: LoginScreen,
-
-    observe: function(observer) {
-      this._observers.push(observer);
-    },
-
-    notify: function(event) {
-      for(var i = 0; i < this._observers.length; i++) {
-        this._observers[i].observed(event);
-      }
-    }
-  };
-
-  return LoginScreen;
+define(["require", "exports", './LoginScreenSubmissionEvent'], function (require, exports, LoginScreenSubmissionEvent_1) {
+    var LoginScreen = (function () {
+        function LoginScreen(scope) {
+            this.scope = scope;
+            this.observers = [];
+            this.getLoginForm().addEventListener("submit", function (event) {
+                event.preventDefault();
+                this.notify(new LoginScreenSubmissionEvent_1.LoginScreenSubmissionEvent(this.getNicknameBox().value));
+            }.bind(this));
+        }
+        LoginScreen.prototype.getLoginForm = function () {
+            return this.scope.querySelector('div.name-selection > form');
+        };
+        LoginScreen.prototype.getNicknameBox = function () {
+            return this.getLoginForm().querySelector('input#nick');
+        };
+        LoginScreen.prototype.observe = function (observer) {
+            this.observers.push(observer);
+        };
+        LoginScreen.prototype.notify = function (event) {
+            this.observers.forEach(function (o) { o.observed(event); });
+        };
+        return LoginScreen;
+    })();
+    exports.LoginScreen = LoginScreen;
 });

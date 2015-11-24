@@ -39,7 +39,7 @@ define(function (require) {
     updateKeysPressed: function(event, pressed) {
       if (KeyHandler.KeyCodeMap[event.keyCode] !== undefined) {
         this.key_pressed[KeyHandler.KeyCodeMap[event.keyCode]] = pressed;
-        event.preventDefault();
+        //event.preventDefault();
       }
     },
 

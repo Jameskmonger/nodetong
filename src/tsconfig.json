@@ -22,6 +22,7 @@
         "!node_modules/**"
     ],
     "files": [
+        "ts/script/app/Login/LoginScreen.ts",
         "ts/server/GameServer.ts",
         "ts/server/Player/Player.ts",
         "ts/server/RouteManager.ts",

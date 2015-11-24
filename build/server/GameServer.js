@@ -1,3 +1,4 @@
+var PacketHandlers = require("./Player/PacketHandlers");
 var Player = require('./Player/Player');
 var GameServer = (function () {
     function GameServer(io) {
@@ -12,6 +13,7 @@ var GameServer = (function () {
             var name = GameServer.getRandomName();
             var player = new Player.Player(id, name, socket);
             player.registerEventListener(Player.Event.DISCONNECT, this.removePlayer.bind(this));
+            player.registerPacketHandler(new PacketHandlers.PingPacketHandler());
             this.storePlayer(player);
         }.bind(this));
     }

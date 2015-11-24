@@ -1,6 +1,7 @@
 /// <reference path="../../../../typings/socket.io/socket.io.d.ts"/>
 
 import socketIO = require('socket.io');
+import Packets = require('./Packet/Packets');
 
 export class Connection {
   private socket: SocketIO.Server;
@@ -8,6 +9,10 @@ export class Connection {
   constructor() {
     this.socket = socketIO();
 
-    this.socket.emit("ping", "new networking with proper socket!!");
+    this.sendPacket(new Packets.PingPacket("new networking with packets!"));
+  }
+
+  sendPacket(packet: Packets.IPacket) {
+    this.socket.emit(packet.event, packet.payload);
   }
 }

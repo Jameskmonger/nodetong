@@ -1,16 +1,20 @@
+/// <reference path="./PacketHandlers.ts"/>
+
+import PacketHandlers = require('./PacketHandlers');
+
 export class Player {
   private listeners: Array<any>;
 
   constructor(public id: number, public name: string, private socket: any) {
     this.listeners = [];
 
-    socket.on('ping', function (data) {
-      console.log("we've had a ping!: " + data);
-    });
-
     socket.on('disconnect', function() {
       this.notifyEventListeners(Event.DISCONNECT);
   	}.bind(this));
+  }
+
+  registerPacketHandler(packet: PacketHandlers.IPacketHandler) {
+    this.socket.on(packet.event, packet.handler);
   }
 
   registerEventListener(evt: Event, listener: any) {

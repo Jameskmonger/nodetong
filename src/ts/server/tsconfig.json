@@ -23,6 +23,7 @@
     ],
     "files": [
         "GameServer.ts",
+        "Player/PacketHandlers.ts",
         "Player/Player.ts",
         "RouteManager.ts",
         "server.ts"

@@ -1,3 +1,4 @@
+import PacketHandlers = require("./Player/PacketHandlers");
 import Player = require('./Player/Player');
 
 export class GameServer {
@@ -19,6 +20,8 @@ export class GameServer {
       var player: Player.Player = new Player.Player(id, name, socket);
 
       player.registerEventListener(Player.Event.DISCONNECT, this.removePlayer.bind(this));
+
+      player.registerPacketHandler(new PacketHandlers.PingPacketHandler());
 
       this.storePlayer(player);
     }.bind(this));

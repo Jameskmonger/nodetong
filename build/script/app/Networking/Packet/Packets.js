@@ -7,4 +7,12 @@ define(["require", "exports"], function (require, exports) {
         return PingPacket;
     })();
     exports.PingPacket = PingPacket;
+    var NicknameInputPacket = (function () {
+        function NicknameInputPacket(nickname) {
+            this.event = "nickname_input";
+            this.payload = nickname;
+        }
+        return NicknameInputPacket;
+    })();
+    exports.NicknameInputPacket = NicknameInputPacket;
 });

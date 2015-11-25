@@ -2,7 +2,7 @@ define(["require", "exports", './LoginScreenSubmissionEvent', '../Networking/Con
     var LoginScreen = (function () {
         function LoginScreen(scope) {
             this.scope = scope;
-            var con = new Connection_1.Connection();
+            var con = Connection_1.Connection.get();
             this.observers = [];
             this.getLoginForm().addEventListener("submit", function (event) {
                 event.preventDefault();

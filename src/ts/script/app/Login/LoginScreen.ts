@@ -7,7 +7,7 @@ export class LoginScreen {
   private observers: Array<NodetongObserver>;
 
   constructor(private scope: HTMLDocument) {
-    var con = new Connection();
+    var con = Connection.get();
 
     this.observers = [];
 

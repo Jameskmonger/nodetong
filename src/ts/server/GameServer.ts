@@ -22,6 +22,7 @@ export class GameServer {
       player.registerEventListener(Player.Event.DISCONNECT, this.removePlayer.bind(this));
 
       player.registerPacketHandler(new PacketHandlers.PingPacketHandler());
+      player.registerPacketHandler(new PacketHandlers.NicknameInputHandler());
 
       this.storePlayer(player);
     }.bind(this));

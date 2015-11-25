@@ -11,3 +11,12 @@ export class PingPacket implements IPacket {
     this.payload = message;
   }
 }
+
+export class NicknameInputPacket implements IPacket {
+  event = "nickname_input";
+  payload: any;
+
+  constructor(nickname) {
+    this.payload = nickname;
+  }
+}

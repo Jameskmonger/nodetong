@@ -16,7 +16,7 @@
       z-index: -999;
     }
 
-    .name-selection {
+    #name-selection {
       margin: auto;
       position: absolute;
       top: 0; left: 0; bottom: 0px; right: 0;
@@ -61,7 +61,7 @@
   <script data-main="/script/app" src="assets/lib/require.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-  <div class="name-selection">
+  <div id="name-selection" style="display: none;">
     <h4 class="name-label">Enter your name</h4>
     <form>
       <input id="nick" class="nick-input" placeholder="Nickname" maxlength="15" autofocus="">

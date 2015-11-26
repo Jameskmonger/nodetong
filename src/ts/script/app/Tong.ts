@@ -3,10 +3,12 @@ import { IScreen } from "./Screen/IScreen";
 import { LoginScreen } from "./Screen/LoginScreen";
 import { GameScreen } from "./Screen/GameScreen";
 
-class Tong {
+export class Tong {
   constructor(private doc) {
 
   }
+
+  public localPlayerIndex: number;
 
   show(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "block";

@@ -13,6 +13,7 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         };
         return Tong;
     })();
+    exports.Tong = Tong;
     var tong = new Tong(document);
     var login_screen = LoginScreen_1.LoginScreen.get(document);
     login_screen.observe(new LoginScreenObserver_1.LoginScreenObserver());

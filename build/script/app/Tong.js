@@ -5,9 +5,11 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         }
         Tong.prototype.show = function (screen) {
             this.doc.getElementById(screen.id).style.display = "block";
+            screen.onShow();
         };
         Tong.prototype.hide = function (screen) {
             this.doc.getElementById(screen.id).style.display = "none";
+            screen.onHide();
         };
         return Tong;
     })();

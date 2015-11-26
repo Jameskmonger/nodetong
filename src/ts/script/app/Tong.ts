@@ -9,10 +9,12 @@ class Tong {
 
   show(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "block";
+    screen.onShow();
   }
 
   hide(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "none";
+    screen.onHide();
   }
 }
 

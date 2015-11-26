@@ -8,6 +8,8 @@ export class Player {
   private listeners: Array<any>;
   private name: string = "Player";
   private state: GameState = GameState.CONNECTED;
+  public modelId: number;
+  public skinId: number;
 
   constructor(public id: number, private socket: any) {
     this.listeners = [];

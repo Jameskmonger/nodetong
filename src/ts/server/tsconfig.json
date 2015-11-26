@@ -25,6 +25,7 @@
     ],
     "files": [
         "GameServer.ts",
+        "Networking/Packets.ts",
         "Player/GameState.ts",
         "Player/PacketHandlers.ts",
         "Player/Player.ts",

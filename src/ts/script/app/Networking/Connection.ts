@@ -15,8 +15,6 @@ export class Connection {
 
     this.socket = socketIO();
 
-    this.sendPacket(new Packets.PingPacket("new networking with packets!"));
-
     Connection.instance = this;
   }
 

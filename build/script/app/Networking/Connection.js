@@ -1,11 +1,10 @@
-define(["require", "exports", 'socket.io', './Packet/Packets'], function (require, exports, socketIO, Packets) {
+define(["require", "exports", 'socket.io'], function (require, exports, socketIO) {
     var Connection = (function () {
         function Connection() {
             if (Connection.instance !== undefined) {
                 throw new Error("A connection instance has already been constructed. Use Connection.get()");
             }
             this.socket = socketIO();
-            this.sendPacket(new Packets.PingPacket("new networking with packets!"));
             Connection.instance = this;
         }
         Connection.prototype.sendPacket = function (packet) {

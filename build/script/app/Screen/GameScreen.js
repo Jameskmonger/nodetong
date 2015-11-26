@@ -9,6 +9,8 @@ define(["require", "exports"], function (require, exports) {
         }
         GameScreen.prototype.onShow = function () {
         };
+        GameScreen.prototype.onHide = function () {
+        };
         GameScreen.get = function (scope) {
             if (scope === void 0) { scope = undefined; }
             if (GameScreen.instance === undefined) {

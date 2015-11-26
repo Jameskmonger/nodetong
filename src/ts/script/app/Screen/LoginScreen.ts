@@ -33,7 +33,11 @@ export class LoginScreen implements IScreen {
   }
 
   onShow() {
-    
+
+  }
+
+  onHide() {
+
   }
 
   private getEnteredNickname() {

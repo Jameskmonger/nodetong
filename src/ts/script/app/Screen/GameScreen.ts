@@ -11,7 +11,11 @@ export class GameScreen implements IScreen {
   }
 
   onShow() {
-    
+
+  }
+
+  onHide() {
+
   }
 
   public static get(scope: HTMLDocument = undefined) {

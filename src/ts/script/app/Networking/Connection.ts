@@ -7,7 +7,6 @@ import { IPacketHandler } from './Packet/PacketHandlers';
 export class Connection {
   static instance: Connection;
 
-  private static _packetHandlers: IPacketHandler[];
   private socket: SocketIO.Server;
 
   constructor() {
@@ -24,8 +23,8 @@ export class Connection {
     this.socket.emit(packet.event, packet.payload);
   }
 
-  static addHandler(packetHandler: IPacketHandler):void {
-     this._packetHandlers.push(packetHandler);
+  addHandler(packetHandler: IPacketHandler):void {
+    this.socket.on(packetHandler.event, packetHandler.handler.bind(packetHandler));
  }
 
   static get() {

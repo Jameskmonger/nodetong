@@ -6,6 +6,7 @@ define(["require", "exports"], function (require, exports) {
         }
         LocalPlayerIndexPacketHandler.prototype.handler = function (payload) {
             this._tong.localPlayerIndex = payload.localPlayerIndex;
+            console.log("YOUR ID IS " + payload.localPlayerIndex);
         };
         return LocalPlayerIndexPacketHandler;
     })();

@@ -13,6 +13,8 @@ export class LocalPlayerIndexPacketHandler implements IPacketHandler {
 
    handler (payload: any): void {
       this._tong.localPlayerIndex = payload.localPlayerIndex;
+
+      console.log("YOUR ID IS " + payload.localPlayerIndex);
    }
 }
 

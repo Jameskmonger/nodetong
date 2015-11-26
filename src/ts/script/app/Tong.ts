@@ -25,15 +25,15 @@ export class Tong {
 
 var tong = new Tong(document);
 
-Connection.addHandler(new PacketHandlers.LocalPlayerIndexPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.AddPlayerPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.RemovePlayerPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.SetPlayerVehicleSkinPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.SetPlayerVehicleModelPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.SetPlayerVehiclePositionPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.SetPlayerVehicleRotationPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.SetPlayerWheelPositionPacketHandler(tong));
-Connection.addHandler(new PacketHandlers.SetPlayerSpeedPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.LocalPlayerIndexPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.AddPlayerPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.RemovePlayerPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.SetPlayerVehicleSkinPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.SetPlayerVehicleModelPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.SetPlayerVehiclePositionPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.SetPlayerVehicleRotationPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.SetPlayerWheelPositionPacketHandler(tong));
+Connection.get().addHandler(new PacketHandlers.SetPlayerSpeedPacketHandler(tong));
 
 
 // We need to provide the document because we are getting the login screen for the first time

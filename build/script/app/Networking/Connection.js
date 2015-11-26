@@ -10,8 +10,8 @@ define(["require", "exports", 'socket.io'], function (require, exports, socketIO
         Connection.prototype.sendPacket = function (packet) {
             this.socket.emit(packet.event, packet.payload);
         };
-        Connection.addHandler = function (packetHandler) {
-            this._packetHandlers.push(packetHandler);
+        Connection.prototype.addHandler = function (packetHandler) {
+            this.socket.on(packetHandler.event, packetHandler.handler.bind(packetHandler));
         };
         Connection.get = function () {
             if (Connection.instance === undefined) {

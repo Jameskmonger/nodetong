@@ -2,6 +2,7 @@
 
 import { IScreen } from "./IScreen";
 import { WorldDrawing } from "./GameScreen/WorldDrawing";
+import { PlayerDrawing } from "./GameScreen/PlayerDrawing";
 import { HUDDrawing } from "./GameScreen/HUDDrawing";
 
 export class GameScreen implements IScreen {
@@ -65,8 +66,7 @@ export class GameScreen implements IScreen {
     this.fps = 1 / delta;
 
     WorldDrawing.draw(this.drawing.world.canvas);
-
-    //PlayerDrawing.draw(this.drawing.player.canvas);
+    PlayerDrawing.draw(this.drawing.player);
     HUDDrawing.draw(this.fps, this.drawing.HUD);
 
     window.requestAnimationFrame(this.draw.bind(this));

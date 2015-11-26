@@ -1,4 +1,4 @@
-define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/HUDDrawing", "../request_animation_frame"], function (require, exports, WorldDrawing_1, HUDDrawing_1) {
+define(["require", "exports", "./GameScreen/WorldDrawing", "../request_animation_frame"], function (require, exports, WorldDrawing_1) {
     var GameScreen = (function () {
         function GameScreen(scope) {
             this.scope = scope;
@@ -8,7 +8,6 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/HUDDraw
             }
             var world_canvas = scope.getElementById('world_canvas');
             var player_canvas = scope.getElementById('players_canvas');
-            var hud_canvas = scope.getElementById('hud_canvas');
             this.drawing = {
                 world: {
                     canvas: world_canvas,
@@ -17,10 +16,6 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/HUDDraw
                 players: {
                     canvas: player_canvas,
                     context: player_canvas.getContext('2d')
-                },
-                HUD: {
-                    canvas: hud_canvas,
-                    context: hud_canvas.getContext('2d')
                 }
             };
         }
@@ -44,7 +39,6 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/HUDDraw
             this.lastDrawnTime = Date.now();
             this.fps = 1 / delta;
             WorldDrawing_1.WorldDrawing.draw(this.drawing.world.canvas);
-            HUDDrawing_1.HUDDrawing.draw(this.fps, this.drawing.HUD);
             window.requestAnimationFrame(this.draw.bind(this));
         };
         GameScreen.prototype.resized = function () {
@@ -52,8 +46,6 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/HUDDraw
             this.drawing.world.canvas.height = window.innerHeight;
             this.drawing.players.canvas.width = window.innerWidth;
             this.drawing.players.canvas.height = window.innerHeight;
-            this.drawing.HUD.canvas.width = window.innerWidth;
-            this.drawing.HUD.canvas.height = window.innerHeight;
         };
         GameScreen.get = function (scope) {
             if (scope === void 0) { scope = undefined; }

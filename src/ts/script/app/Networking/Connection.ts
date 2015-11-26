@@ -1,7 +1,7 @@
 /// <reference path="../../../../typings/socket.io/socket.io.d.ts"/>
 
 import socketIO = require('socket.io');
-import Packets = require('./Packet/Packets');
+import { IPacket } from './Packet/Packets';
 
 export class Connection {
   static instance: Connection;
@@ -18,7 +18,7 @@ export class Connection {
     Connection.instance = this;
   }
 
-  sendPacket(packet: Packets.IPacket) {
+  sendPacket(packet: IPacket) {
     this.socket.emit(packet.event, packet.payload);
   }
 

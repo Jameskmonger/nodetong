@@ -10,7 +10,7 @@ define(["require", "exports", '../Login/LoginScreenSubmissionEvent'], function (
             this.getLoginForm().addEventListener("submit", function (event) {
                 event.preventDefault();
                 var nick = this.getEnteredNickname();
-                var regex = /^[a-z,A-Z,0-9, ]*$/g;
+                var regex = /^[a-z,A-Z,0-9]([a-z,A-Z,0-9, ]*[a-z,A-Z,0-9])?$/;
                 if (nick.length > 0 && regex.test(nick)) {
                     this.notify(new LoginScreenSubmissionEvent_1.LoginScreenSubmissionEvent(nick));
                 }

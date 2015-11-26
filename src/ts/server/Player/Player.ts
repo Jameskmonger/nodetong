@@ -2,6 +2,7 @@
 
 import PacketHandlers = require('./PacketHandlers');
 import { GameState } from "./GameState";
+import { GameServer } from "../GameServer";
 
 export class Player {
   private listeners: Array<any>;
@@ -32,9 +33,11 @@ export class Player {
     if (this.state === GameState.CONNECTED) {
       this.state = GameState.NAMED;
       this.name = name;
-    }
 
-    console.log("The player is now called " + this.name);
+      GameServer.get().acceptPlayer(this);
+
+      console.log("The player is now called " + this.name);
+    }
   }
 
   registerPacketHandler(packet: PacketHandlers.IPacketHandler) {

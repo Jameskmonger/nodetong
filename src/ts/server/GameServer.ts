@@ -45,6 +45,17 @@ export class GameServer {
     return GameServer.instance;
   }
 
+  acceptPlayer(player: Player) {
+    if (this.isPlayerStored(player)) {
+      
+    }
+  }
+
+  isPlayerStored(player: Player): boolean {
+    // If the index of the player in the list is not -1, then they're stored
+    return (this.playerList.indexOf(player) !== -1);
+  }
+
   storePlayer(player: Player) {
     this.playerList[player.id] = player;
   }

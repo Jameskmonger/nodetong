@@ -1,4 +1,5 @@
 var GameState_1 = require("./GameState");
+var GameServer_1 = require("../GameServer");
 var Player = (function () {
     function Player(id, socket) {
         this.id = id;
@@ -23,8 +24,9 @@ var Player = (function () {
         if (this.state === GameState_1.GameState.CONNECTED) {
             this.state = GameState_1.GameState.NAMED;
             this.name = name;
+            GameServer_1.GameServer.get().acceptPlayer(this);
+            console.log("The player is now called " + this.name);
         }
-        console.log("The player is now called " + this.name);
     };
     Player.prototype.registerPacketHandler = function (packet) {
         this.socket.on(packet.event, function (data) {

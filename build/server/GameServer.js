@@ -30,6 +30,13 @@ var GameServer = (function () {
         }
         return GameServer.instance;
     };
+    GameServer.prototype.acceptPlayer = function (player) {
+        if (this.isPlayerStored(player)) {
+        }
+    };
+    GameServer.prototype.isPlayerStored = function (player) {
+        return (this.playerList.indexOf(player) !== -1);
+    };
     GameServer.prototype.storePlayer = function (player) {
         this.playerList[player.id] = player;
     };

@@ -1,5 +1,6 @@
 /// <reference path="./PacketHandlers.ts"/>
 
+import { IPacket } from "../Networking/Packets.ts";
 import PacketHandlers = require('./PacketHandlers');
 import { GameState } from "./GameState";
 import { GameServer } from "../GameServer";
@@ -59,6 +60,10 @@ export class Player {
   notifyEventListeners(evt: PlayerEvent) {
     this.listeners[evt].forEach(e => e(this));
   }
+
+  sendPacket(packet: IPacket) {
+     this.socket.emit(packet.event, packet.payload);
+ }
 }
 
 export enum PlayerEvent {

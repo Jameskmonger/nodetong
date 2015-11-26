@@ -1,5 +1,6 @@
 var PacketHandlers = require("./Player/PacketHandlers");
 var Player_1 = require("./Player/Player");
+var Packets = require("./Networking/Packets");
 var GameServer = (function () {
     function GameServer(io) {
         this.io = io;
@@ -32,6 +33,10 @@ var GameServer = (function () {
     };
     GameServer.prototype.acceptPlayer = function (player) {
         if (this.isPlayerStored(player)) {
+            player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
+            this.playerList.forEach(function (otherPlayer) {
+                player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+            });
         }
     };
     GameServer.prototype.isPlayerStored = function (player) {

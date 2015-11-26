@@ -43,6 +43,9 @@ var Player = (function () {
         var _this = this;
         this.listeners[evt].forEach(function (e) { return e(_this); });
     };
+    Player.prototype.sendPacket = function (packet) {
+        this.socket.emit(packet.event, packet.payload);
+    };
     return Player;
 })();
 exports.Player = Player;

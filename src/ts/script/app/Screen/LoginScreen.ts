@@ -1,10 +1,10 @@
-import IScreen = require("./IScreen");
+import { IScreen } from "./IScreen";
 import { LoginScreenSubmissionEvent } from '../Login/LoginScreenSubmissionEvent';
 import { NodetongEvent } from '../Event/NodetongEvent';
 import { NodetongObserver } from '../Observer/NodetongObserver';
 import { Connection } from '../Networking/Connection';
 
-export class LoginScreen implements IScreen.IScreen {
+export class LoginScreen implements IScreen {
   id = "name-selection";
   static instance: LoginScreen;
 

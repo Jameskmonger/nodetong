@@ -2,10 +2,12 @@
 
 import socketIO = require('socket.io');
 import { IPacket } from './Packet/Packets';
+import { IPacketHandler } from './Packet/PacketHandlers';
 
 export class Connection {
   static instance: Connection;
 
+  private static _packetHandlers: IPacketHandler[];
   private socket: SocketIO.Server;
 
   constructor() {
@@ -21,6 +23,10 @@ export class Connection {
   sendPacket(packet: IPacket) {
     this.socket.emit(packet.event, packet.payload);
   }
+
+  static addHandler(packetHandler: IPacketHandler):void {
+     this._packetHandlers.push(packetHandler);
+ }
 
   static get() {
     if (Connection.instance === undefined) {

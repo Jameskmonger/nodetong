@@ -2,7 +2,7 @@ define(["require", "exports"], function (require, exports) {
     var GameScreen = (function () {
         function GameScreen(scope) {
             this.scope = scope;
-            this.id = "name-selection";
+            this.id = "game-screen";
             if (GameScreen.instance !== undefined) {
                 throw new Error("A GameScreen instance has already been constructed. Use GameScreen.get()");
             }

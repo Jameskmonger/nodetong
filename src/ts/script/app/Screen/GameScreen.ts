@@ -1,7 +1,7 @@
 import { IScreen } from "./IScreen";
 
 export class GameScreen implements IScreen {
-  id = "name-selection";
+  id = "game-screen";
   static instance: GameScreen;
 
   constructor(private scope: HTMLDocument) {

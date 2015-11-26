@@ -1,5 +1,6 @@
 import PacketHandlers = require("./Player/PacketHandlers");
 import { Player, PlayerEvent } from "./Player/Player";
+import { GameState } from "./Player/GameState";
 import Packets = require("./Networking/Packets");
 
 export class GameServer {
@@ -51,7 +52,9 @@ export class GameServer {
       player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
 
       this.playerList.forEach((otherPlayer) => {
-         player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+         if (otherPlayer.getState() === GameState.NAMED) {
+            player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+         }
       });
     }
   }

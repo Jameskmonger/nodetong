@@ -1,5 +1,6 @@
 var PacketHandlers = require("./Player/PacketHandlers");
 var Player_1 = require("./Player/Player");
+var GameState_1 = require("./Player/GameState");
 var Packets = require("./Networking/Packets");
 var GameServer = (function () {
     function GameServer(io) {
@@ -35,7 +36,9 @@ var GameServer = (function () {
         if (this.isPlayerStored(player)) {
             player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
             this.playerList.forEach(function (otherPlayer) {
-                player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+                if (otherPlayer.getState() === GameState_1.GameState.NAMED) {
+                    player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+                }
             });
         }
     };

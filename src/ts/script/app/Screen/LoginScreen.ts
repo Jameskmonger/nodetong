@@ -1,10 +1,10 @@
-import IScreen = require("./IScreen");
+import { IScreen } from "./IScreen";
 import { LoginScreenSubmissionEvent } from '../Login/LoginScreenSubmissionEvent';
 import { NodetongEvent } from '../Event/NodetongEvent';
 import { NodetongObserver } from '../Observer/NodetongObserver';
 import { Connection } from '../Networking/Connection';
 
-export class LoginScreen implements IScreen.IScreen {
+export class LoginScreen implements IScreen {
   id = "name-selection";
   static instance: LoginScreen;
 
@@ -12,7 +12,7 @@ export class LoginScreen implements IScreen.IScreen {
 
   constructor(private scope: HTMLDocument) {
     if (LoginScreen.instance !== undefined) {
-      throw new Error("A connection instance has already been constructed. Use Connection.get()");
+      throw new Error("A LoginScreen instance has already been constructed. Use LoginScreen.get()");
     }
 
     this.observers = [];
@@ -30,6 +30,14 @@ export class LoginScreen implements IScreen.IScreen {
         }
       }.bind(this)
     );
+  }
+
+  onShow() {
+    console.log("showing login");
+  }
+
+  onHide() {
+    console.log("hiding login");
   }
 
   private getEnteredNickname() {

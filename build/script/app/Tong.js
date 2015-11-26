@@ -5,11 +5,16 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         }
         Tong.prototype.show = function (screen) {
             this.doc.getElementById(screen.id).style.display = "block";
+            screen.onShow();
+        };
+        Tong.prototype.hide = function (screen) {
+            this.doc.getElementById(screen.id).style.display = "none";
+            screen.onHide();
         };
         return Tong;
     })();
     var tong = new Tong(document);
-    var screen = LoginScreen_1.LoginScreen.get(document);
-    screen.observe(new LoginScreenObserver_1.LoginScreenObserver());
-    tong.show(screen);
+    var login_screen = LoginScreen_1.LoginScreen.get(document);
+    login_screen.observe(new LoginScreenObserver_1.LoginScreenObserver());
+    tong.show(login_screen);
 });

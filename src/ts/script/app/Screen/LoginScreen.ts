@@ -32,6 +32,10 @@ export class LoginScreen implements IScreen {
     );
   }
 
+  onShow() {
+    
+  }
+
   private getEnteredNickname() {
     return this.getNicknameBox().value;
   }

@@ -10,6 +10,10 @@ export class GameScreen implements IScreen {
     }
   }
 
+  onShow() {
+    
+  }
+
   public static get(scope: HTMLDocument = undefined) {
     if (GameScreen.instance === undefined) {
       if (scope === undefined) {

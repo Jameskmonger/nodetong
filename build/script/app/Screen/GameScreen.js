@@ -7,6 +7,8 @@ define(["require", "exports"], function (require, exports) {
                 throw new Error("A GameScreen instance has already been constructed. Use GameScreen.get()");
             }
         }
+        GameScreen.prototype.onShow = function () {
+        };
         GameScreen.get = function (scope) {
             if (scope === void 0) { scope = undefined; }
             if (GameScreen.instance === undefined) {

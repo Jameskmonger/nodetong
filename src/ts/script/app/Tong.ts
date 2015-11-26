@@ -10,6 +10,10 @@ class Tong {
   show(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "block";
   }
+
+  hide(screen: IScreen) {
+    this.doc.getElementById(screen.id).style.display = "none";
+  }
 }
 
 var tong = new Tong(document);

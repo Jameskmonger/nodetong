@@ -12,7 +12,7 @@ export class LoginScreen implements IScreen {
 
   constructor(private scope: HTMLDocument) {
     if (LoginScreen.instance !== undefined) {
-      throw new Error("A connection instance has already been constructed. Use Connection.get()");
+      throw new Error("A LoginScreen instance has already been constructed. Use LoginScreen.get()");
     }
 
     this.observers = [];

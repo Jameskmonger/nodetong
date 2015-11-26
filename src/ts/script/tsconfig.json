@@ -24,7 +24,6 @@
     "files": [
         "app/Event/NodetongEvent.ts",
         "app/Event/NodetongEventType.ts",
-        "app/Login/LoginScreen.ts",
         "app/Login/LoginScreenObserver.ts",
         "app/Login/LoginScreenSubmissionEvent.ts",
         "app/Networking/Connection.ts",

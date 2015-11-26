@@ -1,13 +1,31 @@
+var GameState_1 = require("./GameState");
 var Player = (function () {
-    function Player(id, name, socket) {
+    function Player(id, socket) {
         this.id = id;
-        this.name = name;
         this.socket = socket;
+        this.name = "Player";
+        this.state = GameState_1.GameState.CONNECTED;
         this.listeners = [];
         socket.on('disconnect', function () {
-            this.notifyEventListeners(Event.DISCONNECT);
+            this.notifyEventListeners(PlayerEvent.DISCONNECT);
         }.bind(this));
     }
+    Player.prototype.getState = function () {
+        return this.state;
+    };
+    Player.prototype.getName = function () {
+        return this.name;
+    };
+    Player.prototype.setName = function (name) {
+        if (this.state === GameState_1.GameState.NAMED) {
+            throw new Error("The Player has already been named.");
+        }
+        if (this.state === GameState_1.GameState.CONNECTED) {
+            this.state = GameState_1.GameState.NAMED;
+            this.name = name;
+        }
+        console.log("The player is now called " + this.name);
+    };
     Player.prototype.registerPacketHandler = function (packet) {
         this.socket.on(packet.event, function (data) {
             packet.handler(this, data);
@@ -26,7 +44,7 @@ var Player = (function () {
     return Player;
 })();
 exports.Player = Player;
-(function (Event) {
-    Event[Event["DISCONNECT"] = 0] = "DISCONNECT";
-})(exports.Event || (exports.Event = {}));
-var Event = exports.Event;
+(function (PlayerEvent) {
+    PlayerEvent[PlayerEvent["DISCONNECT"] = 0] = "DISCONNECT";
+})(exports.PlayerEvent || (exports.PlayerEvent = {}));
+var PlayerEvent = exports.PlayerEvent;

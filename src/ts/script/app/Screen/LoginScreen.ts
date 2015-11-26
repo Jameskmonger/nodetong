@@ -23,7 +23,9 @@ export class LoginScreen implements IScreen.IScreen {
 
         var nick: string = this.getEnteredNickname();
 
-        if (nick.length > 0) {
+        var regex = /^[a-z,A-Z,0-9, ]*$/g
+
+        if (nick.length > 0 && regex.test(nick)) {
           this.notify(new LoginScreenSubmissionEvent(nick));
         }
       }.bind(this)

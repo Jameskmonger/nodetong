@@ -1,5 +1,5 @@
 var PacketHandlers = require("./Player/PacketHandlers");
-var Player = require('./Player/Player');
+var Player_1 = require("./Player/Player");
 var GameServer = (function () {
     function GameServer(io) {
         this.io = io;
@@ -10,10 +10,8 @@ var GameServer = (function () {
             if (id === -1) {
                 return;
             }
-            var name = GameServer.getRandomName();
-            var player = new Player.Player(id, name, socket);
-            player.registerEventListener(Player.Event.DISCONNECT, this.removePlayer.bind(this));
-            player.registerPacketHandler(new PacketHandlers.PingPacketHandler());
+            var player = new Player_1.Player(id, socket);
+            player.registerEventListener(Player_1.PlayerEvent.DISCONNECT, this.removePlayer.bind(this));
             player.registerPacketHandler(new PacketHandlers.NicknameInputHandler());
             this.storePlayer(player);
         }.bind(this));
@@ -34,10 +32,6 @@ var GameServer = (function () {
     };
     GameServer.getRandomInt = function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-    GameServer.getRandomName = function () {
-        var NAMES = ["Boris", "Oscar", "Giovanni", "Patrick", "Derek", "Quentin", "Quagmire", "Milton", "Glen", "Hubert"];
-        return NAMES[GameServer.getRandomInt(0, NAMES.length - 1)];
     };
     return GameServer;
 })();

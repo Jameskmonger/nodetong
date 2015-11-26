@@ -1,16 +1,40 @@
 /// <reference path="./PacketHandlers.ts"/>
 
 import PacketHandlers = require('./PacketHandlers');
+import { GameState } from "./GameState";
 
 export class Player {
   private listeners: Array<any>;
+  private name: string = "Player";
+  private state: GameState = GameState.CONNECTED;
 
-  constructor(public id: number, public name: string, private socket: any) {
+  constructor(public id: number, private socket: any) {
     this.listeners = [];
 
     socket.on('disconnect', function() {
-      this.notifyEventListeners(Event.DISCONNECT);
+      this.notifyEventListeners(PlayerEvent.DISCONNECT);
   	}.bind(this));
+  }
+
+  getState(): GameState {
+    return this.state;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setName(name: string) {
+    if (this.state === GameState.NAMED) {
+      throw new Error("The Player has already been named.");
+    }
+
+    if (this.state === GameState.CONNECTED) {
+      this.state = GameState.NAMED;
+      this.name = name;
+    }
+
+    console.log("The player is now called " + this.name);
   }
 
   registerPacketHandler(packet: PacketHandlers.IPacketHandler) {
@@ -19,7 +43,7 @@ export class Player {
     }.bind(this));
   }
 
-  registerEventListener(evt: Event, listener: any) {
+  registerEventListener(evt: PlayerEvent, listener: any) {
     if (this.listeners[evt] === undefined) {
       this.listeners[evt] = [];
     }
@@ -27,11 +51,11 @@ export class Player {
     this.listeners[evt].push(listener);
   }
 
-  notifyEventListeners(evt: Event) {
+  notifyEventListeners(evt: PlayerEvent) {
     this.listeners[evt].forEach(e => e(this));
   }
 }
 
-export enum Event {
+export enum PlayerEvent {
   DISCONNECT
 }

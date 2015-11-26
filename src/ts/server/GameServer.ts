@@ -1,9 +1,9 @@
 import PacketHandlers = require("./Player/PacketHandlers");
-import Player = require('./Player/Player');
+import { Player, PlayerEvent } from "./Player/Player";
 
 export class GameServer {
   private MAX_PLAYER_COUNT: number = 20;
-  private playerList: Array<Player.Player> = [];
+  private playerList: Array<Player> = [];
 
   constructor(private io: any) {
     io.sockets.on('connection', function(socket) {
@@ -15,24 +15,21 @@ export class GameServer {
         return;
       }
 
-      var name: string = GameServer.getRandomName();
+      var player: Player = new Player(id, socket);
 
-      var player: Player.Player = new Player.Player(id, name, socket);
+      player.registerEventListener(PlayerEvent.DISCONNECT, this.removePlayer.bind(this));
 
-      player.registerEventListener(Player.Event.DISCONNECT, this.removePlayer.bind(this));
-
-      player.registerPacketHandler(new PacketHandlers.PingPacketHandler());
       player.registerPacketHandler(new PacketHandlers.NicknameInputHandler());
 
       this.storePlayer(player);
     }.bind(this));
   }
 
-  storePlayer(player: Player.Player) {
+  storePlayer(player: Player) {
     this.playerList[player.id] = player;
   }
 
-  removePlayer(player: Player.Player) {
+  removePlayer(player: Player) {
     this.playerList[player.id] = undefined;
   }
 
@@ -48,11 +45,5 @@ export class GameServer {
 
   static getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  static getRandomName() {
-    var NAMES = ["Boris", "Oscar", "Giovanni", "Patrick", "Derek", "Quentin", "Quagmire", "Milton", "Glen", "Hubert"];
-
-    return NAMES[GameServer.getRandomInt(0, NAMES.length - 1)];
   }
 }

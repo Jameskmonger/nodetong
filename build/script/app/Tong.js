@@ -1,4 +1,4 @@
-define(["require", "exports", "./Screen/LoginScreen"], function (require, exports, LoginScreen) {
+define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScreen"], function (require, exports, LoginScreenObserver_1, LoginScreen_1) {
     var Tong = (function () {
         function Tong(doc) {
             this.doc = doc;
@@ -9,5 +9,7 @@ define(["require", "exports", "./Screen/LoginScreen"], function (require, export
         return Tong;
     })();
     var tong = new Tong(document);
-    tong.show(LoginScreen.LoginScreen.get());
+    var screen = LoginScreen_1.LoginScreen.get(document);
+    screen.observe(new LoginScreenObserver_1.LoginScreenObserver());
+    tong.show(screen);
 });

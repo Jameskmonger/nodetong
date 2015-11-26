@@ -1,16 +1,22 @@
-import IScreen = require("./Screen/IScreen");
-import LoginScreen = require("./Screen/LoginScreen");
+import { LoginScreenObserver } from "./Login/LoginScreenObserver";
+import { IScreen } from "./Screen/IScreen";
+import { LoginScreen } from "./Screen/LoginScreen";
 
 class Tong {
   constructor(private doc) {
 
   }
 
-  show(screen: IScreen.IScreen) {
+  show(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "block";
   }
 }
 
 var tong = new Tong(document);
 
-tong.show(LoginScreen.LoginScreen.get());
+// We need to provide the document because we are getting the login screen for the first time
+var screen: LoginScreen = LoginScreen.get(document);
+
+screen.observe(new LoginScreenObserver());
+
+tong.show(screen);

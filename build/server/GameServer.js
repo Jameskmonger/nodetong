@@ -36,6 +36,7 @@ var GameServer = (function () {
             player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
             this.playerList.forEach(function (otherPlayer) {
                 player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+                console.log(otherPlayer.getName() + " sent to " + player.getName());
             });
         }
     };

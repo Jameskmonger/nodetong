@@ -52,6 +52,8 @@ export class GameServer {
 
       this.playerList.forEach((otherPlayer) => {
          player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+
+         console.log(otherPlayer.getName() + " sent to " + player.getName());
       });
     }
   }

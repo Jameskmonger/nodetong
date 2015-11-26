@@ -34,6 +34,7 @@
         "app/request_animation_frame.ts",
         "app/Screen/GameScreen.ts",
         "app/Screen/GameScreen/HUDDrawing.ts",
+        "app/Screen/GameScreen/PlayerDrawing.ts",
         "app/Screen/GameScreen/WorldDrawing.ts",
         "app/Screen/IScreen.ts",
         "app/Screen/LoginScreen.ts",

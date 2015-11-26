@@ -27,8 +27,8 @@ var login_screen: LoginScreen = LoginScreen.get(document);
 login_screen.observe(new LoginScreenObserver());
 
 tong.show(login_screen);
-tong.hide(login_screen);
+/*tong.hide(login_screen);
 
 var game_screen: GameScreen = GameScreen.get(document);
 
-tong.show(game_screen);
+tong.show(game_screen);*/

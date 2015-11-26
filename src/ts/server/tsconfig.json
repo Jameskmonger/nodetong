@@ -16,6 +16,8 @@
         "outDir": "../../../build/server",
         "rootDir": "./"
     },
+    "compileOnSave": true,
+    "buildOnSave": true,
     "filesGlob": [
         "**/*.ts",
         "**/*.tsx",

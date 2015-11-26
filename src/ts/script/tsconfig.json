@@ -16,6 +16,8 @@
         "outDir": "../../../build/script",
         "rootDir": "./"
     },
+    "compileOnSave": true,
+    "buildOnSave": true,
     "filesGlob": [
         "**/*.ts",
         "**/*.tsx",

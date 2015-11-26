@@ -21,8 +21,8 @@ class Tong {
 var tong = new Tong(document);
 
 // We need to provide the document because we are getting the login screen for the first time
-var screen: LoginScreen = LoginScreen.get(document);
+var login_screen: LoginScreen = LoginScreen.get(document);
 
-screen.observe(new LoginScreenObserver());
+login_screen.observe(new LoginScreenObserver());
 
-tong.show(screen);
+tong.show(login_screen);

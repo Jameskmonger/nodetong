@@ -14,7 +14,7 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         return Tong;
     })();
     var tong = new Tong(document);
-    var screen = LoginScreen_1.LoginScreen.get(document);
-    screen.observe(new LoginScreenObserver_1.LoginScreenObserver());
-    tong.show(screen);
+    var login_screen = LoginScreen_1.LoginScreen.get(document);
+    login_screen.observe(new LoginScreenObserver_1.LoginScreenObserver());
+    tong.show(login_screen);
 });

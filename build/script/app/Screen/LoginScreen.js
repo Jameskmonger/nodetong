@@ -17,8 +17,10 @@ define(["require", "exports", '../Login/LoginScreenSubmissionEvent'], function (
             }.bind(this));
         }
         LoginScreen.prototype.onShow = function () {
+            console.log("showing login");
         };
         LoginScreen.prototype.onHide = function () {
+            console.log("hiding login");
         };
         LoginScreen.prototype.getEnteredNickname = function () {
             return this.getNicknameBox().value;

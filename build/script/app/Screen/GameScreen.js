@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "../request_animation_frame"], function (require, exports) {
     var GameScreen = (function () {
         function GameScreen(scope) {
             this.scope = scope;
@@ -8,6 +8,11 @@ define(["require", "exports"], function (require, exports) {
             }
         }
         GameScreen.prototype.onShow = function () {
+            console.log("showing game");
+            window.requestAnimationFrame(this.draw.bind(this));
+        };
+        GameScreen.prototype.draw = function () {
+            window.requestAnimationFrame(this.draw.bind(this));
         };
         GameScreen.prototype.onHide = function () {
         };

@@ -1,3 +1,5 @@
+///<amd-dependency path="../request_animation_frame" />
+
 import { IScreen } from "./IScreen";
 
 export class GameScreen implements IScreen {
@@ -11,7 +13,15 @@ export class GameScreen implements IScreen {
   }
 
   onShow() {
+    console.log("showing game");
 
+    window.requestAnimationFrame(this.draw.bind(this));
+  }
+
+  draw() {
+
+
+    window.requestAnimationFrame(this.draw.bind(this));
   }
 
   onHide() {

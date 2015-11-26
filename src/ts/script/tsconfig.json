@@ -31,6 +31,7 @@
         "app/Networking/Connection.ts",
         "app/Networking/Packet/Packets.ts",
         "app/Observer/NodetongObserver.ts",
+        "app/Screen/GameScreen.ts",
         "app/Screen/IScreen.ts",
         "app/Screen/LoginScreen.ts",
         "app/Tong.ts"

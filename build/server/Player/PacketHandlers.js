@@ -4,9 +4,10 @@ var NicknameInputHandler = (function () {
         this.event = "nickname_input";
     }
     NicknameInputHandler.prototype.handler = function (receiver, payload) {
+        var nick = payload.nickname;
         var regex = /^[a-z,A-Z,0-9]([a-z,A-Z,0-9, ]*[a-z,A-Z,0-9])?$/;
-        if (regex.test(payload) && receiver.getState() === GameState_1.GameState.CONNECTED) {
-            receiver.setName(payload);
+        if (regex.test(nick) && receiver.getState() === GameState_1.GameState.CONNECTED) {
+            receiver.setName(nick);
         }
     };
     return NicknameInputHandler;

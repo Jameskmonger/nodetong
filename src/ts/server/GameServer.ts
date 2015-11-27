@@ -17,7 +17,7 @@ export class GameServer {
     GameServer.instance = this;
 
     io.sockets.on('connection', function(socket) {
-      var id: number = this.getEmptyPlayerIndex();
+      var id: number = GameServer.get().getEmptyPlayerIndex();
 
       // If the ID is -1, then there are no more player slots.
       // We need more handling here (error message to the player).

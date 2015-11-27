@@ -4,13 +4,15 @@ import { LoginScreen } from "./Screen/LoginScreen";
 import { GameScreen } from "./Screen/GameScreen";
 import PacketHandlers = require("./Networking/Packet/PacketHandlers");
 import { Connection } from "./Networking/Connection";
+import { Player } from "./Model/Player";
 
 export class Tong {
-  constructor(private doc) {
-
-  }
-
   public localPlayerIndex: number;
+  private playerArray: Array<Player>;
+
+  constructor(private doc) {
+    this.playerArray = [];
+  }
 
   show(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "block";
@@ -20,6 +22,10 @@ export class Tong {
   hide(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "none";
     screen.onHide();
+  }
+
+  registerPlayer(player: Player) {
+    this.playerArray.push(player);
   }
 }
 

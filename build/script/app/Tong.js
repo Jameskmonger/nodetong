@@ -2,6 +2,7 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
     var Tong = (function () {
         function Tong(doc) {
             this.doc = doc;
+            this.playerArray = [];
         }
         Tong.prototype.show = function (screen) {
             this.doc.getElementById(screen.id).style.display = "block";
@@ -10,6 +11,9 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         Tong.prototype.hide = function (screen) {
             this.doc.getElementById(screen.id).style.display = "none";
             screen.onHide();
+        };
+        Tong.prototype.registerPlayer = function (player) {
+            this.playerArray.push(player);
         };
         return Tong;
     })();

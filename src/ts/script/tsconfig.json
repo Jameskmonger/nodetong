@@ -28,6 +28,7 @@
         "app/Event/NodetongEventType.ts",
         "app/Login/LoginScreenObserver.ts",
         "app/Login/LoginScreenSubmissionEvent.ts",
+        "app/Model/Player.ts",
         "app/Networking/Connection.ts",
         "app/Networking/Packet/PacketHandlers.ts",
         "app/Networking/Packet/Packets.ts",

@@ -1,4 +1,5 @@
 import { Tong } from "../../Tong";
+import { Player } from "../../Model/Player";
 
 export interface IPacketHandler {
    event: string;
@@ -13,8 +14,6 @@ export class LocalPlayerIndexPacketHandler implements IPacketHandler {
 
    handler (payload: any): void {
       this._tong.localPlayerIndex = payload.localPlayerIndex;
-
-      console.log("YOUR ID IS " + payload.localPlayerIndex);
    }
 }
 
@@ -25,7 +24,8 @@ export class AddPlayerPacketHandler implements IPacketHandler {
    }
 
    handler (payload: any): void {
-      console.log("implement me");
+     var player: Player = new Player(payload.player.id, payload.player.name);
+     this._tong.registerPlayer(player);
    }
 }
 

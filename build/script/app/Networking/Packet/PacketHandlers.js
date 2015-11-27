@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "../../Model/Player"], function (require, exports, Player_1) {
     var LocalPlayerIndexPacketHandler = (function () {
         function LocalPlayerIndexPacketHandler(_tong) {
             this._tong = _tong;
@@ -6,7 +6,6 @@ define(["require", "exports"], function (require, exports) {
         }
         LocalPlayerIndexPacketHandler.prototype.handler = function (payload) {
             this._tong.localPlayerIndex = payload.localPlayerIndex;
-            console.log("YOUR ID IS " + payload.localPlayerIndex);
         };
         return LocalPlayerIndexPacketHandler;
     })();
@@ -17,7 +16,8 @@ define(["require", "exports"], function (require, exports) {
             this.event = "add_player";
         }
         AddPlayerPacketHandler.prototype.handler = function (payload) {
-            console.log("implement me");
+            var player = new Player_1.Player(payload.player.id, payload.player.name);
+            this._tong.registerPlayer(player);
         };
         return AddPlayerPacketHandler;
     })();

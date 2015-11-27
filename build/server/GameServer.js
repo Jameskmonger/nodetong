@@ -12,7 +12,7 @@ var GameServer = (function () {
         }
         GameServer.instance = this;
         io.sockets.on('connection', function (socket) {
-            var id = this.getEmptyPlayerIndex();
+            var id = GameServer.get().getEmptyPlayerIndex();
             if (id === -1) {
                 return;
             }

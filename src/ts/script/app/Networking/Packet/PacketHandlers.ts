@@ -1,5 +1,7 @@
 import { Tong } from "../../Tong";
 import { Player } from "../../Model/Player";
+import { LoginScreen } from "../../Screen/LoginScreen";
+import { GameScreen } from "../../Screen/GameScreen";
 
 export interface IPacketHandler {
    event: string;
@@ -14,6 +16,12 @@ export class LocalPlayerIndexPacketHandler implements IPacketHandler {
 
    handler (payload: any): void {
       this._tong.localPlayerIndex = payload.localPlayerIndex;
+
+      this._tong.hide(LoginScreen.get());
+
+      var game_screen: GameScreen = GameScreen.get(this._tong, document);
+
+      this._tong.show(game_screen);
    }
 }
 

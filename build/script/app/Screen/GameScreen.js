@@ -1,6 +1,7 @@
 define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerDrawing", "./GameScreen/HUDDrawing", "../request_animation_frame"], function (require, exports, WorldDrawing_1, PlayerDrawing_1, HUDDrawing_1) {
     var GameScreen = (function () {
-        function GameScreen(scope) {
+        function GameScreen(tong, scope) {
+            this.tong = tong;
             this.scope = scope;
             this.id = "game-screen";
             if (GameScreen.instance !== undefined) {
@@ -44,7 +45,7 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerD
             this.lastDrawnTime = Date.now();
             this.fps = 1 / delta;
             WorldDrawing_1.WorldDrawing.draw(this.drawing.world.canvas);
-            PlayerDrawing_1.PlayerDrawing.draw(this.drawing.player);
+            PlayerDrawing_1.PlayerDrawing.draw(this.tong, this.drawing.player);
             HUDDrawing_1.HUDDrawing.draw(this.fps, this.drawing.HUD);
             window.requestAnimationFrame(this.draw.bind(this));
         };
@@ -56,13 +57,17 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerD
             this.drawing.HUD.canvas.width = window.innerWidth;
             this.drawing.HUD.canvas.height = window.innerHeight;
         };
-        GameScreen.get = function (scope) {
+        GameScreen.get = function (tong, scope) {
+            if (tong === void 0) { tong = undefined; }
             if (scope === void 0) { scope = undefined; }
             if (GameScreen.instance === undefined) {
+                if (tong === undefined) {
+                    throw new Error("A Tong must be provided to get a GameScreen instance if one is not already made.");
+                }
                 if (scope === undefined) {
                     throw new Error("A scope must be provided to get a GameScreen instance if one is not already made.");
                 }
-                GameScreen.instance = new GameScreen(scope);
+                GameScreen.instance = new GameScreen(tong, scope);
             }
             return GameScreen.instance;
         };

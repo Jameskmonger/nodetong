@@ -1,4 +1,4 @@
-define(["require", "exports", "../../Model/Player"], function (require, exports, Player_1) {
+define(["require", "exports", "../../Model/Player", "../../Screen/LoginScreen", "../../Screen/GameScreen"], function (require, exports, Player_1, LoginScreen_1, GameScreen_1) {
     var LocalPlayerIndexPacketHandler = (function () {
         function LocalPlayerIndexPacketHandler(_tong) {
             this._tong = _tong;
@@ -6,6 +6,9 @@ define(["require", "exports", "../../Model/Player"], function (require, exports,
         }
         LocalPlayerIndexPacketHandler.prototype.handler = function (payload) {
             this._tong.localPlayerIndex = payload.localPlayerIndex;
+            this._tong.hide(LoginScreen_1.LoginScreen.get());
+            var game_screen = GameScreen_1.GameScreen.get(this._tong, document);
+            this._tong.show(game_screen);
         };
         return LocalPlayerIndexPacketHandler;
     })();

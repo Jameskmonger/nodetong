@@ -12,6 +12,9 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
             this.doc.getElementById(screen.id).style.display = "none";
             screen.onHide();
         };
+        Tong.prototype.getPlayers = function () {
+            return this.playerArray;
+        };
         Tong.prototype.registerPlayer = function (player) {
             this.playerArray.push(player);
         };

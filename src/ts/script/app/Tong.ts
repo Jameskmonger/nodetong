@@ -24,6 +24,10 @@ export class Tong {
     screen.onHide();
   }
 
+  getPlayers(): Array<Player> {
+    return this.playerArray;
+  }
+
   registerPlayer(player: Player) {
     this.playerArray.push(player);
   }
@@ -52,8 +56,3 @@ var login_screen: LoginScreen = LoginScreen.get(document);
 login_screen.observe(new LoginScreenObserver());
 
 tong.show(login_screen);
-/*tong.hide(login_screen);
-
-var game_screen: GameScreen = GameScreen.get(document);
-
-tong.show(game_screen);*/

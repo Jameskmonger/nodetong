@@ -4,6 +4,7 @@ import { IScreen } from "./IScreen";
 import { WorldDrawing } from "./GameScreen/WorldDrawing";
 import { PlayerDrawing } from "./GameScreen/PlayerDrawing";
 import { HUDDrawing } from "./GameScreen/HUDDrawing";
+import { Tong } from "../Tong";
 
 export class GameScreen implements IScreen {
   id = "game-screen";
@@ -12,7 +13,7 @@ export class GameScreen implements IScreen {
   lastDrawnTime: number;
   fps: number;
 
-  constructor(private scope: HTMLDocument) {
+  constructor(private tong: Tong, private scope: HTMLDocument) {
     if (GameScreen.instance !== undefined) {
       throw new Error("A GameScreen instance has already been constructed. Use GameScreen.get()");
     }
@@ -66,7 +67,7 @@ export class GameScreen implements IScreen {
     this.fps = 1 / delta;
 
     WorldDrawing.draw(this.drawing.world.canvas);
-    PlayerDrawing.draw(this.drawing.player);
+    PlayerDrawing.draw(this.tong, this.drawing.player);
     HUDDrawing.draw(this.fps, this.drawing.HUD);
 
     window.requestAnimationFrame(this.draw.bind(this));
@@ -81,13 +82,17 @@ export class GameScreen implements IScreen {
     this.drawing.HUD.canvas.height = window.innerHeight;
   }
 
-  public static get(scope: HTMLDocument = undefined) {
+  public static get(tong: Tong = undefined, scope: HTMLDocument = undefined) {
     if (GameScreen.instance === undefined) {
+      if (tong === undefined) {
+        throw new Error("A Tong must be provided to get a GameScreen instance if one is not already made.");
+      }
+
       if (scope === undefined) {
         throw new Error("A scope must be provided to get a GameScreen instance if one is not already made.");
       }
 
-      GameScreen.instance = new GameScreen(scope);
+      GameScreen.instance = new GameScreen(tong, scope);
     }
 
     return GameScreen.instance;

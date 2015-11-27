@@ -68,6 +68,10 @@ export class GameServer {
   }
 
   isPlayerStored(player: Player): boolean {
+    if (player === undefined) {
+      return false;
+    }
+
     // If the index of the player in the list is not -1, then they're stored
     return (this.playerList.indexOf(player) !== -1);
   }
@@ -78,6 +82,14 @@ export class GameServer {
 
   removePlayer(player: Player) {
     this.playerList[player.id] = undefined;
+
+    this.playerList.forEach((otherPlayer) => {
+      if (this.isPlayerStored(otherPlayer)) {
+        if (otherPlayer.getState() === GameState.NAMED) {
+          otherPlayer.sendPacket(new Packets.RemovePlayerPacket(player));
+        }
+      }
+    });
   }
 
   getEmptyPlayerIndex() {

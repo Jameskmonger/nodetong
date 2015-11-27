@@ -46,13 +46,24 @@ var GameServer = (function () {
         }
     };
     GameServer.prototype.isPlayerStored = function (player) {
+        if (player === undefined) {
+            return false;
+        }
         return (this.playerList.indexOf(player) !== -1);
     };
     GameServer.prototype.storePlayer = function (player) {
         this.playerList[player.id] = player;
     };
     GameServer.prototype.removePlayer = function (player) {
+        var _this = this;
         this.playerList[player.id] = undefined;
+        this.playerList.forEach(function (otherPlayer) {
+            if (_this.isPlayerStored(otherPlayer)) {
+                if (otherPlayer.getState() === GameState_1.GameState.NAMED) {
+                    otherPlayer.sendPacket(new Packets.RemovePlayerPacket(player));
+                }
+            }
+        });
     };
     GameServer.prototype.getEmptyPlayerIndex = function () {
         for (var i = 0; i < this.MAX_PLAYER_COUNT; i++) {

@@ -38,6 +38,9 @@ var GameServer = (function () {
             this.playerList.forEach(function (otherPlayer) {
                 if (otherPlayer.getState() === GameState_1.GameState.NAMED) {
                     player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+                    if (otherPlayer !== player) {
+                        otherPlayer.sendPacket(new Packets.AddPlayerPacket(player));
+                    }
                 }
             });
         }

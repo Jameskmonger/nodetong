@@ -29,7 +29,7 @@ export class Tong {
   }
 
   registerPlayer(player: Player) {
-    this.playerArray.push(player);
+    this.playerArray[player.id] = player;
   }
 
   deregisterPlayer(playerId: number) {

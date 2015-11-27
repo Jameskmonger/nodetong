@@ -52,9 +52,17 @@ export class GameServer {
       player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
 
       this.playerList.forEach((otherPlayer) => {
-         if (otherPlayer.getState() === GameState.NAMED) {
-            player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
-         }
+        /*
+         * Send all initialised players to the new player,
+         * send the new player to all initialised players apart from itself.
+         */
+
+        if (otherPlayer.getState() === GameState.NAMED) {
+          player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));
+          if (otherPlayer !== player) {
+            otherPlayer.sendPacket(new Packets.AddPlayerPacket(player));
+           }
+        }
       });
     }
   }

@@ -28,7 +28,7 @@ define(["require", "exports", "../../Model/Player"], function (require, exports,
             this.event = "remove_player";
         }
         RemovePlayerPacketHandler.prototype.handler = function (payload) {
-            console.log("implement me");
+            this._tong.deregisterPlayer(payload.player.id);
         };
         return RemovePlayerPacketHandler;
     })();

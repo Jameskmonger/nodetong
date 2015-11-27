@@ -36,7 +36,7 @@ export class RemovePlayerPacketHandler implements IPacketHandler {
    }
 
    handler (payload: any): void {
-      console.log("implement me");
+     this._tong.deregisterPlayer(payload.player.id);
    }
 }
 

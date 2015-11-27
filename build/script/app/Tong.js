@@ -15,6 +15,9 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         Tong.prototype.registerPlayer = function (player) {
             this.playerArray.push(player);
         };
+        Tong.prototype.deregisterPlayer = function (playerId) {
+            this.playerArray.splice(playerId, 1);
+        };
         return Tong;
     })();
     exports.Tong = Tong;

@@ -27,6 +27,10 @@ export class Tong {
   registerPlayer(player: Player) {
     this.playerArray.push(player);
   }
+
+  deregisterPlayer(playerId: number) {
+    this.playerArray.splice(playerId, 1);
+  }
 }
 
 var tong = new Tong(document);

@@ -34,7 +34,6 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerD
         GameScreen.prototype.onHide = function () {
         };
         GameScreen.prototype.draw = function () {
-            var drawing = this.drawing;
             if (this.lastDrawnTime === 0) {
                 this.lastDrawnTime = Date.now();
                 this.fps = 0;
@@ -45,7 +44,7 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerD
             this.lastDrawnTime = Date.now();
             this.fps = 1 / delta;
             WorldDrawing_1.WorldDrawing.draw(this.drawing.world.canvas);
-            PlayerDrawing_1.PlayerDrawing.draw(this.tong, this.drawing.player);
+            PlayerDrawing_1.PlayerDrawing.draw(this.tong, this.drawing.players);
             HUDDrawing_1.HUDDrawing.draw(this.fps, this.drawing.HUD);
             window.requestAnimationFrame(this.draw.bind(this));
         };

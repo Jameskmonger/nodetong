@@ -52,8 +52,6 @@ export class GameScreen implements IScreen {
   }
 
   draw() {
-    var drawing = this.drawing;
-
     if(this.lastDrawnTime === 0) {
       this.lastDrawnTime = Date.now();
       this.fps = 0;
@@ -67,7 +65,7 @@ export class GameScreen implements IScreen {
     this.fps = 1 / delta;
 
     WorldDrawing.draw(this.drawing.world.canvas);
-    PlayerDrawing.draw(this.tong, this.drawing.player);
+    PlayerDrawing.draw(this.tong, this.drawing.players);
     HUDDrawing.draw(this.fps, this.drawing.HUD);
 
     window.requestAnimationFrame(this.draw.bind(this));

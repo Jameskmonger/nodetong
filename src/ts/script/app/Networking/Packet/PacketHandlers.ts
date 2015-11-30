@@ -33,6 +33,12 @@ export class AddPlayerPacketHandler implements IPacketHandler {
 
    handler (payload: any): void {
      var player: Player = new Player(payload.player.id, payload.player.name);
+
+     player.positionX = 10;
+     player.positionY = 10;
+     player.modelId = 1;
+     player.skinId = 3;
+
      this._tong.registerPlayer(player);
    }
 }

@@ -20,6 +20,10 @@ define(["require", "exports", "../../Model/Player", "../../Screen/LoginScreen", 
         }
         AddPlayerPacketHandler.prototype.handler = function (payload) {
             var player = new Player_1.Player(payload.player.id, payload.player.name);
+            player.positionX = 10;
+            player.positionY = 10;
+            player.modelId = 1;
+            player.skinId = 3;
             this._tong.registerPlayer(player);
         };
         return AddPlayerPacketHandler;

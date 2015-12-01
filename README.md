@@ -9,6 +9,7 @@ Pardon the pun - let's use an emoji or ten at the start of each commit message a
 * :poop: - `:poop:` - fixed a bug
 * :lipstick: - `:lipstick:` - refactoring
 * :memo: - `:memo:` - adding documentation
+* :sound: - `:sound:` - logging
 
 #### Areas
 * :eyes: - `:eyes:` - graphics

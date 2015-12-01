@@ -20,7 +20,7 @@ export class PlayerDrawing {
         var car_img = PlayerDrawing.getVehicleImage(player.modelId, player.skinId);
 
         if (car_img !== undefined) {
-          (<CanvasRenderingContext2D>drawingDetails.context).drawImage(car_img, player.positionX, player.positionY, CAR_IMAGE_SCALE, CAR_IMAGE_SCALE * (121 / 70));
+          (<CanvasRenderingContext2D>drawingDetails.context).drawImage(car_img, player.positionX + origin_x - local_car_x, player.positionY + origin_y - local_car_y, CAR_IMAGE_SCALE, CAR_IMAGE_SCALE * (121 / 70));
         }
       }
     });

@@ -11,6 +11,8 @@ export class KeyHandler {
     E_KEY: 69
   };
 
+  private keyPressed: Array<boolean>;
+
   constructor(private window: Window) {
     if (KeyHandler.instance !== undefined) {
       throw new Error("An instance of singleton KeyHandler has already been constructed.");
@@ -19,6 +21,14 @@ export class KeyHandler {
     if (this.window == undefined) {
       throw new Error("A valid window must be provided when creating a KeyHandler.");
     }
+  }
+
+  public isKeyPressed(code: number): boolean {
+    if (!(code in KeyHandler.KeyCodes)) {
+      throw new Error("Attempted to use isKeyPressed on unregistered key");
+    }
+
+    return this.keyPressed[code];
   }
 
   public static get(window: Window = undefined): KeyHandler {

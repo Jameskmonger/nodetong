@@ -1,16 +1,6 @@
 define(function (require) {
   "use strict";
 
-  KeyHandler.KeyCodes = {
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    SPACE: 32,
-    Q_KEY: 81,
-    E_KEY: 69
-  };
-
   KeyHandler.KeyCodeMap = [];
   KeyHandler.KeyCodeMap[KeyHandler.KeyCodes.LEFT] = 0;
   KeyHandler.KeyCodeMap[KeyHandler.KeyCodes.UP] = 1;

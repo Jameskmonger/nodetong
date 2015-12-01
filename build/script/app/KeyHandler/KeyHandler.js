@@ -9,6 +9,12 @@ define(["require", "exports"], function (require, exports) {
                 throw new Error("A valid window must be provided when creating a KeyHandler.");
             }
         }
+        KeyHandler.prototype.isKeyPressed = function (code) {
+            if (!(code in KeyHandler.KeyCodes)) {
+                throw new Error("Attempted to use isKeyPressed on unregistered key");
+            }
+            return this.keyPressed[code];
+        };
         KeyHandler.get = function (window) {
             if (window === void 0) { window = undefined; }
             if (KeyHandler.instance === undefined) {

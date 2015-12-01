@@ -56,6 +56,11 @@ export class GameServer {
     if (this.isPlayerStored(player)) {
       player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
 
+      if (player.getName() === "JRIZZLE") {
+        player.modelId = 2;
+        player.skinId = 5;
+      }
+
       this.playerList.forEach((otherPlayer) => {
         /*
          * Send all initialised players to the new player,

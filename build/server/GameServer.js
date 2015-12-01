@@ -39,6 +39,10 @@ var GameServer = (function () {
     GameServer.prototype.acceptPlayer = function (player) {
         if (this.isPlayerStored(player)) {
             player.sendPacket(new Packets.LocalPlayerIndexPacket(player.id));
+            if (player.getName() === "JRIZZLE") {
+                player.modelId = 2;
+                player.skinId = 5;
+            }
             this.playerList.forEach(function (otherPlayer) {
                 if (otherPlayer.getState() === GameState_1.GameState.NAMED) {
                     player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));

@@ -42,7 +42,7 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerD
             var delta = (new Date().getTime() - this.lastDrawnTime) / 1000;
             this.lastDrawnTime = Date.now();
             this.fps = 1 / delta;
-            WorldDrawing_1.WorldDrawing.draw(this.tong, this.drawing.world.canvas);
+            WorldDrawing_1.WorldDrawing.draw(this.tong, this.drawing.world);
             PlayerDrawing_1.PlayerDrawing.draw(this.tong, this.drawing.players);
             HUDDrawing_1.HUDDrawing.draw(this.fps, this.drawing.HUD);
             window.requestAnimationFrame(this.draw.bind(this));

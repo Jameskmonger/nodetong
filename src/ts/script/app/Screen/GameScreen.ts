@@ -62,7 +62,7 @@ export class GameScreen implements IScreen {
     this.lastDrawnTime = Date.now();
     this.fps = 1 / delta;
 
-    WorldDrawing.draw(this.tong, this.drawing.world.canvas);
+    WorldDrawing.draw(this.tong, this.drawing.world);
     PlayerDrawing.draw(this.tong, this.drawing.players);
     HUDDrawing.draw(this.fps, this.drawing.HUD);
 

@@ -26,7 +26,6 @@ define(["require", "exports", "./GameScreen/WorldDrawing", "./GameScreen/PlayerD
             };
         }
         GameScreen.prototype.onShow = function () {
-            console.log("showing game");
             window.onresize += this.resized.bind(this);
             this.resized();
             window.requestAnimationFrame(this.draw.bind(this));

@@ -39,8 +39,6 @@ export class GameScreen implements IScreen {
   }
 
   onShow() {
-    console.log("showing game");
-
     window.onresize += this.resized.bind(this);
     this.resized();
 

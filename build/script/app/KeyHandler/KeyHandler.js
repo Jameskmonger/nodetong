@@ -16,6 +16,15 @@ define(["require", "exports"], function (require, exports) {
             }
             return KeyHandler.instance;
         };
+        KeyHandler.KeyCodes = {
+            LEFT: 37,
+            UP: 38,
+            RIGHT: 39,
+            DOWN: 40,
+            SPACE: 32,
+            Q_KEY: 81,
+            E_KEY: 69
+        };
         return KeyHandler;
     })();
     exports.KeyHandler = KeyHandler;

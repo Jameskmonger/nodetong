@@ -12,7 +12,15 @@ var AddPlayerPacket = (function () {
         this.payload = {
             player: {
                 id: player.id,
-                name: player.getName()
+                name: player.getName(),
+                position: {
+                    x: player.positionX,
+                    y: player.positionY
+                },
+                display: {
+                    modelId: player.modelId,
+                    skinId: player.skinId
+                }
             }
         };
     }

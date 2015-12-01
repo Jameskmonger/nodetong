@@ -9,6 +9,8 @@ export class Player {
   private listeners: Array<any>;
   private name: string = "Player";
   private state: GameState = GameState.CONNECTED;
+  public positionX: number;
+  public positionY: number;
   public modelId: number;
   public skinId: number;
 

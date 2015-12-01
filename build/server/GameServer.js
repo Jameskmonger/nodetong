@@ -17,6 +17,10 @@ var GameServer = (function () {
                 return;
             }
             var player = new Player_1.Player(id, socket);
+            player.positionX = 10;
+            player.positionY = 50;
+            player.modelId = 4;
+            player.skinId = 4;
             player.registerEventListener(Player_1.PlayerEvent.DISCONNECT, this.removePlayer.bind(this));
             player.registerPacketHandler(new PacketHandlers.NicknameInputHandler());
             this.storePlayer(player);

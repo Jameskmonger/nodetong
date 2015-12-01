@@ -27,6 +27,11 @@ export class GameServer {
 
       var player: Player = new Player(id, socket);
 
+      player.positionX = 10;
+      player.positionY = 50;
+      player.modelId = 4;
+      player.skinId = 4;
+
       player.registerEventListener(PlayerEvent.DISCONNECT, this.removePlayer.bind(this));
 
       player.registerPacketHandler(new PacketHandlers.NicknameInputHandler());

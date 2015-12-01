@@ -59,6 +59,9 @@ export class GameServer {
       if (player.getName() === "JRIZZLE") {
         player.modelId = 2;
         player.skinId = 5;
+      } else if (player.getName() === "JM") {
+        player.modelId = 2;
+        player.skinId = 6;
       }
 
       this.playerList.forEach((otherPlayer) => {

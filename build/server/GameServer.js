@@ -43,6 +43,10 @@ var GameServer = (function () {
                 player.modelId = 2;
                 player.skinId = 5;
             }
+            else if (player.getName() === "JM") {
+                player.modelId = 2;
+                player.skinId = 6;
+            }
             this.playerList.forEach(function (otherPlayer) {
                 if (otherPlayer.getState() === GameState_1.GameState.NAMED) {
                     player.sendPacket(new Packets.AddPlayerPacket(otherPlayer));

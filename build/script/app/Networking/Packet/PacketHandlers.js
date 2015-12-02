@@ -8,6 +8,7 @@ define(["require", "exports", "../../Model/Player", "../../Screen/LoginScreen", 
             this._tong.localPlayerIndex = payload.localPlayerIndex;
             this._tong.hide(LoginScreen_1.LoginScreen.get());
             var game_screen = GameScreen_1.GameScreen.get(this._tong, document);
+            this._tong.startGameLoop();
             this._tong.show(game_screen);
         };
         return LocalPlayerIndexPacketHandler;

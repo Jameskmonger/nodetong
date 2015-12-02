@@ -21,6 +21,8 @@ export class LocalPlayerIndexPacketHandler implements IPacketHandler {
 
       var game_screen: GameScreen = GameScreen.get(this._tong, document);
 
+      this._tong.startGameLoop();
+
       this._tong.show(game_screen);
    }
 }

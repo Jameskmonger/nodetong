@@ -9,6 +9,7 @@ import { Player } from "./Model/Player";
 export class Tong {
   public localPlayerIndex: number;
   private playerArray: Array<Player>;
+  private GAME_LOOP_INTERVAL: number = 25;
 
   constructor(private doc) {
     this.playerArray = [];
@@ -22,6 +23,14 @@ export class Tong {
   hide(screen: IScreen) {
     this.doc.getElementById(screen.id).style.display = "none";
     screen.onHide();
+  }
+
+  private _loop() {
+    console.log("game loop");
+  }
+
+  startGameLoop() {
+    setInterval(this._loop, 25);
   }
 
   getPlayers(): Array<Player> {
@@ -48,7 +57,6 @@ Connection.get().addHandler(new PacketHandlers.SetPlayerVehiclePositionPacketHan
 Connection.get().addHandler(new PacketHandlers.SetPlayerVehicleRotationPacketHandler(tong));
 Connection.get().addHandler(new PacketHandlers.SetPlayerWheelPositionPacketHandler(tong));
 Connection.get().addHandler(new PacketHandlers.SetPlayerSpeedPacketHandler(tong));
-
 
 // We need to provide the document because we are getting the login screen for the first time
 var login_screen: LoginScreen = LoginScreen.get(document);

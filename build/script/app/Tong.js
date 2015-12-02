@@ -2,6 +2,7 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
     var Tong = (function () {
         function Tong(doc) {
             this.doc = doc;
+            this.GAME_LOOP_INTERVAL = 25;
             this.playerArray = [];
         }
         Tong.prototype.show = function (screen) {
@@ -11,6 +12,12 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         Tong.prototype.hide = function (screen) {
             this.doc.getElementById(screen.id).style.display = "none";
             screen.onHide();
+        };
+        Tong.prototype._loop = function () {
+            console.log("game loop");
+        };
+        Tong.prototype.startGameLoop = function () {
+            setInterval(this._loop, 25);
         };
         Tong.prototype.getPlayers = function () {
             return this.playerArray;

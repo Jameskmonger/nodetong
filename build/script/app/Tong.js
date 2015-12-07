@@ -1,8 +1,9 @@
-define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScreen", "./Networking/Packet/PacketHandlers", "./Networking/Connection"], function (require, exports, LoginScreenObserver_1, LoginScreen_1, PacketHandlers, Connection_1) {
+define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScreen", "./Networking/Packet/PacketHandlers", "./Networking/Connection", "./KeyHandler/KeyHandler"], function (require, exports, LoginScreenObserver_1, LoginScreen_1, PacketHandlers, Connection_1, KeyHandler_1) {
     var Tong = (function () {
         function Tong(doc) {
             this.doc = doc;
             this.GAME_LOOP_INTERVAL = 25;
+            this._keyHandler = KeyHandler_1.KeyHandler.get();
             this.playerArray = [];
         }
         Tong.prototype.show = function (screen) {
@@ -15,6 +16,12 @@ define(["require", "exports", "./Login/LoginScreenObserver", "./Screen/LoginScre
         };
         Tong.prototype._loop = function () {
             console.log("game loop");
+            if (this._keyHandler.isKeyPressed(KeyHandler_1.KeyHandler.KeyCodes.LEFT)) {
+                this.playerArray[this.localPlayerIndex].turnWheelLeft();
+            }
+            else if (this._keyHandler.isKeyPressed(KeyHandler_1.KeyHandler.KeyCodes.RIGHT)) {
+                this.playerArray[this.localPlayerIndex].turnWheelRight();
+            }
         };
         Tong.prototype.startGameLoop = function () {
             setInterval(this._loop, 25);

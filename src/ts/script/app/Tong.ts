@@ -5,11 +5,13 @@ import { GameScreen } from "./Screen/GameScreen";
 import PacketHandlers = require("./Networking/Packet/PacketHandlers");
 import { Connection } from "./Networking/Connection";
 import { Player } from "./Model/Player";
+import { KeyHandler } from "./KeyHandler/KeyHandler";
 
 export class Tong {
   public localPlayerIndex: number;
   private playerArray: Array<Player>;
   private GAME_LOOP_INTERVAL: number = 25;
+  private _keyHandler: KeyHandler = KeyHandler.get();
 
   constructor(private doc) {
     this.playerArray = [];
@@ -27,6 +29,12 @@ export class Tong {
 
   private _loop() {
     console.log("game loop");
+    if(this._keyHandler.isKeyPressed(KeyHandler.KeyCodes.LEFT)) {
+      this.playerArray[this.localPlayerIndex].turnWheelLeft();
+    }
+    else if(this._keyHandler.isKeyPressed(KeyHandler.KeyCodes.RIGHT)) {
+      this.playerArray[this.localPlayerIndex].turnWheelRight();
+   }
   }
 
   startGameLoop() {
